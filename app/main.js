@@ -3,7 +3,8 @@ const {app,BrowserWindow,protocol,net,Menu,shell}=require('electron');
 const path=require('path'),fs=require('fs'),crypto=require('crypto');
 
 const REPO='OrlaSayZz/PokeOpening';
-const MANIFEST_URL=`https://github.com/${REPO}/releases/latest/download/manifest.json`;
+const RAW=`https://raw.githubusercontent.com/${REPO}/main/data/`;
+const MANIFEST_URL=RAW+'manifest.json';
 
 protocol.registerSchemesAsPrivileged([{scheme:'app',privileges:{standard:true,secure:true,supportFetchAPI:true,corsEnabled:true,stream:true}}]);
 
@@ -44,7 +45,7 @@ async function download(url,dest,sha,onBytes){
 // Met à jour les données. firstRun = aucune carte installée.
 async function update(firstRun){
   let remote;
-  try{const r=await net.fetch(MANIFEST_URL,{cache:'no-store'});if(!r.ok)throw new Error(r.status);remote=await r.json()}
+  try{const r=await net.fetch(MANIFEST_URL+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);remote=await r.json()}
   catch(e){if(firstRun)showSetup("Impossible de télécharger les cartes.<br>Vérifie ta connexion internet puis relance PokeOpening.");return false}
   const local=localManifest();
   if(!firstRun&&remote.version<=local.version)return false;
@@ -58,7 +59,7 @@ async function update(firstRun){
   const label=t=>firstRun?showSetup(`Téléchargement des cartes… ${Math.round(done/1e6)} / ${Math.round(total/1e6)} Mo`,Math.round(done/total*100)):banner(`Mise à jour ${remote.label||''} : ${Math.round(done/total*100)} %`);
   let last=0;
   for(const [rel,f] of todo){
-    await download(f.url,path.join(UPD,rel),f.sha,n=>{done+=n;const now=Date.now();if(now-last>400){last=now;label()}});
+    await download(f.url||RAW+rel,path.join(UPD,rel),f.sha,n=>{done+=n;const now=Date.now();if(now-last>400){last=now;label()}});
   }
   fs.writeFileSync(path.join(UPD,'manifest.json'),JSON.stringify({version:remote.version,label:remote.label,files:Object.fromEntries(Object.entries(remote.files).map(([k,v])=>[k,{sha:v.sha}]))}));
   return true;
