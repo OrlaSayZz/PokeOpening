@@ -1,6 +1,6 @@
 {
- "version": 1,
- "label": "1\u00e8re g\u00e9n\u00e9ration",
+ "version": 2,
+ "label": "Classeur am\u00e9lior\u00e9 + ic\u00f4nes",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -47,8 +47,8 @@
    "size": 9984782
   },
   "index.html": {
-   "sha": "82d79c63bf7420859801cdf2123c0a0a2b285dbf78ae88e2e695a53eae903d71",
-   "size": 2551223
+   "sha": "5cf4cc1f118033317e874b4ce4b7f82acd165929b07c53733783a5aa131a3371",
+   "size": 3697781
   }
  }
 }
