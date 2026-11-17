@@ -1,0 +1,7 @@
+{
+  "name": "pokeopening",
+  "productName": "PokeOpening",
+  "version": "1.0.0",
+  "description": "PokeOpening : cartes, collection et ouverture de boosters",
+  "main": "main.js"
+}
