@@ -471,6 +471,26 @@ body.placing .slot:not(.filled){border-color:rgba(255,203,5,.45)}
 .slotview .d h3{display:flex;align-items:center;gap:8px;font-size:22px}
 
 footer{text-align:center;color:var(--muted);font-size:13px;padding:30px}
+
+.cwrap{grid-template-columns:300px minmax(0,1fr)}
+.cwrap.nofinder{grid-template-columns:minmax(0,1fr)}.cwrap.nofinder .finder{display:none}
+.finder .fh{display:flex;align-items:center;justify-content:space-between}.finder .fh .icon-btn{width:30px;height:30px;font-size:13px}
+.btn.gold{background:var(--gold);color:#2a1d00;border-color:var(--gold);font-weight:800}
+.nbadge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#c8372d;color:#fff;font-size:12px;font-weight:800;margin-left:4px}
+.bhead{display:flex;align-items:center;gap:14px;flex:1;min-width:260px}
+.bcov{width:34px;height:44px;border-radius:3px 7px 7px 3px;background:linear-gradient(90deg,rgba(0,0,0,.35) 0 5px,transparent 5px),var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25),0 4px 10px rgba(0,0,0,.4);flex:none}
+.bring{--p:0;width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--gold) calc(var(--p)*1%),rgba(255,255,255,.1) 0)}
+.bring b{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--bg);font-family:var(--disp);font-size:13px}
+.bname{min-width:0}.bname h2{font-family:var(--disp);font-size:26px;line-height:1.1;overflow-wrap:anywhere}.bname .m{color:var(--muted);font-size:13.5px;width:auto}
+.btitle .bprog{display:none}
+.pdots{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pdot{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.14);cursor:pointer;transition:.15s}
+.pdot.has{background:rgba(255,203,5,.45)}.pdot.on{background:var(--gold);transform:scale(1.35);box-shadow:0 0 0 3px rgba(255,203,5,.25)}
+.pdot:hover{transform:scale(1.3)}
+body.bfull .bar,body.bfull .ctop,body.bfull .finder,body.bfull .btools .btn:not([data-c=fullscreen]),body.bfull .btools .dd,body.bfull .bstats{display:none!important}
+body.bfull main{padding-top:14px;max-width:100%!important}
+body.bfull .cwrap{grid-template-columns:minmax(0,1fr)!important}
+body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 @media (max-width:900px){.cwrap{grid-template-columns:1fr}.finder{position:static;max-height:420px}}
 @media (max-width:640px){nav a span.l{display:none}.stat{display:none}.h1{font-size:26px}.cards{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .binder{padding:11px;border-radius:12px}.binder::before{inset:4px}.binder .corner{width:16px;height:16px}.page{padding:8px}.rings{width:24px}.ring{width:32px;height:9px;margin:0 -4px}.rings::before{width:9px}}
@@ -833,12 +853,13 @@ const twoUp=()=>window.innerWidth>=1180;
 function visible(b){const n=pageCount(b),per=twoUp()?2:1,maxS=Math.max(0,Math.ceil(n/per)-1);
   let s=Math.min(Math.max(0,spread[b.id]||0),maxS);spread[b.id]=s;const arr=[];for(let i=0;i<per;i++){const p=s*per+i;arr.push(p<n?p:-1)}return{arr,n,s,maxS,per}}
 
+let finderOpen;try{finderOpen=localStorage.getItem('finderOpen')!=='0'}catch(e){finderOpen=true}
 function collectionPage(){
   document.body.classList.add('wide');
   app.innerHTML=`<div class="ctop"><div class="bchips" id="bchips"></div><button class="btn primary" data-c="new">+ Nouveau classeur</button></div>
-    <div class="cwrap">
+    <div class="cwrap ${finderOpen?"":"nofinder"}" id="cwrap">
       <aside class="finder">
-        <h3>AJOUTER DES CARTES</h3>
+        <div class="fh"><h3>AJOUTER DES CARTES</h3><button class="icon-btn" data-c="togglefinder" title="Fermer le panneau">✕</button></div>
         <div class="seg fseg">${[["all","Toutes"],["intl","International"],["jp","Japonais"]].map(([k,l])=>`<button data-freg="${k}" class="${freg===k?"on":""}">${l}</button>`).join("")}</div>
         <div class="input"><span>🔍</span><input id="fq" placeholder="Rechercher un Pokémon…" value="${esc(fq)}" autocomplete="off"></div>
         <div class="flist" id="flist"></div>
@@ -901,20 +922,28 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
   const shown=v.arr.filter(p=>p>=0).map(p=>p+1);
   const lbl=shown.length===2?`Pages ${shown[0]}–${shown[1]} / ${v.n}`:shown.length?`Page ${shown[0]} / ${v.n}`:`Fin · ${v.n} pages`;
   const pct=placed.length?Math.round(got/placed.length*100):0;
-  z.innerHTML=`<div class="btitle"><h2>${esc(b.name)}</h2>
-      <div class="btools"><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
+  const own=placed.filter(k=>qty(k)>0).length;
+  z.innerHTML=`<div class="btitle"><div class="bhead"><span class="bcov" style="--c:${esc(b.color)}"></span><div class="bring" style="--p:${pct}"><b>${pct}%</b></div><div class="bname"><h2>${esc(b.name)}</h2><span class="m">${placed.length} carte${placed.length>1?"s":""} rangée${placed.length>1?"s":""} · ${own} obtenue${own>1?"s":""} · ${v.n} pages de ${b.cols}×${b.rows}</span></div></div>
+      <div class="btools"><button class="btn ${finderOpen?"":"gold"}" data-c="togglefinder">${finderOpen?"◧ Masquer le panneau":"＋ Ajouter des cartes"}${(()=>{const n=toPlaceCount();return !finderOpen&&n?` <span class="nbadge">${n}</span>`:""})()}</button><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
         <div class="ddm" id="sortMenu" hidden><button data-sort="dex">Par Pokémon</button><button data-sort="rar">Par rareté</button><button data-sort="got">Obtenues d'abord</button><button data-sort="reg">International puis Japonais</button></div></div>
         <button class="btn" data-c="compact" title="Supprimer les cases vides entre les cartes">⇤ Boucher les trous</button>
         <button class="btn" data-c="addowned" title="Ajouter toutes les cartes obtenues qui ne sont pas encore dans ce classeur">＋ Mes cartes obtenues</button>
-        <button class="btn" data-c="edit">⚙️ Réglages</button></div>
+        <button class="btn" data-c="edit">⚙️ Réglages</button>
+        <button class="btn" data-c="fullscreen" title="Afficher le classeur en grand (touche F)">⛶ Plein écran</button></div>
       <div class="bprog"><i style="width:${pct}%"></i></div>
       <div class="bstats">${(()=>{const cnt={};placed.forEach(k=>{const c=CARDS[k];if(c&&qty(k))cnt[c.r]=(cnt[c.r]||0)+1});return Object.keys(TIERS).filter(t=>cnt[t]).sort((a,b)=>TIERS[b].o-TIERS[a].o).map(t=>`<span class="bst t-${t}"><i></i>${esc(tierName(t))} <b>${cnt[t]}</b></span>`).join("")})()}</div>
-      <span class="m">Grille <b>${b.cols} × ${b.rows}</b> · <b>${v.n}</b> pages · <b>${placed.length}</b> carte${placed.length>1?"s":""} rangée${placed.length>1?"s":""} dont <b>${got}</b> obtenue${got>1?"s":""}</span></div>
+</div>
     <div class="stage"><div class="binder" id="binderEl" style="--cover:${esc(b.color)};--cols:${b.cols}">${parts.join("")}<i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i></div></div>
-    <nav class="pager"><button class="icon-btn" data-c="prev" ${v.s<=0?"disabled":""} aria-label="Pages précédentes">‹</button><span class="lbl">${lbl}</span><button class="icon-btn" data-c="next" ${v.s>=v.maxS?"disabled":""} aria-label="Pages suivantes">›</button><button class="btn" data-c="addpage">+ Page</button></nav>`;
+    <nav class="pager"><button class="icon-btn" data-c="prev" ${v.s<=0?"disabled":""} aria-label="Pages précédentes">‹</button><span class="lbl">${lbl}</span><button class="icon-btn" data-c="next" ${v.s>=v.maxS?"disabled":""} aria-label="Pages suivantes">›</button><button class="btn" data-c="addpage">+ Page</button></nav>
+    ${v.maxS>0&&v.maxS<60?`<div class="pdots">${Array.from({length:v.maxS+1},(_,i)=>{const per=twoUp()?2:1;const p1=i*per+1;const has=Object.keys(sl).some(pos=>Math.floor(pos/pp)>=i*per&&Math.floor(pos/pp)<i*per+per);return `<button class="pdot ${i===v.s?"on":""} ${has?"has":""}" data-spread="${i}" title="Page${per>1?"s":""} ${p1}${per>1&&p1+1<=v.n?"–"+(p1+1):""}"></button>`}).join("")}</div>`:""}`;
   layout();turnDir="";
 }
 let turnDir="";
+function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!inB.has(k)).length}
+function toggleFull(force){const on=force??!document.body.classList.contains("bfull");document.body.classList.toggle("bfull",on);
+  try{if(on&&!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});if(!on&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{})}catch(e){}
+  setTimeout(drawBinder,60)}
+document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&document.body.classList.contains("bfull"))toggleFull(false)});
 function reorder(mode){const b=binder(),sl=slotsOf(b);const keys=Object.keys(sl).map(Number).sort((a,b)=>a-b).map(k=>sl[k]).filter(k=>CARDS[k]);
   const dex=k=>{const c=CARDS[k];return POKEMON.indexOf(c.pokemon)*1000+c.pokemon.cards.indexOf(c)};
   if(mode==="dex")keys.sort((a,b)=>dex(a)-dex(b));
@@ -932,8 +961,9 @@ function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
   const padX=innerWidth<640?22:36,pagePad=innerWidth<640?16:24,ringW=innerWidth<640?24:40;
   const availW=(stage.clientWidth-padX-ringW)/per-pagePad;
   const top=el.getBoundingClientRect().top+scrollY;
-  const availH=Math.max(340,innerHeight-Math.min(top,230)-95)-pagePad;
-  const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap)/b.rows)*63/88,280)));
+  const full=document.body.classList.contains("bfull");
+  const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?95:105))-pagePad;
+  const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap)/b.rows)*63/88,full?420:340)));
   el.style.setProperty("--sw",sw+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
   el.classList.toggle("small",sw<80)}
 function place(pos,key){const b=binder();slotsOf(b)[pos]=key;save();pick=null;drawFinder();drawBinder();drawChips()}
@@ -992,12 +1022,15 @@ document.addEventListener("click",e=>{if(location.hash!=="#collection")return;co
   const bc=t.closest("[data-b]");if(bc){ST.current=bc.dataset.b;save();drawChips();drawBinder();return}
   const fill=t.closest("[data-fill]");if(fill){fillSeries(fill.dataset.fill);return}
   const fr=t.closest(".fres");if(fr){pick=pick===fr.dataset.k?null:fr.dataset.k;drawFinder();return}
+  const sp=t.closest("[data-spread]");if(sp){const b=binder(),v=visible(b),n=+sp.dataset.spread;turnDir=n>v.s?"next":n<v.s?"prev":"";spread[b.id]=n;drawBinder();return}
   const a=t.closest("[data-c]");
   if(a){const b=binder(),c=a.dataset.c;
     if(c==="new")binderModal(null);else if(c==="edit")binderModal(b);else if(c==="unpick"){pick=null;drawFinder()}
     else if(c==="prev"){spread[b.id]--;turnDir="prev";drawBinder()}else if(c==="next"){spread[b.id]++;turnDir="next";drawBinder()}
     else if(c==="sortmenu"){const m=$("#sortMenu");m.hidden=!m.hidden}
     else if(c==="compact")reorder("keep")
+    else if(c==="togglefinder"){finderOpen=!finderOpen;try{localStorage.setItem('finderOpen',finderOpen?'1':'0')}catch(e){}$("#cwrap").classList.toggle("nofinder",!finderOpen);drawBinder();if(finderOpen)drawFinder()}
+    else if(c==="fullscreen")toggleFull()
     else if(c==="addowned")addOwned()
     else if(c==="addpage"){const n=pageCount(b);b.pages=n+1;save();spread[b.id]=Math.floor(n/(twoUp()?2:1));drawBinder()}
     return}
@@ -1026,7 +1059,7 @@ document.addEventListener("dragend",()=>{dragFrom=null;document.querySelectorAll
 /* ============================================================
    ROUTAGE
    ============================================================ */
-function route(keep){document.body.classList.remove('wide');
+function route(keep){document.body.classList.remove('wide');document.body.classList.remove('bfull');
   lb.classList.remove("open");
   if(!keep&&!$("#opener"))$("#modalRoot").innerHTML="";
   const id=location.hash.slice(1);
@@ -1041,8 +1074,9 @@ addEventListener("hashchange",()=>{if($("#opener")){$("#modalRoot").innerHTML=""
 let rT;addEventListener("resize",()=>{clearTimeout(rT);rT=setTimeout(()=>{if(location.hash==="#collection")drawBinder()},150)});
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&sselOpen){sselOpen=false;drawSsel();return}
-  if(e.key==="Escape"){if(lb.classList.contains("open")){lb.classList.remove("open");return}if($("#modal")){$("#modalRoot").innerHTML="";return}if(pick){pick=null;drawFinder()}return}
+  if(e.key==="Escape"){if(lb.classList.contains("open")){lb.classList.remove("open");return}if($("#modal")){$("#modalRoot").innerHTML="";return}if(pick){pick=null;drawFinder();return}if(document.body.classList.contains("bfull"))toggleFull(false);return}
   if(lb.classList.contains("open")&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){lbIdx=(lbIdx+(e.key==="ArrowLeft"?-1:1)+lbList.length)%lbList.length;renderLb();return}
+  if(location.hash==="#collection"&&!/INPUT/.test(e.target.tagName)&&!$("#modal")&&(e.key==="f"||e.key==="F")){toggleFull();return}
   if(location.hash==="#collection"&&!/INPUT/.test(e.target.tagName)&&!$("#modal")){const b=binder(),v=visible(b);
     if(e.key==="ArrowRight"&&v.s<v.maxS){spread[b.id]=v.s+1;turnDir="next";drawBinder()}if(e.key==="ArrowLeft"&&v.s>0){spread[b.id]=v.s-1;turnDir="prev";drawBinder()}}});
 document.documentElement.style.setProperty("--back",`url("${CARD_BACK}")`);

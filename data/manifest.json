@@ -1,6 +1,6 @@
 {
  "version": 2,
- "label": "Classeur am\u00e9lior\u00e9 + ic\u00f4nes",
+ "label": "Nouveau classeur + ic\u00f4nes",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -47,8 +47,8 @@
    "size": 9984782
   },
   "index.html": {
-   "sha": "5cf4cc1f118033317e874b4ce4b7f82acd165929b07c53733783a5aa131a3371",
-   "size": 3697781
+   "sha": "4627a7968ade8f31641db88accf24e3a9f8bebc8152b6ae48f4861e782a38147",
+   "size": 3702476
   }
  }
 }
