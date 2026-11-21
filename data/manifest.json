@@ -1,6 +1,6 @@
 {
- "version": 3,
- "label": "Pages qui tournent",
+ "version": 4,
+ "label": "Raret\u00e9s AR + nouveaux taux",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -47,8 +47,8 @@
    "size": 9984782
   },
   "index.html": {
-   "sha": "acf58d9bbacc83f27202825b2184a01a5d8de9f0136d34bf1141e8a17a2d8ecd",
-   "size": 3705425
+   "sha": "d07b30d8e990891384778692a89b4da8f1f54879e9166dd279c80a5ce95c25e5",
+   "size": 3705491
   }
  }
 }

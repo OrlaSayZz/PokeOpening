@@ -733,7 +733,7 @@ const TIERS={C:{n:"Commune",o:0},U:{n:"Peu commune",o:1},R:{n:"Rare",o:2},H:{n:"
 /* Taux de drop (en %) — modifiables ici */
 const RATES={
   reverse:{C:60,U:30,R:10},              /* emplacements 7 et 8 (le « R » pioche dans les rares et holo rares) */
-  hit:{R:60,H:20,DR:10,UR:4,IR:4,SIR:1.3,HR:0.7}, /* emplacements 9 et 10, tirés séparément */
+  hit:{R:66.8,H:20,DR:6,UR:3,IR:3,SIR:0.8,HR:0.4}, /* emplacements 9 et 10, tirés séparément */
   god:0.02,                                 /* % de chance qu'un booster soit un GOD PACK (1 sur 5000), tirage pur sans palier */
   godMain:{IR:60,UR:25,DR:15},              /* god pack : emplacements 1 à 8 */
   godTop:{SIR:60,HR:25,UR:15}               /* god pack : emplacements 9 et 10 */
@@ -789,7 +789,7 @@ function openerPage(){
   app.querySelectorAll("[data-rates]").forEach(b=>b.onclick=()=>showRates());
 }
 function showRates(){const root=$("#modalRoot");
-  const row=(t,v)=>`<tr><td><span class="rt rt-${t}">${tierName(t)}</span></td><td>${v} %</td></tr>`;
+  const row=(t,v)=>`<tr><td><span class="rt rt-${t}">${tierName(t)}</span></td><td>${String(v).replace(".",",")} %</td></tr>`;
   root.innerHTML=`<div class="modal" id="modal"><div class="sheet"><h2>Contenu d'un booster</h2>
     <table class="rates"><tr><th colspan="2">Emplacements 1 à 4</th></tr>${row("C",100)}
     <tr><th colspan="2">Emplacements 5 et 6</th></tr>${row("U",100)}
