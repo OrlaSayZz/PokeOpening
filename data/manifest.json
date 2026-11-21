@@ -1,6 +1,6 @@
 {
- "version": 2,
- "label": "Nouveau classeur + ic\u00f4nes",
+ "version": 3,
+ "label": "Pages qui tournent",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -47,8 +47,8 @@
    "size": 9984782
   },
   "index.html": {
-   "sha": "4627a7968ade8f31641db88accf24e3a9f8bebc8152b6ae48f4861e782a38147",
-   "size": 3702476
+   "sha": "acf58d9bbacc83f27202825b2184a01a5d8de9f0136d34bf1141e8a17a2d8ecd",
+   "size": 3705425
   }
  }
 }

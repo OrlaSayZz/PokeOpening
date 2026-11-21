@@ -438,10 +438,25 @@ body.placing .slot:not(.filled){border-color:rgba(255,203,5,.45)}
 .bprog{width:100%;height:6px;border-radius:3px;background:var(--panel);overflow:hidden}
 .bprog i{display:block;height:100%;background:linear-gradient(90deg,var(--ok),#8af0bd);transition:width .4s}
 .inb{font-size:13px;opacity:.85}
-.page.turn-next{animation:turnNext .38s ease-out}
-.page.turn-prev{animation:turnPrev .38s ease-out}
-@keyframes turnNext{from{opacity:0;transform:perspective(1200px) rotateY(-18deg) translateX(30px)}to{opacity:1;transform:none}}
-@keyframes turnPrev{from{opacity:0;transform:perspective(1200px) rotateY(18deg) translateX(-30px)}to{opacity:1;transform:none}}
+html{overflow-x:hidden}
+html:has(body.bfull){overflow:hidden}
+body.bfull{overflow:hidden}
+body.bfull main{padding-bottom:6px}
+body.bfull .pdots{display:none}
+.binder{perspective:2600px}
+.flipcover{position:absolute;z-index:4;pointer-events:none}
+.leaf{position:absolute;z-index:6;pointer-events:none;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.45,.05,.3,1)}
+.leaf .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leaf .face.back{transform:rotateY(180deg)}
+.leaf .face::after{content:"";position:absolute;inset:0;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .75s}
+.leaf.next .face.front::after{background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.leaf.next .face.back::after{background:linear-gradient(270deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.leaf.prev .face.front::after{background:linear-gradient(270deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.leaf.prev .face.back::after{background:linear-gradient(90deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.leaf.go .face::after{animation:leafShade .75s ease-in-out}
+@keyframes leafShade{0%,100%{opacity:0}50%{opacity:1}}
+.leaf .page,.flipcover .page{position:absolute!important;inset:0;margin:0;width:100%;height:100%;box-sizing:border-box}
+.leaf .face.blank{background:var(--page);border-radius:8px}
 /* modal */
 .modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:16px;background:rgba(4,8,20,.6)}
 .sheet{background:var(--bg2);border:1px solid var(--line);border-radius:16px;width:min(520px,100%);max-height:calc(100% - 20px);overflow:auto;box-shadow:0 30px 60px rgba(0,0,0,.6);padding:22px;display:flex;flex-direction:column;gap:16px}
@@ -907,6 +922,7 @@ function drawFinder(){const q=norm(fq.trim());const inBinder=new Set(binder()?Ob
   document.body.classList.toggle("placing",!!(pick&&CARDS[pick]));
 }
 function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML="";return}
+  const dir=turnDir,oldPages=dir?[...z.querySelectorAll("#binderEl > .page")].map(p=>{const c=p.cloneNode(true);c.classList.remove("turn-next","turn-prev");return c}):[];
   const v=visible(b),sl=slotsOf(b),pp=perPage(b);
   const placed=Object.values(sl);const got=placed.filter(k=>qty(k)>0).length;
   const parts=[];const rings=`<div class="rings" aria-hidden="true">${"<i class='ring'></i>".repeat(Math.min(6,Math.max(3,b.rows+1)))}</div>`;
@@ -916,7 +932,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
     let cells="";for(let k=0;k<pp;k++){const pos=p*pp+k;const key=sl[pos];const c=key&&CARDS[key];
       cells+=c?`<button class="slot filled ${qty(key)?"":"missing"} ${qty(key)&&isBig(c)?"holo full soft t-"+c.r:""}" data-pos="${pos}" draggable="true" title="${esc(c.name)} · ${esc(c.label)} · ${esc(tierName(c.r))}"><img src="${c.th||c.img}" ${srcset(c)} alt="${esc(c.name)}" draggable="false">${qty(key)&&isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}</button>`
              :`<button class="slot" data-pos="${pos}" aria-label="Case vide ${k+1}"><span class="num">${k+1}</span><span class="hint">+</span></button>`}
-    parts.push(`<div class="page ${v.per===2&&i===0?"pl":"pr"} ${turnDir?"turn-"+turnDir:""}">${cells}</div>`)});
+    parts.push(`<div class="page ${v.per===2&&i===0?"pl":"pr"}">${cells}</div>`)});
   if(v.per===1)parts.unshift(rings);
   const shown=v.arr.filter(p=>p>=0).map(p=>p+1);
   const lbl=shown.length===2?`Pages ${shown[0]}–${shown[1]} / ${v.n}`:shown.length?`Page ${shown[0]} / ${v.n}`:`Fin · ${v.n} pages`;
@@ -936,6 +952,30 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
     <nav class="pager"><button class="icon-btn" data-c="prev" ${v.s<=0?"disabled":""} aria-label="Pages précédentes">‹</button><span class="lbl">${lbl}</span><button class="icon-btn" data-c="next" ${v.s>=v.maxS?"disabled":""} aria-label="Pages suivantes">›</button><button class="btn" data-c="addpage">+ Page</button></nav>
     ${v.maxS>0&&v.maxS<60?`<div class="pdots">${Array.from({length:v.maxS+1},(_,i)=>{const per=twoUp()?2:1;const p1=i*per+1;const has=Object.keys(sl).some(pos=>Math.floor(pos/pp)>=i*per&&Math.floor(pos/pp)<i*per+per);return `<button class="pdot ${i===v.s?"on":""} ${has?"has":""}" data-spread="${i}" title="Page${per>1?"s":""} ${p1}${per>1&&p1+1<=v.n?"–"+(p1+1):""}"></button>`}).join("")}</div>`:""}`;
   layout();turnDir="";
+  if(dir&&oldPages.length&&!matchMedia("(prefers-reduced-motion: reduce)").matches)flipPages(dir,oldPages);
+}
+function flipPages(dir,oldPages){const el=$("#binderEl");if(!el)return;
+  const nw=[...el.querySelectorAll(":scope > .page")];if(!nw.length)return;
+  const box=p=>({left:p.offsetLeft,top:p.offsetTop,width:p.offsetWidth,height:p.offsetHeight});
+  const two=nw.length===2&&oldPages.length===2;
+  const mk=(cls,b)=>{const d=document.createElement("div");d.className=cls;Object.assign(d.style,{left:b.left+"px",top:b.top+"px",width:b.width+"px",height:b.height+"px"});return d};
+  const face=(cls,content)=>{const f=document.createElement("div");f.className="face "+cls;if(content)f.appendChild(content);else f.classList.add("blank");return f};
+  let leaf,cover=null;
+  if(two){
+    const [nl,nr]=nw,[ol,or]=oldPages;
+    if(dir==="next"){cover=mk("flipcover",box(nl));cover.appendChild(ol);
+      leaf=mk("leaf next",box(nr));leaf.style.transformOrigin="left center";leaf.append(face("front",or),face("back",nl.cloneNode(true)));}
+    else{cover=mk("flipcover",box(nr));cover.appendChild(or);
+      leaf=mk("leaf prev",box(nl));leaf.style.transformOrigin="right center";leaf.append(face("front",ol),face("back",nr.cloneNode(true)));}
+  }else{
+    const p=nw[nw.length-1];leaf=mk("leaf "+dir,box(p));leaf.style.transformOrigin=dir==="next"?"left center":"right center";
+    leaf.append(face("front",oldPages[oldPages.length-1]),face("back",null));
+  }
+  if(cover)el.appendChild(cover);el.appendChild(leaf);
+  leaf.getBoundingClientRect();
+  requestAnimationFrame(()=>{leaf.classList.add("go");leaf.style.transform=`rotateY(${dir==="next"?-180:180}deg)`});
+  let done=false;const end=()=>{if(done)return;done=true;leaf.remove();cover&&cover.remove()};
+  leaf.addEventListener("transitionend",end);setTimeout(end,1000);
 }
 let turnDir="";
 function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!inB.has(k)).length}
@@ -961,7 +1001,7 @@ function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
   const availW=(stage.clientWidth-padX-ringW)/per-pagePad;
   const top=el.getBoundingClientRect().top+scrollY;
   const full=document.body.classList.contains("bfull");
-  const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?95:105))-pagePad;
+  const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?112:105))-pagePad;
   const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap)/b.rows)*63/88,full?420:340)));
   el.style.setProperty("--sw",sw+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
   el.classList.toggle("small",sw<80)}
