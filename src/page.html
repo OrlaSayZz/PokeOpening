@@ -602,6 +602,15 @@ nav a{white-space:nowrap}
 .slab-info .subs{display:grid;grid-template-columns:max-content 2.6em max-content 2.6em;column-gap:6px;justify-content:start;align-items:baseline}
 .slab-info .subs span{display:contents}.slab-info .subs b{text-align:right;font-variant-numeric:tabular-nums;padding-right:6px}
 .slab.big .slab-info .subs{column-gap:8px}
+.slab-info .subs{display:grid!important;grid-template-columns:1fr 1fr!important;column-gap:0!important;margin-top:5px;border:1px solid #d4d9e3;border-radius:4px;overflow:hidden}
+.slab.gem .slab-info .subs{border-color:#e2cf8e}
+.slab-info .subs span{display:flex!important;justify-content:space-between;align-items:baseline;gap:4px;padding:2px 5px}
+.slab-info .subs span:nth-child(odd){border-right:1px solid #d4d9e3}.slab-info .subs span:nth-child(n+3){border-top:1px solid #d4d9e3}
+.slab.gem .slab-info .subs span{border-color:#e2cf8e}
+.slab-info .subs b{padding-right:0!important}
+.slab.big .slab-info .subs span{padding:3px 7px}
+.glast{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))!important}
+.slab-gr b.half{font-size:24px;letter-spacing:-.5px}.slab.big .slab-gr b.half{font-size:36px}.slab-gr small{margin-top:3px}
 </style>
 </head>
 <body>
@@ -1425,7 +1434,7 @@ function slabHtml(s,big){const c=CARDS[s.k];if(!c)return"";const gem=s.g===10;
     <div class="slab-logo"><div class="mk">PO</div><div class="bt">POKEOPENING<br>GRADING</div></div>
     <div class="slab-info"><b>${esc(nm)}</b><span>${esc(setName(c))} · ${esc(c.num||"")}</span><span>${c.y||""} · ${lang} · <i class="rt-${c.r}">${tierName(c.r)}</i></span><small>N° ${esc(s.id)}</small>
       <div class="subs"><span>CENTRAGE <b>${fmtG(s.sub[0])}</b></span><span>COINS <b>${fmtG(s.sub[1])}</b></span><span>CÔTÉS <b>${fmtG(s.sub[2])}</b></span><span>SURFACE <b>${fmtG(s.sub[3])}</b></span></div></div>
-    <div class="slab-gr"><b>${fmtG(s.g)}</b><small>${GLAB[s.g]||""}</small></div></div>
+    <div class="slab-gr"><b class="${s.g%1?"half":""}">${fmtG(s.g)}</b><small>${GLAB[s.g]||""}</small></div></div>
     <div class="slab-well"><img src="${c.img||c.th}" alt="" loading="lazy"></div><div class="slab-shine"></div></div>`}
 /* --- onglet Gradation --- */
 let gPick=null;
