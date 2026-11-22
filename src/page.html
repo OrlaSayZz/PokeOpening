@@ -649,26 +649,38 @@ nav a{white-space:nowrap}
 .sh-row.wrap{flex-wrap:wrap;overflow:visible}.sh-hint{color:var(--muted);font-size:14px;align-self:center;padding:0 10px}
 .sh-item[draggable]{cursor:grab}.sh-item.dragging{opacity:.35}.shelf.tray{background:transparent;border-style:dashed;padding-bottom:10px}
 .vpick{display:grid;gap:8px}
-.gbwrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:30px}
-.gbside{position:sticky;top:90px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;max-height:calc(100vh - 120px);display:flex;flex-direction:column}
-.gbside h3{font-family:var(--disp);font-size:16px;display:flex;justify-content:space-between;margin-bottom:10px}.gbside h3 b{color:var(--muted);font-size:13px}
-.gbq{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;margin-bottom:10px;border-radius:10px;border:1px solid var(--line);background:var(--tile);color:var(--txt);outline:none}.gbq:focus{border-color:var(--acc,#f5c400)}.gbnone{font-size:13px;color:var(--muted);padding:6px 4px;line-height:1.4}.gbchips{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.gbfree{overflow:auto;display:grid;gap:6px;flex:1}.gbf{display:flex;gap:10px;align-items:center;text-align:left;background:var(--tile);border:1px solid transparent;border-radius:10px;padding:6px 8px;color:var(--txt);font:inherit;cursor:grab}
-.gbf.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.gbf img{width:34px;border-radius:4px}.gbf b{display:block;font-size:13px}.gbf small{font-size:11.5px;color:var(--muted)}
+.gbwrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:22px;align-items:start}body.gbfit main{padding-bottom:14px;padding-top:22px}body.gbfit .h1{margin-bottom:10px}
+.gbside{position:sticky;top:86px;background:linear-gradient(180deg,var(--panel),rgba(20,30,66,.6));border:1px solid var(--line);border-radius:18px;padding:16px;max-height:calc(100vh - 110px);display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.gbside h3{font-family:var(--disp);font-size:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.gbside h3 b{background:var(--tile);color:var(--txt);font-size:12px;border-radius:999px;padding:2px 9px;min-width:12px;text-align:center}
+.gbq{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:9px 12px;margin-bottom:8px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--txt);outline:none;transition:border-color .15s}.gbq:focus{border-color:var(--gold)}
+.gbnone{font-size:12.5px;color:var(--muted);padding:4px 2px 2px;line-height:1.45}
+.gbfree{overflow:auto;display:grid;gap:6px;flex:1;align-content:start}.gbf{display:flex;gap:10px;align-items:center;text-align:left;background:var(--tile);border:1px solid transparent;border-radius:12px;padding:6px 8px;color:var(--txt);font:inherit;cursor:grab;transition:transform .12s,border-color .12s}.gbf:hover{transform:translateX(2px);border-color:var(--line)}
+.gbf.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.gbf img{width:34px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.4)}.gbf b{display:block;font-size:13px}.gbf small{font-size:11.5px;color:var(--muted)}
 .gbg{display:inline-block;min-width:26px;text-align:center;font-weight:800;border-radius:6px;padding:0 4px;background:#e9eef8;color:#141a2b}.gbg.gold{background:linear-gradient(135deg,#e3b43c,#fff1b8);color:#3d2a00}.gbg.black{background:#111;color:#e8c66a}
-.gbtools{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px;font-size:13px;color:var(--muted)}.gbtools select{font:inherit;padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--tile);color:var(--txt)}
-.gbbook{display:flex;gap:0;padding:14px;border-radius:16px;background:linear-gradient(135deg,#1d2b5e,#121a3c);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06) inset}
-.gbp{flex:1;min-width:0;background:linear-gradient(180deg,#0e1532,#0b112a);border-radius:10px;padding:14px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
-.gbring{width:26px;flex:none;background:repeating-linear-gradient(180deg,transparent 0 30px,rgba(200,210,230,.55) 30px 38px,transparent 38px 60px);margin:20px 0;border-radius:6px}
-.gbgrid{display:grid;gap:14px}.gbs{position:relative;border-radius:14px;min-height:120px;border:1px dashed rgba(255,255,255,.12);overflow:visible}
-.gbs.full{border-color:transparent;cursor:grab}.gbs.over{box-shadow:0 0 0 2px var(--gold) inset;background:rgba(255,203,5,.06)}
-.gbs:not(.full){aspect-ratio:285/470;cursor:pointer}.gbs:not(.full):hover{background:rgba(255,255,255,.03)}
-.gbsc{width:285px;transform-origin:top left;pointer-events:none}.gbsc .slab{max-width:285px}
-.gbn{position:absolute;bottom:4px;right:10px;font-size:11px;color:var(--muted)}
-.gbnav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;color:var(--muted)}
-.gbbook.tn .gbp{animation:gbIn .35s ease}.gbbook.tp .gbp{animation:gbIn2 .35s ease}@keyframes gbIn{from{opacity:0;transform:translateX(30px)}}@keyframes gbIn2{from{opacity:0;transform:translateX(-30px)}}
+.gbtools{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.gbtools .btn{width:100%;justify-content:center}
+.gbchips{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.gbchips .bchips{flex:1}.gbib{display:inline-flex;align-items:center;gap:6px}
+.gbmain{display:flex;flex-direction:column;align-items:center;min-width:0}.gbchips{align-self:stretch}
+.gbbook{--c:#2d5ba3;display:flex;padding:16px;border-radius:20px;position:relative;
+  background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.14),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--c) 78%,#000),color-mix(in srgb,var(--c) 45%,#000));
+  box-shadow:0 26px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08) inset,0 -3px 0 rgba(0,0,0,.25) inset}
+.gbbook:before{content:"";position:absolute;inset:7px;border-radius:15px;border:1.5px dashed rgba(255,255,255,.16);pointer-events:none}
+.gbp{flex:none;background:radial-gradient(140% 90% at 50% 0%,#18224a,#0b112a 70%);border-radius:12px;padding:16px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset,0 6px 18px rgba(0,0,0,.45)}
+.gbp.l{border-radius:12px 4px 4px 12px}.gbp.r{border-radius:4px 12px 12px 4px}
+.gbring{width:34px;flex:none;display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;position:relative;z-index:2}
+.gbring:before{content:"";position:absolute;top:6px;bottom:6px;left:50%;width:8px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(90deg,rgba(0,0,0,.45),rgba(0,0,0,.15),rgba(0,0,0,.45))}
+.gbring i{width:46px;height:13px;border-radius:7px;background:linear-gradient(180deg,#f4f7fc,#9aa3b5 45%,#5d6577 55%,#c9d0dd);box-shadow:0 2px 4px rgba(0,0,0,.6);position:relative}
+.gbgrid{display:grid;gap:12px;justify-content:center}
+.gbs{position:relative;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));box-shadow:inset 0 2px 8px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05) inset;cursor:pointer;transition:background .15s,box-shadow .15s}
+.gbs:not(.full):hover{background:rgba(255,255,255,.06)}.gbs.full{background:none;box-shadow:none;cursor:grab}
+.gbs.over,.gbpick .gbs:not(.full){box-shadow:0 0 0 2px rgba(255,203,5,.55) inset;background:rgba(255,203,5,.05)}
+.gbs:not(.full):after{content:"";position:absolute;inset:0;margin:auto;width:26%;aspect-ratio:1;border-radius:50%;border:1.5px dashed rgba(255,255,255,.08)}
+.gbsc{position:absolute;left:0;top:0;width:285px;transform-origin:top left;pointer-events:none;transition:filter .15s}.gbsc .slab{max-width:285px}.gbs.full:hover .gbsc{filter:brightness(1.08) drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+.gbn{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:10.5px;color:rgba(255,255,255,.28);letter-spacing:.08em}
+.gbnav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;color:var(--muted);font-size:14px}
+.gbnav .btn{width:40px;height:40px;border-radius:50%;padding:0;justify-content:center}
+.gbdots{display:flex;gap:6px;align-items:center}.gbdots button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.22);cursor:pointer}.gbdots button.on{background:var(--gold);width:22px;border-radius:5px}
+.gbbook.tn .gbp{animation:gbIn .3s ease}.gbbook.tp .gbp{animation:gbIn2 .3s ease}@keyframes gbIn{from{opacity:0;transform:translateX(24px)}}@keyframes gbIn2{from{opacity:0;transform:translateX(-24px)}}
 @media(max-width:900px){.gbwrap{grid-template-columns:1fr}.gbside{position:static;max-height:300px}}
-.gbsc{position:absolute;left:0;top:0}.gbs.full{aspect-ratio:285/470}
 </style>
 </head>
 <body>
@@ -1556,12 +1568,12 @@ function gbPages(){const B=gb();let m=-1;for(const p in B.slots)m=Math.max(m,+p)
 function gbHtml(L){const B=gb(),per=gbPer(),n=gbPages(),two=gbTwo(),nS=Math.ceil(n/(two?2:1));gbSpread=Math.min(gbSpread,nS-1);
   const placed=gbPlaced(),byId=Object.fromEntries(gState().map(x=>[x.id,x]));const free=L.filter(x=>!placed.has(x.id));
   const first=gbSpread*(two?2:1),pages=[first].concat(two?[first+1]:[]);
-  const page=pi=>`<div class="gbp"><div class="gbgrid" style="grid-template-columns:repeat(${B.cols},minmax(0,1fr))">${Array.from({length:per},(_,j)=>{const pos=pi*per+j,id=B.slots[pos],x=id&&byId[id];
-     return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;
-  return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Rechercher un Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden></p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont rangées.</p>'}</div>
+  const page=(pi,ix)=>`<div class="gbp ${two?(ix?"r":"l"):""}"><div class="gbgrid" style="grid-template-columns:repeat(${B.cols},120px)">${Array.from({length:per},(_,j)=>{const pos=pi*per+j,id=B.slots[pos],x=id&&byId[id];
+     return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;const rings=`<div class="gbring">${"<i></i>".repeat(B.rows>2?4:3)}</div>`;
+  return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Nom du Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden></p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont rangées.</p>'}</div>
      <div class="gbtools"><button class="btn sm" id="gbAll" ${free.length?"":"disabled"} title="Range toutes les cartes dans « ${esc(B.name)} »">Tout ranger ici</button></div></aside>
-   <div class="gbmain"><div class="gbchips"><div class="bchips">${Object.values(gbAll()).sort((a,b)=>a.created-b.created).map(x=>`<button class="bchip ${x.id===B.id?"on":""}" data-gbsel="${x.id}" style="--c:${esc(x.color)}"><span class="cov"></span>${esc(x.name)} <small style="color:var(--muted)">${Object.keys(x.slots).length}</small></button>`).join("")}</div><button class="btn sm" id="gbSet">⚙ Réglages</button><button class="btn sm primary" id="gbNew">＋ Nouveau classeur</button></div><div class="gbbook ${two?"two":""} ${gbTurn}" id="gbBook">${pages.map(page).join(two?'<div class="gbring"></div>':"")}</div>
-     <div class="gbnav"><button class="btn" id="gbPrev" ${gbSpread?"":"disabled"}>◀</button><span>${two?`Pages ${first+1}–${first+2}`:`Page ${first+1}`} / ${n}</span><button class="btn" id="gbNext" ${gbSpread<nS-1?"":"disabled"}>▶</button></div></div></div>`}
+   <div class="gbmain"><div class="gbchips"><div class="bchips">${Object.values(gbAll()).sort((a,b)=>a.created-b.created).map(x=>`<button class="bchip ${x.id===B.id?"on":""}" data-gbsel="${x.id}" style="--c:${esc(x.color)}"><span class="cov"></span>${esc(x.name)} <small style="color:var(--muted)">${Object.keys(x.slots).length}</small></button>`).join("")}</div><button class="btn sm gbib" id="gbSet">⚙ Réglages</button><button class="btn sm primary gbib" id="gbNew">＋ Nouveau</button></div><div class="gbbook ${two?"two":""} ${gbTurn} ${gbPick?"gbpick":""}" id="gbBook" style="--c:${esc(B.color||"#2d5ba3")}">${pages.map(page).join(two?rings:"")}</div>
+     <div class="gbnav"><button class="btn" id="gbPrev" ${gbSpread?"":"disabled"}>◀</button>${nS<=14?`<div class="gbdots">${Array.from({length:nS},(_,i)=>`<button data-gbsp="${i}" class="${i===gbSpread?"on":""}" title="${two?`Pages ${i*2+1}–${i*2+2}`:`Page ${i+1}`}"></button>`).join("")}</div>`:""}<span>${two?`Pages ${first+1}–${first+2}`:`Page ${first+1}`} / ${n}</span><button class="btn" id="gbNext" ${gbSpread<nS-1?"":"disabled"}>▶</button></div></div></div>`}
 function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   const put=(pos,id)=>{for(const p in B.slots)if(B.slots[p]===id)delete B.slots[p];B.slots[pos]=id;gbPick=null;redraw()};
   const turn=d=>{gbTurn=d>0?"tn":"tp";gbSpread=Math.max(0,gbSpread+d);gradedPage();setTimeout(()=>gbTurn="",400)};
@@ -1583,8 +1595,17 @@ function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
       $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(380px,100%)"><h2>${esc(CARDS[byIdG(id).k].name)} · ${fmtG(byIdG(id).g)}</h2><div class="vpick"><button class="btn" id="gbZ">Agrandir</button><button class="btn" id="gbR">Retirer du classeur</button></div></div></div>`;
       $("#modal").onclick=ev=>{if(ev.target.id==="modal")$("#modalRoot").innerHTML=""};
       $("#gbZ").onclick=()=>slabZoom(id);$("#gbR").onclick=()=>{delete B.slots[pos];$("#modalRoot").innerHTML="";redraw()}}});
-  const fit=()=>app.querySelectorAll(".gbsc").forEach(el=>{const w=el.parentElement.clientWidth;if(w)el.style.transform=`scale(${w/285})`});addEventListener("resize",fit,{once:true});
-  fit();requestAnimationFrame(fit);}
+  app.querySelectorAll("[data-gbsp]").forEach(d=>d.onclick=()=>{const i=+d.dataset.gbsp;if(i!==gbSpread)turn(i-gbSpread)});
+  gbFit();requestAnimationFrame(gbFit);if(!window.__gbRs){window.__gbRs=1;addEventListener("resize",()=>{const bk=$("#gbBook");if(!bk)return;if(bk.classList.contains("two")!==gbTwo())gradedPage();else gbFit()})}}
+let gbR=0;
+function gbFit(){const m=app.querySelector(".gbmain"),bk=$("#gbBook");if(!m||!bk)return;const B=gb(),two=gbTwo(),G=12;
+  if(!gbR){const sc=app.querySelector(".gbsc .slab");if(sc&&sc.offsetHeight)gbR=sc.offsetHeight/285}const R=gbR||1.62;
+  const avW=(m.clientWidth-32-(two?34:0))/(two?2:1)-32-2;
+  const top=bk.getBoundingClientRect().top+scrollY,avH=innerHeight-top-32-32-56-16;
+  const w=Math.max(56,Math.floor(Math.min((avW-(B.cols-1)*G)/B.cols,(avH-(B.rows-1)*G)/B.rows/R)));
+  app.querySelectorAll(".gbgrid").forEach(g=>g.style.gridTemplateColumns=`repeat(${B.cols},${w}px)`);
+  app.querySelectorAll(".gbs").forEach(x=>x.style.height=Math.round(w*R)+"px");
+  app.querySelectorAll(".gbsc").forEach(el=>el.style.transform=`scale(${w/285})`)}
 const byIdG=id=>gState().find(x=>x.id===id);
 const GPRE=[[2,2],[3,2],[3,3],[4,2],[4,3],[5,2]];
 function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,rows:2,color:COVERS[Object.keys(all).length%COVERS.length][1],created:Date.now(),slots:{}};
@@ -1619,14 +1640,14 @@ function gradedPage(){const L=[...gState()];
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
-  document.body.classList.toggle('wide',GV.view!=="grid"&&L.length>0);
+  document.body.classList.toggle('wide',GV.view!=="grid"&&L.length>0);document.body.classList.toggle('gbfit',GV.view!=="grid"&&L.length>0);
   if(GV.view!=="grid")bindGB(L);
   app.querySelectorAll(".gwall [data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
 
 /* ============================================================
    ROUTAGE
    ============================================================ */
-function route(keep){document.body.classList.remove('wide');document.body.classList.remove('bfull');
+function route(keep){document.body.classList.remove('wide');document.body.classList.remove('gbfit');document.body.classList.remove('bfull');
   lb.classList.remove("open");
   if(!keep&&!$("#opener"))$("#modalRoot").innerHTML="";
   const id=location.hash.slice(1);
