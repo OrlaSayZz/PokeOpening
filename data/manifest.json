@@ -1,6 +1,6 @@
 {
- "version": 26,
- "label": "\u00c9tiquettes grad\u00e9es : s\u00e9parateurs",
+ "version": 27,
+ "label": "Suppression des cartes grad\u00e9es",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "61af2c5626400dc4b6b8ef58198d276a878f627c5f00ef579479bb2607769740",
-   "size": 15927517,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=61af2c5626400dc4"
+   "sha": "19b0b7f8d3cc4d62946ec50161b4b4effe644c1519dae7ed61560c337f622352",
+   "size": 15928096,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=19b0b7f8d3cc4d62"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",

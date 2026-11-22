@@ -1461,8 +1461,9 @@ function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newC
   $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
 }
 function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
-  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div></div></div>`;
-  $("#modal").onclick=()=>$("#modalRoot").innerHTML=""}
+  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div><div class="tact" style="justify-content:center"><button class="btn" id="zClose">Fermer</button><button class="btn danger" id="zDel">Supprimer cette carte gradée</button></div></div></div>`;
+  $("#modal").onclick=e=>{if(e.target.id==="modal")$("#modalRoot").innerHTML=""};$("#zClose").onclick=()=>$("#modalRoot").innerHTML="";
+  $("#zDel").onclick=()=>confirmBox("Supprimer cette carte gradée ?",`${esc(CARDS[s.k]?.name||"")} · note ${fmtG(s.g)} — elle sera définitivement supprimée.`,"Supprimer",()=>{ST.graded=gState().filter(x=>x.id!==id);if(typeof tSlabs!=="undefined")tSlabs.delete(id);save();toast("Carte gradée supprimée");route()})}
 /* --- onglet Cartes gradées --- */
 const GV={sort:"note"};
 function gradedPage(){const L=[...gState()];
