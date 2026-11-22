@@ -564,6 +564,7 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 .mctiers{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}.mct{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 4px;cursor:pointer;color:var(--txt);font:inherit;font-size:13px}
 .mct.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.mct b{color:var(--muted);font-weight:700}.mct.clr{padding:6px 12px;color:var(--muted)}
 .rt.mini{font-size:10px;padding:1px 6px}.mcmore{display:flex;justify-content:center;margin:24px 0}
+.mcdup.on{background:var(--gold);color:#2a1d00;border-color:transparent}
 </style>
 </head>
 <body>
@@ -1300,11 +1301,12 @@ avLoad();
 /* ============================================================
    MES CARTES (toutes les cartes obtenues)
    ============================================================ */
-const MC={sort:"rare",reg:"all",tiers:new Set(),q:"",shown:0};
+const MC={sort:"rare",reg:"all",tiers:new Set(),q:"",shown:0,dup:false};
 try{Object.assign(MC,JSON.parse(localStorage.getItem("mc-view")||"{}"));MC.tiers=new Set(MC.tiers||[])}catch(e){MC.tiers=new Set()}
-const mcSave=()=>{try{localStorage.setItem("mc-view",JSON.stringify({sort:MC.sort,reg:MC.reg,tiers:[...MC.tiers]}))}catch(e){}};
+const mcSave=()=>{try{localStorage.setItem("mc-view",JSON.stringify({sort:MC.sort,reg:MC.reg,tiers:[...MC.tiers],dup:MC.dup}))}catch(e){}};
+const mcMin=()=>MC.dup?2:1;
 function mcList(){const nq=norm(MC.q.trim());
-  const L=UNIQ.filter(c=>qty(c.key)>0&&(MC.reg==="all"||(MC.reg==="tr"?c.tr:(!c.tr&&c.region===MC.reg)))&&(!MC.tiers.size||MC.tiers.has(c.r))&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq)));
+  const L=UNIQ.filter(c=>qty(c.key)>=mcMin()&&(MC.reg==="all"||(MC.reg==="tr"?c.tr:(!c.tr&&c.region===MC.reg)))&&(!MC.tiers.size||MC.tiers.has(c.r))&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq)));
   const dex=c=>c.tr?9999:(DEXI[c.pokemon.id]||9998);
   const by={rare:(a,b)=>TIERS[b.r].o-TIERS[a.r].o||dex(a)-dex(b),
     rareasc:(a,b)=>TIERS[a.r].o-TIERS[b.r].o||dex(a)-dex(b),
@@ -1314,12 +1316,13 @@ function mcList(){const nq=norm(MC.q.trim());
     annee:(a,b)=>(b.y||0)-(a.y||0)||dex(a)-dex(b)}[MC.sort];
   return L.sort(by)}
 function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
-  const own=UNIQ.filter(c=>qty(c.key)>0);
+  const own=UNIQ.filter(c=>qty(c.key)>=mcMin());
   const cnt=t=>own.filter(c=>c.r===t&&(MC.reg==="all"||(MC.reg==="tr"?c.tr:(!c.tr&&c.region===MC.reg)))).length;
-  app.innerHTML=`<h1 class="h1">Mes cartes <small class="mcn">${L.length} carte${L.length>1?"s":""}</small></h1>
+  app.innerHTML=`<h1 class="h1">Mes cartes <small class="mcn">${L.length} carte${L.length>1?"s":""}${MC.dup?` en double · ${L.reduce((a,c)=>a+qty(c.key)-1,0)} exemplaire(s) en trop`:""}</small></h1>
   <div class="mcbar">
     <input id="mcQ" placeholder="Rechercher (Pokémon, set…)" value="${esc(MC.q)}">
     <div class="pseg">${[["all","Toutes"],["intl","🌍 International"],["jp",flag("ja")+" Japonais"],["tr","🧑 Dresseurs"]].map(([k,l])=>`<button data-reg="${k}" class="${MC.reg===k?"on":""}">${l}</button>`).join("")}</div>
+    <button class="btn mcdup ${MC.dup?"on":""}" id="mcDup">${MC.dup?"✓ ":""}Doublons seulement</button>
     <label class="mcsort">Trier par <select id="mcS">${[["rare","Rareté (plus rare d'abord)"],["rareasc","Rareté (plus commune d'abord)"],["dex","N° de Pokédex"],["nom","Nom"],["qte","Quantité"],["annee","Plus récentes"]].map(([k,l])=>`<option value="${k}" ${MC.sort===k?"selected":""}>${l}</option>`).join("")}</select></label>
   </div>
   <div class="mctiers">${Object.keys(TIERS).sort((a,b)=>TIERS[b].o-TIERS[a].o).map(t=>`<button class="mct ${MC.tiers.has(t)?"on":""}" data-t="${t}"><span class="rt rt-${t}">${tierName(t)}</span><b>${cnt(t)}</b></button>`).join("")}${MC.tiers.size?`<button class="mct clr" data-t="">✕ Toutes les raretés</button>`:""}</div>
@@ -1330,9 +1333,10 @@ function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
   const more=()=>{$("#mcMore").innerHTML=MC.shown<L.length?`<button class="btn" id="mcMoreB">Afficher plus (${L.length-MC.shown} restantes)</button>`:"";
     const b=$("#mcMoreB");if(b)b.onclick=()=>{const a=MC.shown;MC.shown=Math.min(L.length,a+150);grid.insertAdjacentHTML("beforeend",L.slice(a,MC.shown).map((c,j)=>tile(c,a+j)).join(""));bind();more()}};
   const bind=()=>grid.querySelectorAll(".card:not([data-b])").forEach(el=>{el.dataset.b=1;el.onclick=()=>openLb("card",L,+el.dataset.i);const pre=()=>ensureFull(L[+el.dataset.i]);el.onpointerenter=pre;el.onpointerdown=pre});
-  grid.innerHTML=L.length?L.slice(0,MC.shown).map(tile).join(""):"";if(!L.length)grid.outerHTML=`<p class="empty">Aucune carte${own.length?" avec ces filtres":" pour l'instant : ouvre des boosters !"}.</p>`;else{bind();more()}
+  grid.innerHTML=L.length?L.slice(0,MC.shown).map(tile).join(""):"";if(!L.length)grid.outerHTML=`<p class="empty">${MC.dup&&!own.length?"Aucune carte en double pour l'instant":`Aucune carte${own.length?" avec ces filtres":" pour l'instant : ouvre des boosters !"}`}.</p>`;else{bind();more()}
   let qt;$("#mcQ").oninput=e=>{MC.q=e.target.value;clearTimeout(qt);qt=setTimeout(()=>{minePage();const i=$("#mcQ");i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)};
   $("#mcS").onchange=e=>{MC.sort=e.target.value;mcSave();minePage()};
+  $("#mcDup").onclick=()=>{MC.dup=!MC.dup;mcSave();minePage()};
   app.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{MC.reg=b.dataset.reg;mcSave();minePage()});
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const t=b.dataset.t;if(!t)MC.tiers.clear();else MC.tiers.has(t)?MC.tiers.delete(t):MC.tiers.add(t);mcSave();minePage()});
 }
