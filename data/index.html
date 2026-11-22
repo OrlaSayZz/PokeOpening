@@ -643,6 +643,12 @@ nav a{white-space:nowrap}
 .shelf.sh-gem{border-color:rgba(255,255,255,.25)}.shelf.sh-gem .sh-board{background:linear-gradient(180deg,#d9dde6,#8f96a6)}
 .shelves{grid-template-columns:minmax(0,1fr)}.shelf{min-width:0}.sh-item{flex:0 0 250px}.sh-item .slab{max-width:250px}
 .sh-item{flex:0 0 285px}.sh-item .slab{max-width:285px}.slab:not(.big) .slab-info .subs span{padding:2px 4px}
+.shelves.mine .sh-name{font-family:var(--disp);font-size:20px;font-weight:800;background:transparent;border:0;border-bottom:1px dashed transparent;color:var(--txt);padding:2px 0;min-width:120px;max-width:60%}
+.shelves.mine .sh-name:hover,.shelves.mine .sh-name:focus{border-color:var(--line);outline:none}.sh-tools{display:flex;gap:6px}
+.sh-row.drop{min-height:120px;border-radius:12px;transition:background .15s}.sh-row.drop.over{background:rgba(255,203,5,.08);box-shadow:0 0 0 2px rgba(255,203,5,.45) inset}
+.sh-row.wrap{flex-wrap:wrap;overflow:visible}.sh-hint{color:var(--muted);font-size:14px;align-self:center;padding:0 10px}
+.sh-item[draggable]{cursor:grab}.sh-item.dragging{opacity:.35}.shelf.tray{background:transparent;border-style:dashed;padding-bottom:10px}
+.vpick{display:grid;gap:8px}
 </style>
 </head>
 <body>
@@ -1524,15 +1530,49 @@ function shelvesHtml(L){const G=[];const add=(key,title,sub,cls,f)=>G.push({key,
     E.reverse().forEach(([a,b,t])=>add(t,t,"","",s=>{const y=CARDS[s.k].y||2010;return y>=a&&y<=b}))}
   return `<div class="shelves">${G.filter(g=>g.items.length).map(g=>`<section class="shelf ${g.cls}"><div class="sh-head"><h3>${esc(g.title)}</h3>${g.sub?`<span>${esc(g.sub)}</span>`:""}<b>${g.items.length}</b></div>
     <div class="sh-row">${g.items.map(s=>`<div class="sh-item">${slabHtml(s)}</div>`).join("")}</div><div class="sh-board"></div></section>`).join("")}</div>`}
+
+/* --- Ma vitrine : étagères rangées à la main --- */
+function vit(){ST.vitrine=ST.vitrine||[{id:uid(),name:"Étagère 1",items:[]}];const ids=new Set(gState().map(x=>x.id));ST.vitrine.forEach(sh=>sh.items=sh.items.filter(i=>ids.has(i)));return ST.vitrine}
+function myShelvesHtml(L){const V=vit(),placed=new Set(V.flatMap(s=>s.items)),byId=Object.fromEntries(gState().map(x=>[x.id,x]));
+  const tray=L.filter(x=>!placed.has(x.id));
+  const item=x=>`<div class="sh-item" draggable="true" data-vid="${x.id}">${slabHtml(x)}</div>`;
+  return `<div class="shelves mine">${V.map((sh,i)=>`<section class="shelf" data-shelf="${sh.id}"><div class="sh-head"><input class="sh-name" data-rn="${sh.id}" value="${esc(sh.name)}" maxlength="40">
+      <b>${sh.items.length}</b><div class="sh-tools"><button class="btn sm" data-up="${sh.id}" ${i?"":"disabled"} title="Monter">▲</button><button class="btn sm" data-down="${sh.id}" ${i<V.length-1?"":"disabled"} title="Descendre">▼</button><button class="btn sm" data-delsh="${sh.id}" title="Supprimer l'étagère">🗑</button></div></div>
+    <div class="sh-row drop" data-drop="${sh.id}">${sh.items.map(id=>byId[id]&&item(byId[id])).join("")}<div class="sh-hint">${sh.items.length?"":"Glisse des cartes gradées ici"}</div></div><div class="sh-board"></div></section>`).join("")}
+    <button class="btn" id="vAdd">＋ Ajouter une étagère</button>
+    <section class="shelf tray"><div class="sh-head"><h3>Pas encore rangées</h3><b>${tray.length}</b></div><div class="sh-row drop wrap" data-drop="tray">${tray.map(item).join("")||'<div class="sh-hint">Toutes tes cartes gradées sont rangées 👍</div>'}</div></section></div>`}
+let vDrag=null;
+function bindMyShelves(){const V=vit(),find=id=>V.find(s=>s.id===id);
+  const redraw=()=>{save();gradedPage()};
+  $("#vAdd").onclick=()=>{V.push({id:uid(),name:"Étagère "+(V.length+1),items:[]});redraw()};
+  app.querySelectorAll("[data-rn]").forEach(inp=>inp.onchange=()=>{find(inp.dataset.rn).name=inp.value.trim()||"Étagère";save()});
+  app.querySelectorAll("[data-up],[data-down]").forEach(b=>b.onclick=()=>{const id=b.dataset.up||b.dataset.down,i=V.findIndex(s=>s.id===id),j=i+(b.dataset.up?-1:1);[V[i],V[j]]=[V[j],V[i]];redraw()});
+  app.querySelectorAll("[data-delsh]").forEach(b=>b.onclick=()=>confirmBox("Supprimer cette étagère ?","Ses cartes retournent dans « Pas encore rangées ».","Supprimer",()=>{ST.vitrine=V.filter(s=>s.id!==b.dataset.delsh);redraw()}));
+  app.querySelectorAll("[data-vid]").forEach(el=>{el.ondragstart=e=>{vDrag=el.dataset.vid;el.classList.add("dragging");try{e.dataTransfer.setData("text/plain",vDrag)}catch(_){}};el.ondragend=()=>{vDrag=null;el.classList.remove("dragging")}});
+  app.querySelectorAll("[data-drop]").forEach(row=>{
+    row.ondragover=e=>{if(!vDrag)return;e.preventDefault();row.classList.add("over")};
+    row.ondragleave=()=>row.classList.remove("over");
+    row.ondrop=e=>{e.preventDefault();row.classList.remove("over");if(!vDrag)return;const id=vDrag;vDrag=null;
+      V.forEach(s=>s.items=s.items.filter(x=>x!==id));
+      if(row.dataset.drop!=="tray"){const sh=find(row.dataset.drop);const tgt=e.target.closest("[data-vid]");
+        let idx=sh.items.length;if(tgt&&tgt.dataset.vid!==id){const r=tgt.getBoundingClientRect();idx=sh.items.indexOf(tgt.dataset.vid)+(e.clientX>r.left+r.width/2?1:0)}
+        sh.items.splice(Math.max(0,idx),0,id)}
+      redraw()}});
+  /* clic = zoom ; clic droit / bouton = ranger sans glisser */
+  app.querySelectorAll("[data-vid]").forEach(el=>el.oncontextmenu=e=>{e.preventDefault();const id=el.dataset.vid;
+    $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(420px,100%)"><h2>Ranger dans…</h2><div class="vpick">${V.map(s=>`<button class="btn" data-to="${s.id}">${esc(s.name)}</button>`).join("")}<button class="btn" data-to="tray">Pas encore rangées</button></div></div></div>`;
+    $("#modal").onclick=ev=>{if(ev.target.id==="modal")$("#modalRoot").innerHTML=""};
+    document.querySelectorAll("[data-to]").forEach(b=>b.onclick=()=>{V.forEach(s=>s.items=s.items.filter(x=>x!==id));if(b.dataset.to!=="tray")find(b.dataset.to).items.push(id);$("#modalRoot").innerHTML="";redraw()})})}
 function gradedPage(){const L=[...gState()];
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><div class="pseg">${[["shelf","🗄️ Vitrine"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view==="shelf"?`<label class="mcsort">Étagères par <select id="gG">${[["note","Note"],["rare","Rareté"],["gen","Génération"],["serie","Époque"]].map(([k,l])=>`<option value="${k}" ${GV.group===k?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   ${GV.view==="shelf"?shelvesHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["mine","✋ Ma vitrine"],["shelf","🗄️ Vitrine auto"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view==="shelf"?`<label class="mcsort">Étagères par <select id="gG">${[["note","Note"],["rare","Rareté"],["gen","Génération"],["serie","Époque"]].map(([k,l])=>`<option value="${k}" ${GV.group===k?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   ${GV.view==="mine"?myShelvesHtml(L):GV.view==="shelf"?shelvesHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
+  if(GV.view==="mine")bindMyShelves();
   app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
 
 /* ============================================================
