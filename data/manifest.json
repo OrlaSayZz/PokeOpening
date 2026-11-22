@@ -1,6 +1,6 @@
 {
- "version": 7,
- "label": "Cartes TAG TEAM / L\u00c9GENDE partag\u00e9es, boosters sans g\u00e9n\u00e9rations",
+ "version": 8,
+ "label": "Profil et \u00e9changes",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -183,8 +183,8 @@
    "size": 22765584
   },
   "index.html": {
-   "sha": "e379ffff929800ad1761d4234c2ffe39102b4f3021bc6880ef0a22ee6b189e12",
-   "size": 15688336
+   "sha": "ef32d47e9891ad31949e3c929246d935f6b7831415b36da272e12b8d082056b7",
+   "size": 15712037
   }
  }
 }

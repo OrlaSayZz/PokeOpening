@@ -509,6 +509,50 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 @media (max-width:900px){.cwrap{grid-template-columns:1fr}.finder{position:static;max-height:420px}}
 @media (max-width:640px){nav a span.l{display:none}.stat{display:none}.h1{font-size:26px}.cards{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .binder{padding:11px;border-radius:12px}.binder::before{inset:4px}.binder .corner{width:16px;height:16px}.page{padding:8px}.rings{width:24px}.ring{width:32px;height:9px;margin:0 -4px}.rings::before{width:9px}}
+.mechip{display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border-radius:999px;border:1px solid var(--line);background:var(--panel);font-weight:700;font-size:13.5px;margin-left:14px;max-width:200px}
+.mechip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mechip.on{border-color:var(--gold)}
+.meav{width:28px;height:28px;border-radius:50%;object-fit:cover;flex:none}
+.avph{display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#7e4bc0);color:#fff;font-weight:800}
+.prof{display:grid;gap:18px}.pcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+.pcard h2{font-size:17px;font-weight:800;margin-bottom:16px;font-family:var(--disp);letter-spacing:.02em}
+.phead{display:flex;align-items:center;gap:26px}
+.avbig{position:relative;cursor:pointer;flex:none}.avimg{width:120px;height:120px;border-radius:50%;object-fit:cover;display:grid;place-items:center;font-size:48px;border:3px solid var(--gold);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.avedit{position:absolute;right:2px;bottom:2px;width:32px;height:32px;border-radius:50%;background:var(--gold);color:#2a1d00;display:grid;place-items:center;font-weight:900}
+.pid{flex:1;min-width:0}.pid input{width:100%;max-width:440px;font:inherit;font-size:30px;font-weight:800;background:transparent;border:0;border-bottom:2px solid var(--line);color:var(--txt);padding:4px 2px;outline:none}
+.pid input:focus{border-color:var(--gold)}.pmeta{color:var(--muted);margin-top:10px}.pmeta2{margin-top:8px;font-size:13px;color:var(--muted)}
+.lnk{background:none;border:0;color:var(--danger);font:inherit;cursor:pointer;padding:0;text-decoration:underline}
+.favs{display:grid;grid-template-columns:repeat(3,minmax(0,220px));gap:22px;justify-content:center}
+.fav{position:relative;aspect-ratio:63/88;border-radius:14px;border:2px dashed var(--line);background:var(--tile);color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font:inherit;padding:0}
+.fav .plus{font-size:44px;line-height:1}.fav em{font-style:normal;font-size:12.5px;text-align:center;padding:0 8px}
+.fav.has{border:0;background:none;justify-content:flex-start;aspect-ratio:auto}
+.fav.has img{width:100%;border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.45);transition:transform .25s}.fav.has:hover img{transform:translateY(-6px) rotate(-1deg)}
+.fav.has .rt{margin-top:6px}.fav.has em{color:var(--txt)}
+.fav .fx{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-style:normal;display:none;place-items:center;font-size:18px}.fav.has:hover .fx{display:grid}
+.prings{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-around}
+.pring{display:flex;align-items:center;gap:16px}.pring .pin{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),rgba(255,255,255,.09) 0);position:relative}
+.pring .pin::before{content:"";position:absolute;inset:11px;border-radius:50%;background:var(--panel)}.pring .pin b{position:relative;font-size:22px;font-family:var(--disp)}
+.plb strong{display:block;font-size:16px}.plb small{color:var(--muted)}
+.kpis{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.kpis>div{flex:1;min-width:140px;background:var(--tile);border-radius:12px;padding:12px 14px}.kpis b{display:block;font-size:22px;font-family:var(--disp)}.kpis small{color:var(--muted)}
+.pcols{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+.trow{display:grid;grid-template-columns:190px 1fr 110px;align-items:center;gap:6px 12px;margin-bottom:12px}.trow small{grid-column:2/4;color:var(--muted);font-size:12px;margin-top:-4px}.trow b,.grow b{text-align:right;font-size:13.5px}
+.tbar{height:10px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.tbar i{display:block;height:100%;border-radius:99px;background:var(--gold);min-width:2px}
+.grow{display:grid;grid-template-columns:70px 1fr 70px;align-items:center;gap:12px;margin-bottom:12px;font-size:14px}
+.pksheet{width:min(1000px,100%)}.pkbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}.pkbar input{flex:1;font:inherit;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--tile);color:var(--txt)}
+.pseg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}.pseg button{background:none;border:0;color:var(--muted);font:inherit;padding:9px 12px;cursor:pointer}.pseg button.on{background:var(--tile);color:var(--txt)}
+.pklist{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px;max-height:60vh;overflow:auto;padding:4px}
+.pk1{background:none;border:0;color:var(--txt);font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px;border-radius:12px}.pk1:hover{background:var(--tile)}
+.pk1 img{width:100%;aspect-ratio:63/88;object-fit:contain;border-radius:8px}.pk1 em{font-style:normal;font-size:12.5px;font-weight:700;text-align:center}.pk1 small{color:var(--muted);font-size:11px}.pk1 .rt{font-size:10.5px;padding:2px 7px}
+.pnote{color:var(--muted);font-size:14px;margin:-6px 0 14px;line-height:1.5}
+.trade{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}.tfull{grid-column:1/-1}
+.basket{display:grid;gap:8px;max-height:420px;overflow:auto}.bk{display:flex;align-items:center;gap:12px;background:var(--tile);border-radius:12px;padding:8px 12px}
+.bk img{width:44px;border-radius:5px}.bk>div:nth-child(2){flex:1;min-width:0}.bk b{display:block;font-size:14px}.bk small{color:var(--muted);font-size:12px}.bk .rt{font-size:10.5px;padding:1px 7px}
+.qn2{display:flex;align-items:center;gap:8px}.qn2 button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--txt);cursor:pointer;font-size:16px}.qn2 button:disabled{opacity:.35;cursor:default}
+.tact{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;flex-wrap:wrap}.btn:disabled{opacity:.45;cursor:default}.btn.sm{padding:5px 10px;font-size:12.5px}
+.trade textarea,.codebox{width:100%;min-height:120px;resize:vertical;font:13px/1.45 ui-monospace,Consolas,monospace;background:var(--tile);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:12px;word-break:break-all}
+.hrow{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}.hrow small{color:var(--muted);margin-left:auto}
+.hs{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px}.hs.out{background:rgba(239,107,95,.15);color:var(--danger)}.hs.in{background:rgba(46,194,126,.15);color:var(--ok)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;max-height:55vh;overflow:auto}.tg{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}.tg img{width:100%;border-radius:8px}.tg small{font-size:12px}.tg .rt{font-size:10.5px;padding:1px 7px}.nw{color:var(--gold)}
+@media(max-width:900px){.pcols,.trade{grid-template-columns:1fr}.favs{grid-template-columns:repeat(3,1fr);gap:10px}.trow{grid-template-columns:130px 1fr 80px}}
 </style>
 </head>
 <body>
@@ -522,8 +566,9 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
       <a href="#" data-nav="cards">🃏 <span class="l">Cartes</span></a>
       <a href="#collection" data-nav="collection">🗂️ <span class="l">Collection</span></a>
       <a href="#pack-opener" data-nav="opener">🎁 <span class="l">Pack Opener</span></a>
+      <a href="#echanges" data-nav="trade">🔄 <span class="l">Échanges</span></a>
     </nav>
-    <div class="stat" id="globalStat"></div>
+    <div class="stat" id="globalStat"></div><a href="#profil" class="mechip" id="meChip"></a>
   </div>
 </header>
 <main id="app"></main>
@@ -1105,6 +1150,117 @@ document.addEventListener("dragend",()=>{dragFrom=null;document.querySelectorAll
   x.putImageData(d,0,0);document.documentElement.style.setProperty("--grain","url("+c.toDataURL()+")")}catch(e){}})();
 
 /* ============================================================
+   PROFIL & ÉCHANGES
+   ============================================================ */
+const TCOL={C:"#9aa6c4",U:"#b8c4e0",R:"#e8eeff",H:"#cfd9ff",DR:"#7ab8ff",UR:"#d3a4ff",IR:"#6fe8d6",SIR:"#ff9fd2",HR:"#ffd76a"};
+function prof(){ST.profile=ST.profile||{};const P=ST.profile;P.name=P.name||"";P.fav=P.fav||[null,null,null];if(!P.uid)P.uid=Math.random().toString(36).slice(2,10);ST.trades=ST.trades||{sent:[],got:[],used:[]};return P}
+/* avatar : IndexedDB (gros GIF possibles) */
+const AV={db:null,url:null};
+function avDb(){return AV.db||(AV.db=new Promise((ok,ko)=>{const r=indexedDB.open("pokeopening-profil",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)}))}
+async function avGet(){try{const db=await avDb();return await new Promise(ok=>{const q=db.transaction("kv").objectStore("kv").get("avatar");q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)})}catch(e){return null}}
+async function avSet(blob){const db=await avDb();await new Promise((ok,ko)=>{const t=db.transaction("kv","readwrite");blob?t.objectStore("kv").put(blob,"avatar"):t.objectStore("kv").delete("avatar");t.oncomplete=ok;t.onerror=()=>ko(t.error)})}
+async function avLoad(){const b=await avGet();if(AV.url)URL.revokeObjectURL(AV.url);AV.url=b?URL.createObjectURL(b):null;drawMe()}
+function avHtml(cls){const P=prof();return AV.url?`<img class="${cls}" src="${AV.url}" alt="">`:`<span class="${cls} avph">${esc((P.name||"?").trim().slice(0,1).toUpperCase()||"?")}</span>`}
+function drawMe(){const m=$("#meChip");if(!m)return;const P=prof();m.innerHTML=`${avHtml("meav")}<span>${esc(P.name||"Mon profil")}</span>`}
+/* retire une carte de la collection (et du classeur / des favoris si plus aucun exemplaire) */
+function takeOut(key,n){const k=canon(key);const q=(ST.owned[k]||0)-n;if(q>0)ST.owned[k]=q;else{delete ST.owned[k];
+  for(const id in ST.slots){const m=ST.slots[id];for(const s in m)if(canon(m[s])===k)delete m[s]}
+  const P=prof();P.fav=P.fav.map(f=>f&&canon(f)===k?null:f)}}
+const ring=(p,lbl,sub,col)=>`<div class="pring" style="--p:${p.toFixed(1)};--c:${col||"var(--gold)"}"><div class="pin"><b>${(p<10&&p>0?p.toFixed(1):String(Math.round(p))).replace(".",",")} %</b></div><div class="plb"><strong>${lbl}</strong><small>${sub}</small></div></div>`;
+function statsOf(list){const o=list.filter(c=>qty(c.key)>0).length;return {o,t:list.length,p:list.length?o*100/list.length:0}}
+function profilePage(){const P=prof();
+  const all=statsOf(UNIQ),intl=statsOf(UNIQ.filter(c=>c.region==="intl")),jp=statsOf(UNIQ.filter(c=>c.region==="jp"));
+  const copies=Object.values(ST.owned).reduce((a,b)=>a+b,0);
+  const done=POKEMON.filter(p=>p.cards.length&&p.cards.every(c=>qty(c.key)>0)).length;
+  const started=POKEMON.filter(p=>p.cards.some(c=>qty(c.key)>0)).length;
+  const best=UNIQ.filter(c=>qty(c.key)>0).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o)[0];
+  const tiers=Object.keys(TIERS).reverse().map(t=>{const L=UNIQ.filter(c=>c.r===t),a=statsOf(L),i=statsOf(L.filter(c=>c.region==="intl")),j=statsOf(L.filter(c=>c.region==="jp"));
+    return `<div class="trow"><span class="rt rt-${t}">${tierName(t)}</span><div class="tbar"><i style="width:${a.p}%;background:${TCOL[t]}"></i></div><b>${a.o} / ${a.t}</b><small>🌍 ${i.o}/${i.t} · 🇯🇵 ${j.o}/${j.t}</small></div>`}).join("");
+  const gens=GENS.map(g=>{const s=statsOf(UNIQ.filter(c=>c.gen===g[0]));return `<div class="grow"><span>Gén. ${g[0]}</span><div class="tbar"><i style="width:${s.p}%"></i></div><b>${s.p.toFixed(1).replace(".",",")} %</b></div>`}).join("");
+  const favs=P.fav.map((k,i)=>{const c=k&&CARDS[k];return c?`<button class="fav has" data-fav="${i}"><img src="${c.img}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)} · ${esc(c.label)}</em><i class="fx" data-unfav="${i}" title="Retirer">×</i></button>`:`<button class="fav" data-fav="${i}"><span class="plus">+</span><em>Carte préférée n°${i+1}</em></button>`}).join("");
+  app.innerHTML=`<div class="prof">
+    <section class="pcard phead">
+      <label class="avbig" title="Changer l'image (PNG, GIF, JPG)">${avHtml("avimg")}<input type="file" id="avIn" accept="image/png,image/gif,image/jpeg,image/webp" hidden><span class="avedit">✎</span></label>
+      <div class="pid"><input id="pseudo" maxlength="24" placeholder="Ton pseudo" value="${esc(P.name)}"><div class="pmeta">${all.o} cartes différentes · ${copies} au total · ${ST.opened||0} boosters ouverts</div>
+        <div class="pmeta2">${AV.url?`<button class="lnk" id="avDel">Retirer l'image</button>`:`<span>Clique sur l'avatar pour mettre une image PNG ou GIF</span>`}</div></div>
+    </section>
+    <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
+    <section class="pcard"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,"🇯🇵 Japonais",`${jp.o} / ${jp.t}`,"#ff7b7b")}</div>
+      <div class="kpis"><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section>
+    <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
+  </div>`;
+  const ps=$("#pseudo");ps.oninput=()=>{P.name=ps.value.trim();save();drawMe()};
+  $("#avIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>15*1024*1024){toast("Image trop lourde (15 Mo max)");return}
+    try{await avSet(f);await avLoad();toast("Avatar mis à jour");profilePage()}catch(err){toast("Impossible d'enregistrer l'image")}};
+  const d=$("#avDel");if(d)d.onclick=async e=>{e.preventDefault();await avSet(null);await avLoad();profilePage()};
+  app.querySelectorAll("[data-unfav]").forEach(x=>x.onclick=e=>{e.stopPropagation();P.fav[+x.dataset.unfav]=null;save();profilePage()});
+  app.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>pickFav(+b.dataset.fav));
+}
+function cardPicker({title,filter,onPick,note}){let q="",reg="all";const root=$("#modalRoot");
+  const draw=()=>{const nq=norm(q.trim());const L=UNIQ.filter(c=>qty(c.key)>0&&(reg==="all"||c.region===reg)&&(!filter||filter(c))&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq))).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o||a.name.localeCompare(b.name));
+    $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy"><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)}</small></button>`).join("")||`<p class="empty">Aucune carte obtenue${q?" pour cette recherche":""}.</p>`;
+    $("#pkList").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>onPick(CARDS[b.dataset.k],draw))};
+  root.innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet"><h2>${title}</h2>${note?`<p class="pnote">${note}</p>`:""}
+    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp","🇯🇵"]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div><button class="btn" id="pkClose">Fermer</button></div>
+    <div class="pklist" id="pkList"></div></div></div>`;
+  $("#pkQ").oninput=e=>{q=e.target.value;draw()};$("#pkClose").onclick=()=>root.innerHTML="";
+  root.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{reg=b.dataset.reg;root.querySelectorAll("[data-reg]").forEach(x=>x.classList.toggle("on",x===b));draw()});
+  $("#modal").onclick=e=>{if(e.target.id==="modal")root.innerHTML=""};draw();setTimeout(()=>$("#pkQ").focus(),30)}
+function pickFav(i){const P=prof();cardPicker({title:`Carte préférée n°${i+1}`,onPick:c=>{P.fav=P.fav.map(f=>f===c.key?null:f);P.fav[i]=c.key;save();$("#modalRoot").innerHTML="";profilePage()}})}
+
+/* --- codes d'échange --- */
+const TSALT="pkO!échange-2026";
+const b64u={enc:u8=>{let s="";u8.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")},
+  dec:t=>{t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";const s=atob(t);return Uint8Array.from(s,ch=>ch.charCodeAt(0))}};
+async function zip(str,inflate){const cs=inflate?new DecompressionStream("deflate-raw"):new CompressionStream("deflate-raw");const w=cs.writable.getWriter();w.write(inflate?str:new TextEncoder().encode(str));w.close();
+  const buf=await new Response(cs.readable).arrayBuffer();return inflate?new TextDecoder().decode(buf):new Uint8Array(buf)}
+async function chk(body){const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(TSALT+body));return b64u.enc(new Uint8Array(h).slice(0,5))}
+async function makeCode(items){const P=prof();const pl={v:1,i:Math.random().toString(36).slice(2,12),f:P.name||"Anonyme",u:P.uid,d:Date.now(),c:items.map(([k,n])=>n>1?[k,n]:k)};
+  const body=b64u.enc(await zip(JSON.stringify(pl)));return {code:`PKO-${body}.${await chk(body)}`,pl}}
+async function readCode(code){code=(code||"").replace(/\s+/g,"");const m=code.match(/^PKO-([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)$/);if(!m)throw new Error("Ce n'est pas un code d'échange PokeOpening.");
+  if(await chk(m[1])!==m[2])throw new Error("Code invalide ou incomplet (vérifie qu'il est copié en entier).");
+  let pl;try{pl=JSON.parse(await zip(b64u.dec(m[1]),true))}catch(e){throw new Error("Code illisible.")}
+  pl.c=(pl.c||[]).map(x=>Array.isArray(x)?x:[x,1]);return pl}
+let tBasket={};
+function tradePage(){const T=(prof(),ST.trades);
+  const items=Object.entries(tBasket).filter(([k,n])=>n>0&&CARDS[k]);const tot=items.reduce((a,[,n])=>a+n,0);
+  const hist=[...T.sent.map(x=>({...x,s:1})),...T.got.map(x=>({...x,s:0}))].sort((a,b)=>b.d-a.d).slice(0,30);
+  app.innerHTML=`<h1 class="h1">Échanges</h1><div class="trade">
+    <section class="pcard"><h2>📤 Donner des cartes</h2><p class="pnote">Choisis les cartes à donner, puis crée un code. Les cartes quittent ta collection et ton ami les reçoit en entrant le code dans son appli.</p>
+      <div class="basket">${items.map(([k,n])=>{const c=CARDS[k];return `<div class="bk"><img src="${c.th}" alt=""><div><b>${esc(c.name)}</b><small>${esc(c.label)} · <span class="rt rt-${c.r}">${tierName(c.r)}</span></small></div><div class="qn2"><button data-dec="${k}">−</button><span>${n}</span><button data-inc="${k}" ${n>=qty(k)?"disabled":""}>+</button></div></div>`}).join("")||`<p class="empty">Aucune carte sélectionnée.</p>`}</div>
+      <div class="tact"><button class="btn" id="tAdd">+ Ajouter des cartes</button><button class="btn gold" id="tMake" ${tot?"":"disabled"}>Créer le code${tot?` (${tot} carte${tot>1?"s":""})`:""}</button></div></section>
+    <section class="pcard"><h2>📥 Recevoir des cartes</h2><p class="pnote">Colle ici le code que ton ami t'a envoyé.</p>
+      <textarea id="tIn" placeholder="PKO-…" spellcheck="false"></textarea><div class="tact"><button class="btn gold" id="tRead">Valider le code</button></div></section>
+    <section class="pcard tfull"><h2>Historique</h2>${hist.length?hist.map(h=>`<div class="hrow"><span class="hs ${h.s?"out":"in"}">${h.s?"Envoyé":"Reçu"}</span><span>${h.n} carte${h.n>1?"s":""}${h.s?"":` de <b>${esc(h.f||"?")}</b>`}</span><small>${new Date(h.d).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small>${h.s&&h.code?`<button class="btn sm" data-copy="${esc(h.code)}">Copier le code</button>`:""}</div>`).join(""):`<p class="empty">Aucun échange pour l'instant.</p>`}</section>
+  </div>`;
+  app.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const k=b.dataset.inc;tBasket[k]=Math.min(qty(k),(tBasket[k]||0)+1);tradePage()});
+  app.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const k=b.dataset.dec;tBasket[k]=(tBasket[k]||0)-1;if(tBasket[k]<=0)delete tBasket[k];tradePage()});
+  app.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyTxt(b.dataset.copy));
+  $("#tAdd").onclick=()=>cardPicker({title:"Cartes à donner",note:"Clique sur une carte pour l'ajouter (clique plusieurs fois pour en donner plusieurs exemplaires).",onPick:(c,redraw)=>{const n=tBasket[c.key]||0;if(n>=qty(c.key)){toast("Tu n'as pas plus d'exemplaires");return}tBasket[c.key]=n+1;toast(`${c.name} ajouté (${n+1})`);tradePage()}});
+  $("#tMake").onclick=()=>{if(!tot)return;confirmBox(`Donner ${tot} carte${tot>1?"s":""} ?`,"Elles vont quitter ta collection tout de suite. Envoie bien le code à ton ami : il ne peut être utilisé qu'une fois.","Créer le code",async()=>{
+    const ok=items.filter(([k,n])=>qty(k)>=n);if(ok.length!==items.length){toast("Certaines cartes ne sont plus dans ta collection");tBasket={};tradePage();return}
+    const {code,pl}=await makeCode(ok.map(([k,n])=>[canon(k),n]));ok.forEach(([k,n])=>takeOut(k,n));
+    T.sent.push({i:pl.i,d:pl.d,n:tot,code});T.used.push(pl.i);tBasket={};save();updateStat();tradePage();showCode(code,tot)})};
+  $("#tRead").onclick=async()=>{let pl;try{pl=await readCode($("#tIn").value)}catch(e){toast(e.message);return}
+    if(T.used.includes(pl.i)){toast(T.sent.some(s=>s.i===pl.i)?"C'est ton propre code : envoie-le à ton ami.":"Ce code a déjà été utilisé.");return}
+    const miss=pl.c.filter(([k])=>!CARDS[k]);if(miss.length){toast("Certaines cartes sont inconnues : mets à jour l'appli puis réessaie.");return}
+    const n=pl.c.reduce((a,[,x])=>a+x,0);
+    $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(760px,100%)"><h2>${esc(pl.f)} t'envoie ${n} carte${n>1?"s":""}</h2>
+      <div class="tgrid">${pl.c.map(([k,x])=>{const c=CARDS[k];return `<div class="tg"><img src="${c.th}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><small>${esc(c.name)}${x>1?` ×${x}`:""}${qty(k)?"":` · <b class="nw">nouvelle</b>`}</small></div>`}).join("")}</div>
+      <div class="tact"><button class="btn" id="tNo">Annuler</button><button class="btn gold" id="tYes">Ajouter à ma collection</button></div></div></div>`;
+    $("#tNo").onclick=()=>$("#modalRoot").innerHTML="";
+    $("#tYes").onclick=()=>{if(T.used.includes(pl.i))return;const o={...ST.owned};pl.c.forEach(([k,x])=>{const ck=canon(k);o[ck]=(o[ck]||0)+x});ST.owned=o;
+      T.used.push(pl.i);T.got.push({i:pl.i,d:Date.now(),n,f:pl.f});save();updateStat();$("#modalRoot").innerHTML="";toast(`${n} carte${n>1?"s":""} ajoutée${n>1?"s":""} !`);tradePage()}};
+}
+function copyTxt(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("Code copié"),()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();toast("Code copié")})}
+function showCode(code,n){$("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(620px,100%)"><h2>Code d'échange créé</h2><p class="pnote">${n} carte${n>1?"s ont":" a"} quitté ta collection. Envoie ce code à ton ami : il le colle dans <b>Échanges → Recevoir</b>.</p>
+  <textarea class="codebox" readonly>${esc(code)}</textarea><div class="tact"><button class="btn" id="cClose">Fermer</button><button class="btn gold" id="cCopy">Copier le code</button></div></div></div>`;
+  $("#cCopy").onclick=()=>copyTxt(code);$("#cClose").onclick=()=>$("#modalRoot").innerHTML="";const ta=document.querySelector(".codebox");ta.onclick=()=>ta.select()}
+function confirmBox(t,txt,ok,fn){$("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(460px,100%)"><h2>${t}</h2><p class="pnote">${txt}</p><div class="tact"><button class="btn" id="cfNo">Annuler</button><button class="btn gold" id="cfYes">${ok}</button></div></div></div>`;
+  $("#cfNo").onclick=()=>$("#modalRoot").innerHTML="";$("#cfYes").onclick=()=>{$("#modalRoot").innerHTML="";fn()}}
+avLoad();
+
+/* ============================================================
    ROUTAGE
    ============================================================ */
 function route(keep){document.body.classList.remove('wide');document.body.classList.remove('bfull');
@@ -1114,8 +1270,10 @@ function route(keep){document.body.classList.remove('wide');document.body.classL
   let navOn="cards";
   if(id==="collection"){navOn="collection";collectionPage()}
   else if(id==="pack-opener"){navOn="opener";openerPage()}
+  else if(id==="profil"){navOn="profil";profilePage()}
+  else if(id==="echanges"){navOn="trade";tradePage()}
   else cardsPage();
-  document.querySelectorAll("[data-nav]").forEach(a=>a.classList.toggle("on",a.dataset.nav===navOn));
+  document.querySelectorAll("[data-nav]").forEach(a=>a.classList.toggle("on",a.dataset.nav===navOn));const mc=$("#meChip");if(mc)mc.classList.toggle("on",navOn==="profil");drawMe();
   if(!keep)scrollTo(0,0);updateStat();
 }
 addEventListener("hashchange",()=>{if($("#opener")){$("#modalRoot").innerHTML=""}route()});
