@@ -896,7 +896,7 @@ function openBooster(b){
     <div class="bbar" id="bbar"><button class="btn" data-op="skip">Tout révéler</button></div></div>`;
   const pk=root.querySelector(".pack");
   setTimeout(()=>pk.classList.add("shake"),120);
-  setTimeout(()=>{pk.classList.add("tear");const f=$("#flash");f.classList.toggle("gold",!!pack.god);f.classList.remove("on");void f.offsetWidth;f.classList.add("on");
+  setTimeout(()=>{pk.classList.add("tear");const f=$("#flash");f.classList.toggle("gold",!!pack.god);
     if(pack.god){const g=document.createElement("div");g.className="godban";g.innerHTML="<b>✨ GOD PACK ✨</b><small>10 cartes rares !</small>";$("#opener").appendChild(g);setTimeout(()=>g.remove(),2600)}},1000);
   setTimeout(()=>{if(packState&&packState.phase==="pack"){packState.phase="cards";drawStack()}},pack.god?2900:1700);
   root.onclick=e=>{const a=e.target.closest("[data-op]");

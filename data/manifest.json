@@ -1,6 +1,6 @@
 {
- "version": 13,
- "label": "Correction des reflets reverse",
+ "version": 14,
+ "label": "Cartes full art en Holo rare, sans flash blanc",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "3be0ab37dccc40706c3eb0b06871edf17702012ca6e1a6b52668e30d7e434f30",
-   "size": 15894789,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=3be0ab37dccc4070"
+   "sha": "d86d9a0465b0a06e07319200234b61324d61f89313bbe57f7baae7a4bb68b250",
+   "size": 15893342,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=d86d9a0465b0a06e"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",
