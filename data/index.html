@@ -596,6 +596,9 @@ nav a{white-space:nowrap}
 @media (max-width:1650px){nav a{padding:8px 10px;font-size:14px;gap:6px}.mechip span{display:none}.mechip{padding:4px;margin-left:8px}}
 @media (max-width:1380px){nav a span.l{display:none}nav a{font-size:18px}}
 .slab-info .subs{overflow:visible;gap:0 5px}.gwall{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.preset{display:flex;align-items:center;justify-content:space-between;gap:20px;border-color:rgba(239,107,95,.35)}.preset h2{margin-bottom:6px}.preset .pnote{margin:0}
+.btn.danger{background:var(--danger,#ef6b5f);color:#fff;border-color:transparent}.btn.danger:disabled{opacity:.4}
+.rkeep{display:flex;gap:8px;align-items:center;font-size:14px}.rtxt{width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--tile);color:var(--txt);letter-spacing:.08em}
 </style>
 </head>
 <body>
@@ -1241,6 +1244,19 @@ function takeOut(key,n){const k=canon(key);const q=(ST.owned[k]||0)-n;if(q>0){ST
   const P=prof();P.fav=P.fav.map(f=>f&&canon(f)===k?null:f)}}
 const ring=(p,lbl,sub,col)=>`<div class="pring" style="--p:${p.toFixed(1)};--c:${col||"var(--gold)"}"><div class="pin"><b>${(p<10&&p>0?p.toFixed(1):String(Math.round(p))).replace(".",",")} %</b></div><div class="plb"><strong>${lbl}</strong><small>${sub}</small></div></div>`;
 function statsOf(list){const o=list.filter(c=>qty(c.key)>0).length;return {o,t:list.length,p:list.length?o*100/list.length:0}}
+function resetGame(){$("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(500px,100%)"><h2>Réinitialiser la partie ?</h2>
+  <p class="pnote">Tout sera effacé : cartes, classeurs, cartes gradées, boosters ouverts et historique d'échanges. <b>C'est définitif.</b></p>
+  <label class="rkeep"><input type="checkbox" id="rKeep" checked> Garder mon pseudo et mon avatar</label>
+  <p class="pnote" style="margin-top:14px">Pour confirmer, écris <b>RECOMMENCER</b> :</p><input id="rTxt" class="rtxt" autocomplete="off">
+  <div class="tact"><button class="btn" id="rNo">Annuler</button><button class="btn danger" id="rYes" disabled>Tout effacer</button></div></div></div>`;
+  const t=$("#rTxt"),y=$("#rYes");t.oninput=()=>y.disabled=t.value.trim().toUpperCase()!=="RECOMMENCER";t.focus();
+  $("#rNo").onclick=()=>$("#modalRoot").innerHTML="";
+  y.onclick=async()=>{const keep=$("#rKeep").checked,old=ST;
+    const n={owned:{},slots:{},opened:0,trades:{sent:[],got:[],used:(old.trades&&old.trades.used)||[]}};
+    if(keep&&old.profile)n.profile={...old.profile,fav:[null,null,null]};
+    try{localStorage.setItem(LS,JSON.stringify(n));localStorage.removeItem("mc-view")}catch(e){}
+    if(!keep){try{await avSet(null)}catch(e){}}
+    location.hash="#";location.reload()}}
 function profilePage(){const P=prof();
   const all=statsOf(UNIQ),intl=statsOf(UNIQ.filter(c=>c.region==="intl")),jp=statsOf(UNIQ.filter(c=>c.region==="jp"));
   const copies=Object.values(ST.owned).reduce((a,b)=>a+b,0);
@@ -1263,7 +1279,9 @@ function profilePage(){const P=prof();
     <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}${ring(trs.p,"🧑 Dresseurs",`${trs.o} / ${trs.t}`,"#5fd39a")}</div>
       <div class="kpis"><div><b>${gState().length}</b><small>Cartes gradées</small></div><div><b>${ST.graded.filter(s=>s.g===10).length}</b><small>Notes de 10</small></div><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
     <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
+    <section class="pcard preset"><div><h2>Réinitialiser la partie</h2><p class="pnote">Efface toutes tes cartes, tes classeurs, tes cartes gradées et tes stats pour recommencer à zéro.</p></div><button class="btn danger" id="pReset">Réinitialiser…</button></section>
   </div>`;
+  $("#pReset").onclick=resetGame;
   const ps=$("#pseudo");ps.oninput=()=>{P.name=ps.value.trim();save();drawMe()};
   $("#avIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>15*1024*1024){toast("Image trop lourde (15 Mo max)");return}
     try{await avSet(f);await avLoad();toast("Avatar mis à jour");profilePage()}catch(err){toast("Impossible d'enregistrer l'image")}};
