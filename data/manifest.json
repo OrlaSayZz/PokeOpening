@@ -1,6 +1,6 @@
 {
- "version": 19,
- "label": "Cartes Star en Hyper rare, bouton Doublons",
+ "version": 20,
+ "label": "Taux de drop baiss\u00e9s",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "5b43054ca406ac372c43c2fa2327fd7f9cfbd955b3e5d73e9e2ae7b0595d6e78",
-   "size": 15898908,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=5b43054ca406ac37"
+   "sha": "12266b600ee9923486231aeb751480d36a21b192bdabb1c4071439cfc13e5d17",
+   "size": 15898913,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=12266b600ee99234"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",

@@ -796,8 +796,8 @@ lb.addEventListener("click",e=>{const a=e.target.closest("[data-lb]");
 const TIERS={C:{n:"Commune",o:0},U:{n:"Peu commune",o:1},R:{n:"Rare",o:2},H:{n:"Holo rare",o:3},DR:{n:"Double rare",o:4},UR:{n:"Ultra rare",o:5},IR:{n:"Illustration rare",o:6},SIR:{n:"Illustration spéciale rare",o:7},HR:{n:"Hyper rare",o:8}};
 /* Taux de drop (en %) — modifiables ici */
 const RATES={
-  reverse:{C:60,U:30,R:10},              /* emplacements 7 et 8 (le « R » pioche dans les rares et holo rares) */
-  hit:{R:66.8,H:20,DR:6,UR:3,IR:3,SIR:0.8,HR:0.4}, /* emplacements 9 et 10, tirés séparément */
+  reverse:{C:64,U:30,R:6},              /* emplacements 7 et 8 (le « R » pioche dans les rares et holo rares) */
+  hit:{R:74.9,H:18,DR:3.5,UR:1.5,IR:1.5,SIR:0.4,HR:0.2}, /* emplacements 9 et 10, tirés séparément */
   god:0.02,                                 /* % de chance qu'un booster soit un GOD PACK (1 sur 5000), tirage pur sans palier */
   godMain:{IR:60,UR:25,DR:15},              /* god pack : emplacements 1 à 8 */
   godTop:{SIR:60,HR:25,UR:15}               /* god pack : emplacements 9 et 10 */
