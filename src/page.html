@@ -630,6 +630,19 @@ nav a{white-space:nowrap}
 .greveal .slab.done.gold{animation:goldPulse 1.6s ease-in-out 2}@keyframes goldPulse{50%{box-shadow:0 0 0 2px rgba(255,225,130,.95) inset,0 0 90px rgba(255,195,50,.9)}}
 .greveal .slab.done.black{animation:blackPulse 1.6s ease-in-out 3}@keyframes blackPulse{50%{box-shadow:0 0 0 2px rgba(40,40,40,.9) inset,0 0 110px rgba(180,150,255,.95)}}
 .greveal .slab.done.gem{animation:none}
+.gfavs .gfav.has{position:relative;display:flex;justify-content:center}.gfavs .gfav.has .slab{max-width:220px}.gfavs .gfav.has .fx{position:absolute;top:-8px;right:4px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-style:normal;display:none;place-items:center;font-size:18px;cursor:pointer;z-index:3}.gfavs .gfav.has:hover .fx{display:grid}
+.gfavs .fav.gfav{aspect-ratio:63/105}
+.shelves{display:grid;gap:34px;padding:6px 0 40px}
+.shelf{position:relative;border-radius:18px;padding:18px 20px 0;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line)}
+.sh-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}.sh-head h3{font-family:var(--disp);font-size:20px;font-weight:800}.sh-head span{color:var(--muted);font-size:14px}.sh-head b{margin-left:auto;background:var(--tile);border-radius:999px;padding:3px 12px;font-size:13px;color:var(--muted)}
+.sh-row{display:flex;gap:22px;overflow-x:auto;padding:6px 6px 22px;scroll-snap-type:x proximity}.sh-row::-webkit-scrollbar{height:8px}.sh-row::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:8px}
+.sh-item{flex:0 0 210px;scroll-snap-align:start}.sh-item .slab{max-width:210px}
+.sh-board{height:16px;margin:0 -20px;border-radius:0 0 18px 18px;background:linear-gradient(180deg,#3a2a1c,#22170e);box-shadow:0 -6px 14px rgba(0,0,0,.35) inset,0 10px 20px rgba(0,0,0,.45)}
+.shelf.sh-black{background:linear-gradient(180deg,rgba(170,140,255,.10),rgba(0,0,0,.25));border-color:rgba(180,150,255,.35)}.shelf.sh-black .sh-board{background:linear-gradient(180deg,#1a1a1f,#050506)}.shelf.sh-black h3{color:#e8c66a}
+.shelf.sh-gold{background:linear-gradient(180deg,rgba(255,205,80,.12),rgba(255,205,80,.02));border-color:rgba(255,205,80,.4)}.shelf.sh-gold .sh-board{background:linear-gradient(180deg,#c9971e,#7a5608)}.shelf.sh-gold h3{color:#ffd86b}
+.shelf.sh-gem{border-color:rgba(255,255,255,.25)}.shelf.sh-gem .sh-board{background:linear-gradient(180deg,#d9dde6,#8f96a6)}
+.shelves{grid-template-columns:minmax(0,1fr)}.shelf{min-width:0}.sh-item{flex:0 0 250px}.sh-item .slab{max-width:250px}
+.sh-item{flex:0 0 285px}.sh-item .slab{max-width:285px}.slab:not(.big) .slab-info .subs span{padding:2px 4px}
 </style>
 </head>
 <body>
@@ -1288,6 +1301,10 @@ function resetGame(){$("#modalRoot").innerHTML=`<div class="modal" id="modal"><d
     try{localStorage.setItem(LS,JSON.stringify(n));localStorage.removeItem("mc-view")}catch(e){}
     if(!keep){try{await avSet(null)}catch(e){}}
     location.hash="#";location.reload()}}
+function pickGFav(i){const P=prof();const L=gState().filter(x=>CARDS[x.k]).sort((a,b)=>gScore(b)-gScore(a));
+  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet"><h2>Carte gradée préférée n°${i+1}</h2><div class="gwall" style="grid-template-columns:repeat(auto-fill,minmax(210px,1fr));max-height:64vh;overflow:auto">${L.map(x=>slabHtml(x)).join("")||'<p class="empty">Aucune carte gradée pour l\'instant.</p>'}</div><div class="tact"><button class="btn" id="pkClose">Fermer</button></div></div></div>`;
+  $("#pkClose").onclick=()=>$("#modalRoot").innerHTML="";
+  document.querySelectorAll("#modal [data-slab]").forEach(el=>el.onclick=()=>{const id=el.dataset.slab;P.gfav=(P.gfav||[null,null,null]).map(f=>f===id?null:f);P.gfav[i]=id;save();$("#modalRoot").innerHTML="";profilePage()})}
 function profilePage(){const P=prof();
   const all=statsOf(UNIQ),intl=statsOf(UNIQ.filter(c=>c.region==="intl")),jp=statsOf(UNIQ.filter(c=>c.region==="jp"));
   const copies=Object.values(ST.owned).reduce((a,b)=>a+b,0);
@@ -1297,6 +1314,8 @@ function profilePage(){const P=prof();
   const tiers=Object.keys(TIERS).reverse().map(t=>{const L=UNIQ.filter(c=>c.r===t),a=statsOf(L),i=statsOf(L.filter(c=>c.region==="intl")),j=statsOf(L.filter(c=>c.region==="jp"));
     return `<div class="trow"><span class="rt rt-${t}">${tierName(t)}</span><div class="tbar"><i style="width:${a.p}%;background:${TCOL[t]}"></i></div><b>${a.o} / ${a.t}</b><small>🌍 ${i.o}/${i.t} · ${flag("ja")} ${j.o}/${j.t}</small></div>`}).join("");
   const gens=GENS.map(g=>{const s=statsOf(UNIQ.filter(c=>c.gen===g[0]));return `<div class="grow"><span>Gén. ${g[0]}</span><div class="tbar"><i style="width:${s.p}%"></i></div><b>${s.p.toFixed(1).replace(".",",")} %</b></div>`}).join("");
+  P.gfav=P.gfav||[null,null,null];const GS=gState();
+  const gfavs=P.gfav.map((id,i)=>{const sb=id&&GS.find(x=>x.id===id);return sb&&CARDS[sb.k]?`<div class="gfav has" data-gfav="${i}">${slabHtml(sb)}<i class="fx" data-ungfav="${i}" title="Retirer">×</i></div>`:`<button class="fav gfav" data-gfav="${i}"><span class="plus">+</span><em>Carte gradée préférée n°${i+1}</em></button>`}).join("");
   const favs=P.fav.map((k,i)=>{const c=k&&CARDS[k];return c?`<button class="fav has" data-fav="${i}"><img src="${c.img}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)} · ${esc(c.label)}</em><i class="fx" data-unfav="${i}" title="Retirer">×</i></button>`:`<button class="fav" data-fav="${i}"><span class="plus">+</span><em>Carte préférée n°${i+1}</em></button>`}).join("");
   app.innerHTML=`<div class="prof">
     <div class="ptop"><div class="pleft">
@@ -1306,6 +1325,7 @@ function profilePage(){const P=prof();
         <div class="pmeta2">${AV.url?`<button class="lnk" id="avDel">Retirer l'image</button>`:`<span>Clique sur l'avatar pour mettre une image PNG ou GIF</span>`}</div></div>
     </section>
     <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
+    <section class="pcard"><h2>Mes 3 cartes gradées préférées</h2><div class="favs gfavs">${gfavs}</div></section>
     </div>
     <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}${ring(trs.p,"🧑 Dresseurs",`${trs.o} / ${trs.t}`,"#5fd39a")}</div>
       <div class="kpis"><div><b>${gState().length}</b><small>Cartes gradées</small></div><div><b>${ST.graded.filter(s=>s.g===10).length}</b><small>Notes de 10</small></div><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
@@ -1313,6 +1333,8 @@ function profilePage(){const P=prof();
     <section class="pcard preset"><div><h2>Réinitialiser la partie</h2><p class="pnote">Efface toutes tes cartes, tes classeurs, tes cartes gradées et tes stats pour recommencer à zéro.</p></div><button class="btn danger" id="pReset">Réinitialiser…</button></section>
   </div>`;
   $("#pReset").onclick=resetGame;
+  app.querySelectorAll("[data-ungfav]").forEach(x=>x.onclick=e=>{e.stopPropagation();P.gfav[+x.dataset.ungfav]=null;save();profilePage()});
+  app.querySelectorAll("[data-gfav]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-ungfav]"))return;pickGFav(+b.dataset.gfav)});
   const ps=$("#pseudo");ps.oninput=()=>{P.name=ps.value.trim();save();drawMe()};
   $("#avIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;if(f.size>15*1024*1024){toast("Image trop lourde (15 Mo max)");return}
     try{await avSet(f);await avLoad();toast("Avatar mis à jour");profilePage()}catch(err){toast("Impossible d'enregistrer l'image")}};
@@ -1489,14 +1511,27 @@ function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
   $("#modal").onclick=e=>{if(e.target.id==="modal")$("#modalRoot").innerHTML=""};$("#zClose").onclick=()=>$("#modalRoot").innerHTML="";
   $("#zDel").onclick=()=>confirmBox("Supprimer cette carte gradée ?",`${esc(CARDS[s.k]?.name||"")} · note ${fmtG(s.g)} — elle sera définitivement supprimée.`,"Supprimer",()=>{ST.graded=gState().filter(x=>x.id!==id);if(typeof tSlabs!=="undefined")tSlabs.delete(id);save();toast("Carte gradée supprimée");route()})}
 /* --- onglet Cartes gradées --- */
-const GV={sort:"note"};
+const GV={sort:"note",view:"shelf",group:"note"};try{Object.assign(GV,JSON.parse(localStorage.getItem("gv")||"{}"))}catch(e){}
+const gvSave=()=>{try{localStorage.setItem("gv",JSON.stringify(GV))}catch(e){}};
+
+function shelvesHtml(L){const G=[];const add=(key,title,sub,cls,f)=>G.push({key,title,sub,cls,items:L.filter(f)});
+  if(GV.group==="note"){add("bl","Black Label","10 parfait","sh-black",s=>s.lb==="black");add("gl","Gold Label","10 Pristine","sh-gold",s=>s.lb==="gold");add("10","Gem Mint 10","","sh-gem",s=>s.g===10&&!s.lb);
+    add("9","Mint","9 – 9,5","",s=>s.g>=9&&s.g<10);add("8","Near Mint – Mint","8 – 8,5","",s=>s.g>=8&&s.g<9);add("7","Near Mint","7 – 7,5","",s=>s.g>=7&&s.g<8);add("low","Les abîmées","6,5 et moins","",s=>s.g<7)}
+  else if(GV.group==="rare"){Object.keys(TIERS).sort((a,b)=>TIERS[b].o-TIERS[a].o).forEach(t=>add(t,tierName(t),"","sh-t sh-"+t,s=>CARDS[s.k].r===t))}
+  else if(GV.group==="gen"){GENS.forEach(g=>add("g"+g[0],g[1],"","",s=>!CARDS[s.k].tr&&CARDS[s.k].gen===g[0]));add("tr","Dresseurs","","",s=>CARDS[s.k].tr)}
+  else{const E=[[0,1998,"Avant 1999"],[1999,2002,"Wizards (1999–2002)"],[2003,2006,"Époque EX (2003–2006)"],[2007,2010,"Diamant & Perle / HGSS (2007–2010)"],[2011,2013,"Noir & Blanc (2011–2013)"],[2014,2016,"XY (2014–2016)"],[2017,2019,"Soleil & Lune (2017–2019)"],[2020,2022,"Épée & Bouclier (2020–2022)"],[2023,2099,"Écarlate & Violet et après (2023+)"]];
+    E.reverse().forEach(([a,b,t])=>add(t,t,"","",s=>{const y=CARDS[s.k].y||2010;return y>=a&&y<=b}))}
+  return `<div class="shelves">${G.filter(g=>g.items.length).map(g=>`<section class="shelf ${g.cls}"><div class="sh-head"><h3>${esc(g.title)}</h3>${g.sub?`<span>${esc(g.sub)}</span>`:""}<b>${g.items.length}</b></div>
+    <div class="sh-row">${g.items.map(s=>`<div class="sh-item">${slabHtml(s)}</div>`).join("")}</div><div class="sh-board"></div></section>`).join("")}</div>`}
 function gradedPage(){const L=[...gState()];
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   <div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
-  const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gradedPage()};
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["shelf","🗄️ Vitrine"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view==="shelf"?`<label class="mcsort">Étagères par <select id="gG">${[["note","Note"],["rare","Rareté"],["gen","Génération"],["serie","Époque"]].map(([k,l])=>`<option value="${k}" ${GV.group===k?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   ${GV.view==="shelf"?shelvesHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+  const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
+  const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
+  app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
   app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
 
 /* ============================================================
