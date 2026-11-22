@@ -652,7 +652,7 @@ nav a{white-space:nowrap}
 .gbwrap{display:grid;grid-template-columns:240px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:30px}
 .gbside{position:sticky;top:90px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;max-height:calc(100vh - 120px);display:flex;flex-direction:column}
 .gbside h3{font-family:var(--disp);font-size:16px;display:flex;justify-content:space-between;margin-bottom:10px}.gbside h3 b{color:var(--muted);font-size:13px}
-.gbq{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;margin-bottom:10px;border-radius:10px;border:1px solid var(--line);background:var(--tile);color:var(--txt);outline:none}.gbq:focus{border-color:var(--acc,#f5c400)}.gbnone{font-size:13px;color:var(--muted);padding:6px 4px}
+.gbq{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:8px 10px;margin-bottom:10px;border-radius:10px;border:1px solid var(--line);background:var(--tile);color:var(--txt);outline:none}.gbq:focus{border-color:var(--acc,#f5c400)}.gbnone{font-size:13px;color:var(--muted);padding:6px 4px;line-height:1.4}.gbchips{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
 .gbfree{overflow:auto;display:grid;gap:6px;flex:1}.gbf{display:flex;gap:10px;align-items:center;text-align:left;background:var(--tile);border:1px solid transparent;border-radius:10px;padding:6px 8px;color:var(--txt);font:inherit;cursor:grab}
 .gbf.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.gbf img{width:34px;border-radius:4px}.gbf b{display:block;font-size:13px}.gbf small{font-size:11.5px;color:var(--muted)}
 .gbg{display:inline-block;min-width:26px;text-align:center;font-weight:800;border-radius:6px;padding:0 4px;background:#e9eef8;color:#141a2b}.gbg.gold{background:linear-gradient(135deg,#e3b43c,#fff1b8);color:#3d2a00}.gbg.black{background:#111;color:#e8c66a}
@@ -1543,26 +1543,34 @@ const gvSave=()=>{try{localStorage.setItem("gv",JSON.stringify(GV))}catch(e){}};
 
 /* --- Classeur des cartes gradées --- */
 let gbSpread=0,gbPick=null,gbDrag=null,gbTurn="",gbQ="";const gbNorm=t=>(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function gb(){ST.gbinder=ST.gbinder||{cols:3,rows:2,slots:{}};const B=ST.gbinder,ids=new Set(gState().map(x=>x.id));for(const p in B.slots)if(!ids.has(B.slots[p]))delete B.slots[p];return B}
+function gbAll(){if(!ST.gbinders){const o=ST.gbinder||{cols:3,rows:2,slots:{}},id=uid();ST.gbinders={[id]:{id,name:"Mes cartes gradées",cols:o.cols,rows:o.rows,color:"#d9a600",created:Date.now(),slots:o.slots||{}}};ST.gbcur=id;delete ST.gbinder}
+  if(!Object.keys(ST.gbinders).length){const id=uid();ST.gbinders[id]={id,name:"Mes cartes gradées",cols:3,rows:2,color:"#d9a600",created:Date.now(),slots:{}}}
+  if(!ST.gbinders[ST.gbcur])ST.gbcur=Object.values(ST.gbinders).sort((a,b)=>a.created-b.created)[0].id;
+  const ids=new Set(gState().map(x=>x.id)),seen=new Set();
+  for(const B of Object.values(ST.gbinders)){B.slots=B.slots||{};for(const p in B.slots){const v=B.slots[p];if(!ids.has(v)||seen.has(v))delete B.slots[p];else seen.add(v)}}
+  return ST.gbinders}
+function gb(){return gbAll()[ST.gbcur]}
+const gbPlaced=()=>{const S=new Set();for(const B of Object.values(gbAll()))for(const p in B.slots)S.add(B.slots[p]);return S};
 const gbPer=()=>{const B=gb();return B.cols*B.rows};const gbTwo=()=>innerWidth>=1100;
 function gbPages(){const B=gb();let m=-1;for(const p in B.slots)m=Math.max(m,+p);const per=gbPer();return Math.max(gbTwo()?2:1,Math.ceil((m+2)/per)+(gbTwo()?((Math.ceil((m+2)/per))%2):0))}
 function gbHtml(L){const B=gb(),per=gbPer(),n=gbPages(),two=gbTwo(),nS=Math.ceil(n/(two?2:1));gbSpread=Math.min(gbSpread,nS-1);
-  const placed=new Set(Object.values(B.slots)),byId=Object.fromEntries(gState().map(x=>[x.id,x]));const free=L.filter(x=>!placed.has(x.id));
+  const placed=gbPlaced(),byId=Object.fromEntries(gState().map(x=>[x.id,x]));const free=L.filter(x=>!placed.has(x.id));
   const first=gbSpread*(two?2:1),pages=[first].concat(two?[first+1]:[]);
   const page=pi=>`<div class="gbp"><div class="gbgrid" style="grid-template-columns:repeat(${B.cols},minmax(0,1fr))">${Array.from({length:per},(_,j)=>{const pos=pi*per+j,id=B.slots[pos],x=id&&byId[id];
      return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;
-  return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Rechercher un Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden>Aucune carte trouvée.</p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont dans le classeur.</p>'}</div>
-     <div class="gbtools"><label>Format <select id="gbFmt">${[[2,2],[3,2],[3,3],[4,2]].map(([c,r])=>`<option value="${c}x${r}" ${B.cols===c&&B.rows===r?"selected":""}>${c} × ${r}</option>`).join("")}</select></label><button class="btn sm" id="gbAll" ${free.length?"":"disabled"}>Tout ranger</button></div></aside>
-   <div class="gbmain"><div class="gbbook ${two?"two":""} ${gbTurn}" id="gbBook">${pages.map(page).join(two?'<div class="gbring"></div>':"")}</div>
+  return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Rechercher un Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden></p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont rangées.</p>'}</div>
+     <div class="gbtools"><button class="btn sm" id="gbAll" ${free.length?"":"disabled"} title="Range toutes les cartes dans « ${esc(B.name)} »">Tout ranger ici</button></div></aside>
+   <div class="gbmain"><div class="gbchips"><div class="bchips">${Object.values(gbAll()).sort((a,b)=>a.created-b.created).map(x=>`<button class="bchip ${x.id===B.id?"on":""}" data-gbsel="${x.id}" style="--c:${esc(x.color)}"><span class="cov"></span>${esc(x.name)} <small style="color:var(--muted)">${Object.keys(x.slots).length}</small></button>`).join("")}</div><button class="btn sm" id="gbSet">⚙ Réglages</button><button class="btn sm primary" id="gbNew">＋ Nouveau classeur</button></div><div class="gbbook ${two?"two":""} ${gbTurn}" id="gbBook">${pages.map(page).join(two?'<div class="gbring"></div>':"")}</div>
      <div class="gbnav"><button class="btn" id="gbPrev" ${gbSpread?"":"disabled"}>◀</button><span>${two?`Pages ${first+1}–${first+2}`:`Page ${first+1}`} / ${n}</span><button class="btn" id="gbNext" ${gbSpread<nS-1?"":"disabled"}>▶</button></div></div></div>`}
 function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   const put=(pos,id)=>{for(const p in B.slots)if(B.slots[p]===id)delete B.slots[p];B.slots[pos]=id;gbPick=null;redraw()};
   const turn=d=>{gbTurn=d>0?"tn":"tp";gbSpread=Math.max(0,gbSpread+d);gradedPage();setTimeout(()=>gbTurn="",400)};
-  const q=$("#gbQ");if(q){const f=()=>{const v=gbNorm(q.value.trim());let n=0;app.querySelectorAll("[data-gn]").forEach(b=>{const ok=!v||b.dataset.gn.includes(v);b.hidden=!ok;if(ok)n++});$("#gbNone").hidden=!!n};
+  const q=$("#gbQ");if(q){const f=()=>{const v=gbNorm(q.value.trim());let n=0;app.querySelectorAll("[data-gn]").forEach(b=>{const ok=!!v&&b.dataset.gn.includes(v);b.hidden=!ok;if(ok)n++});const no=$("#gbNone");no.textContent=v?"Aucune carte trouvée.":"Tape le nom d'un Pokémon pour voir tes cartes à ranger.";no.hidden=!!n};
     q.oninput=()=>{gbQ=q.value;f()};f();if(gbQ){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
   $("#gbPrev").onclick=()=>turn(-1);$("#gbNext").onclick=()=>turn(1);
-  $("#gbFmt").onchange=e=>{const [c,r]=e.target.value.split("x").map(Number);const ids=Object.keys(B.slots).sort((a,b)=>a-b).map(k=>B.slots[k]);B.cols=c;B.rows=r;B.slots={};ids.forEach((id,i)=>B.slots[i]=id);gbSpread=0;redraw()};
-  $("#gbAll").onclick=()=>{const placed=new Set(Object.values(B.slots));let pos=0;L.filter(x=>!placed.has(x.id)).forEach(x=>{while(B.slots[pos])pos++;B.slots[pos]=x.id});redraw()};
+  app.querySelectorAll("[data-gbsel]").forEach(c=>c.onclick=()=>{ST.gbcur=c.dataset.gbsel;gbSpread=0;gbPick=null;save();gradedPage()});
+  $("#gbNew").onclick=()=>gbModal(null);$("#gbSet").onclick=()=>gbModal(B);
+  $("#gbAll").onclick=()=>{const placed=gbPlaced();let pos=0;L.filter(x=>!placed.has(x.id)).forEach(x=>{while(B.slots[pos])pos++;B.slots[pos]=x.id});redraw()};
   app.querySelectorAll("[data-gfree]").forEach(b=>{b.onclick=()=>{gbPick=gbPick===b.dataset.gfree?null:b.dataset.gfree;gradedPage()};
     b.ondragstart=e=>{gbDrag={id:b.dataset.gfree};try{e.dataTransfer.setData("text/plain","x")}catch(_){}}});
   app.querySelectorAll("[data-gpos]").forEach(sl=>{const pos=+sl.dataset.gpos;
@@ -1578,6 +1586,30 @@ function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   const fit=()=>app.querySelectorAll(".gbsc").forEach(el=>{const w=el.parentElement.clientWidth;if(w)el.style.transform=`scale(${w/285})`});addEventListener("resize",fit,{once:true});
   fit();requestAnimationFrame(fit);}
 const byIdG=id=>gState().find(x=>x.id===id);
+const GPRE=[[2,2],[3,2],[3,3],[4,2],[4,3],[5,2]];
+function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,rows:2,color:COVERS[Object.keys(all).length%COVERS.length][1],created:Date.now(),slots:{}};
+  const root=$("#modalRoot");let armed=false;
+  const draw=()=>{root.innerHTML=`<div class="modal" id="modal"><form class="sheet" id="gbForm" novalidate>
+    <h2>${ex?"Réglages du classeur":"Nouveau classeur gradé"}</h2>
+    <div class="field"><label for="gbName">Nom</label><input id="gbName" value="${esc(b.name)}" placeholder="Mes cartes gradées" maxlength="40"></div>
+    <div class="field"><label>Couleur de la couverture</label><div class="swatches">${COVERS.map(([n,c])=>`<button type="button" class="swatch ${b.color===c?"on":""}" style="--c:${c}" data-color="${c}" title="${n}"></button>`).join("")}</div></div>
+    <div class="field"><label>Cartes par page (colonnes × lignes)</label><div class="presets">${GPRE.map(([c,r])=>`<button type="button" class="preset ${b.cols===c&&b.rows===r?"on":""}" data-grid="${c}x${r}"><span class="mini" style="grid-template-columns:repeat(${c},7px)">${"<i></i>".repeat(c*r)}</span><b>${c}×${r}</b></button>`).join("")}</div></div>
+    <div class="custom"><div class="field"><label for="gbCols">Colonnes</label><input id="gbCols" type="number" min="1" max="6" value="${b.cols}"></div>
+      <div class="field"><label for="gbRows">Lignes</label><input id="gbRows" type="number" min="1" max="4" value="${b.rows}"></div></div>
+    <div class="foot">${ex&&Object.keys(all).length>1?`<button type="button" class="btn danger" id="gbDel">Supprimer</button>`:""}<div class="r"><button type="button" class="btn" id="gbCancel">Annuler</button><button type="submit" class="btn primary">${ex?"Enregistrer":"Créer le classeur"}</button></div></div>
+  </form></div>`};
+  const sync=()=>{b.name=$("#gbName").value;b.cols=Math.min(6,Math.max(1,parseInt($("#gbCols").value)||1));b.rows=Math.min(4,Math.max(1,parseInt($("#gbRows").value)||1))};
+  draw();setTimeout(()=>$("#gbName").focus(),30);
+  root.onclick=e=>{const t=e.target;
+    if(t.id==="modal"||t.id==="gbCancel"){root.innerHTML="";return}
+    const sw=t.closest("[data-color]");if(sw){sync();b.color=sw.dataset.color;draw();return}
+    const pr=t.closest("[data-grid]");if(pr){sync();[b.cols,b.rows]=pr.dataset.grid.split("x").map(Number);draw();return}
+    if(t.id==="gbDel"){if(!armed){armed=true;t.classList.add("armed");t.textContent="Confirmer (les cartes retournent dans « À ranger »)";return}
+      delete all[b.id];ST.gbcur=null;gbSpread=0;save();root.innerHTML="";gradedPage();toast("Classeur supprimé")}};
+  root.onsubmit=e=>{e.preventDefault();sync();b.name=b.name.trim()||"Mes cartes gradées";
+    if(ex&&(ex.cols!==b.cols||ex.rows!==b.rows)){const ids=Object.keys(b.slots).sort((x,y)=>x-y).map(k=>b.slots[k]);b.slots={};ids.forEach((id,i)=>b.slots[i]=id)}
+    all[b.id]=b;ST.gbcur=b.id;gbSpread=0;save();root.innerHTML="";gradedPage();toast(ex?"Classeur mis à jour":"Classeur créé")};
+}
 function gradedPage(){const L=[...gState()];
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
