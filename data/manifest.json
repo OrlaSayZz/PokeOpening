@@ -5,242 +5,242 @@
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
    "size": 615308,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/dos.png?v=331c89ec00676ab7"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/dos.png"
   },
   "fix1-full1.pack": {
    "sha": "4cd241ed980c0b1b7866085ae5a48f9c882ef05e93baabb19ea4e8611e1956ea",
    "size": 167558,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/fix1-full1.pack?v=4cd241ed980c0b1b"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/fix1-full1.pack"
   },
   "fix1-thumbs1.pack": {
    "sha": "21957d52ce16d6b7fb6415c9150895a7ee4642884ce96bafdaa780e6e0d47994",
    "size": 42276,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/fix1-thumbs1.pack?v=21957d52ce16d6b7"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/fix1-thumbs1.pack"
   },
   "g1-full1.pack": {
    "sha": "f7542cccf96a49802b9336cf3cf4706f8834ebe6c61713ffb8db6321e7f1123a",
    "size": 94359682,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full1.pack?v=f7542cccf96a4980"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full1.pack"
   },
   "g1-full2.pack": {
    "sha": "78ae258d8138b4fba8bb1eeb5e7457f4932a8003acb2ea300866bf827784127c",
    "size": 94338038,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full2.pack?v=78ae258d8138b4fb"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full2.pack"
   },
   "g1-full3.pack": {
    "sha": "73e9dc15e987d8c6e551765dc252513baeec8b7995b2eff95b5f4e5e481c48ec",
    "size": 94327534,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full3.pack?v=73e9dc15e987d8c6"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full3.pack"
   },
   "g1-full4.pack": {
    "sha": "416d0343e8e332f4e70fb2233f9be3f1ce877b188e944c88a7b6d12d5554bdf4",
    "size": 94338640,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full4.pack?v=416d0343e8e332f4"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full4.pack"
   },
   "g1-full5.pack": {
    "sha": "4dbce549f64505a97ca441c14513ee69c6a023b9182dfea862db8ca4216af1f1",
    "size": 94355840,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full5.pack?v=4dbce549f64505a9"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full5.pack"
   },
   "g1-full6.pack": {
    "sha": "2a5582387dc0ca6d3968929eecf6bab833e1a91151ec9f43def031cc5c402374",
    "size": 94337118,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full6.pack?v=2a5582387dc0ca6d"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full6.pack"
   },
   "g1-full7.pack": {
    "sha": "ff1c4dfdbb82688d8d16b128caeb579e5b236203d421bd9a7db445f2892f54e4",
    "size": 94332550,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full7.pack?v=ff1c4dfdbb82688d"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full7.pack"
   },
   "g1-full8.pack": {
    "sha": "409a1cce38762fd796b890024d7e7325e10f0396ac369ef413df26412c30bff0",
    "size": 68802088,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-full8.pack?v=409a1cce38762fd7"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-full8.pack"
   },
   "g1-thumbs1.pack": {
    "sha": "a5e6cb0df837c7ded1f6376a3decb67b6c3e9a6152ee75d8c77aae1c6b94c26e",
    "size": 94358816,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-thumbs1.pack?v=a5e6cb0df837c7de"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-thumbs1.pack"
   },
   "g1-thumbs2.pack": {
    "sha": "7acd7ab7b8f91d4dc66f86d9458714e20452dae8da06a1874dcc539f1a8ffd4b",
    "size": 9984782,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g1-thumbs2.pack?v=7acd7ab7b8f91d4d"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g1-thumbs2.pack"
   },
   "g2-full1.pack": {
    "sha": "1dfae3418b39baa4e3850be282c07570c94577f9209068509f2eab38d44b199d",
    "size": 92251940,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g2-full1.pack?v=1dfae3418b39baa4"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g2-full1.pack"
   },
   "g2-full2.pack": {
    "sha": "cca1730232be6fdf26a0e97b769461d20b22ef86d0204cf7f2aea459ed888236",
    "size": 92177072,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g2-full2.pack?v=cca1730232be6fdf"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g2-full2.pack"
   },
   "g2-full3.pack": {
    "sha": "05b8650e41c6e0bd14692ded2a0986e170f2ed99599b6d4adcbb28bb83242f85",
    "size": 92211456,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g2-full3.pack?v=05b8650e41c6e0bd"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g2-full3.pack"
   },
   "g2-full4.pack": {
    "sha": "da0a2198b4fd01ebb3b3a702f3c6a71ca2239784e0eae96e5b977b5866678bde",
    "size": 37740064,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g2-full4.pack?v=da0a2198b4fd01eb"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g2-full4.pack"
   },
   "g2-thumbs1.pack": {
    "sha": "8d4ae28410d893186dd6ddb5f242f8fc6f9ec262ee46e79899f6a858f5661a8f",
    "size": 46696814,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g2-thumbs1.pack?v=8d4ae28410d89318"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g2-thumbs1.pack"
   },
   "g3-full1.pack": {
    "sha": "8f6519884d5113366167d728d52c1fe9c1587370887ddc1d97a51d740a0bcf90",
    "size": 92248384,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g3-full1.pack?v=8f6519884d511336"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g3-full1.pack"
   },
   "g3-full2.pack": {
    "sha": "09e36deca23e45e8bf1d11a50818cd0c6c50071bce753f2b40c6a1df52598335",
    "size": 92264994,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g3-full2.pack?v=09e36deca23e45e8"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g3-full2.pack"
   },
   "g3-full3.pack": {
    "sha": "ae3394c8a74870a48394d80fce4f56d537acfc8fbbc9f973c7d51c5f36ab4d56",
    "size": 92226068,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g3-full3.pack?v=ae3394c8a74870a4"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g3-full3.pack"
   },
   "g3-full4.pack": {
    "sha": "c0ae0233424df5060862233c5adca778ab22e369063dd1fb99329f8fca45f531",
    "size": 88235258,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g3-full4.pack?v=c0ae0233424df506"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g3-full4.pack"
   },
   "g3-thumbs1.pack": {
    "sha": "414702a9fe5108ac5d0f7691ab4aeee6e4c5782fe30588787ea4413511eb1dae",
    "size": 53782238,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g3-thumbs1.pack?v=414702a9fe5108ac"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g3-thumbs1.pack"
   },
   "g4-full1.pack": {
    "sha": "ed80b71f00ef776a22632443d9499043af3be7b73f028936f0197328aef312a2",
    "size": 92251080,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g4-full1.pack?v=ed80b71f00ef776a"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g4-full1.pack"
   },
   "g4-full2.pack": {
    "sha": "625a58bf0e65a612e56532e92272c634b30c6f5dc9a996c52b508cc394fb4fe7",
    "size": 92239778,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g4-full2.pack?v=625a58bf0e65a612"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g4-full2.pack"
   },
   "g4-full3.pack": {
    "sha": "ecc9c1b6994fb302466948ff97577ce47e6dcf164f66d85c5528161672785a24",
    "size": 92263582,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g4-full3.pack?v=ecc9c1b6994fb302"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g4-full3.pack"
   },
   "g4-full4.pack": {
    "sha": "170e5a55a3e353b7a7d8b3dc2361f6a9330bd2b859c3943d845fa85536a974a9",
    "size": 24725050,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g4-full4.pack?v=170e5a55a3e353b7"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g4-full4.pack"
   },
   "g4-thumbs1.pack": {
    "sha": "c4325e52fa26802f452ab8d2e5a5905bb5339952dead5e9a22eb8a89ba11a468",
    "size": 44354086,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g4-thumbs1.pack?v=c4325e52fa26802f"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g4-thumbs1.pack"
   },
   "g5-full1.pack": {
    "sha": "57cc83c676fd7157b9034b1324872a0ea8ba96ee6caab31079955fe1ce604722",
    "size": 92269630,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g5-full1.pack?v=57cc83c676fd7157"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g5-full1.pack"
   },
   "g5-full2.pack": {
    "sha": "4437fc06102dd5fcb9880e2437585a80c7d0326c383ec712bbbc04c90dfd18eb",
    "size": 92203860,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g5-full2.pack?v=4437fc06102dd5fc"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g5-full2.pack"
   },
   "g5-full3.pack": {
    "sha": "335923d82359da967a49059581aa8371088690183b855b3a48f844a2113be9d8",
    "size": 92261894,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g5-full3.pack?v=335923d82359da96"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g5-full3.pack"
   },
   "g5-full4.pack": {
    "sha": "d10546e8b58eafdc7cb7e53bf1eef299eaa16cf1b17c77d0ca6d247e1f37c1df",
    "size": 52107948,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g5-full4.pack?v=d10546e8b58eafdc"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g5-full4.pack"
   },
   "g5-thumbs1.pack": {
    "sha": "2e9c449e9e0dc5742f065267441cbafd3d2de61c006885cf9d88da5efad63391",
    "size": 48801456,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g5-thumbs1.pack?v=2e9c449e9e0dc574"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g5-thumbs1.pack"
   },
   "g6-full1.pack": {
    "sha": "36934389e9383cef9aeb0f465de86cba717e702b0e5c5801d339812fbd5cec64",
    "size": 92234202,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g6-full1.pack?v=36934389e9383cef"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g6-full1.pack"
   },
   "g6-full2.pack": {
    "sha": "24bbd4ac063fc78dca61522631edf810bb05a5456b08b499dbb7eab2896dcb5a",
    "size": 65162764,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g6-full2.pack?v=24bbd4ac063fc78d"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g6-full2.pack"
   },
   "g6-thumbs1.pack": {
    "sha": "e0f1744e21ad759a4090cca71a3e358cdc34caf0b10a8acfe9fa00ceed62c7c3",
    "size": 23231534,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g6-thumbs1.pack?v=e0f1744e21ad759a"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g6-thumbs1.pack"
   },
   "g7-full1.pack": {
    "sha": "9d2eb3a2350a507f18c7b7ae152bc80924d954588eacf5fc7b41d0140a76c608",
    "size": 92266514,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g7-full1.pack?v=9d2eb3a2350a507f"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g7-full1.pack"
   },
   "g7-full2.pack": {
    "sha": "274c27a195fc4909f7ee1eda805ead324ac0688deb37a6387ddd84159df558ca",
    "size": 82505386,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g7-full2.pack?v=274c27a195fc4909"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g7-full2.pack"
   },
   "g7-thumbs1.pack": {
    "sha": "9582557fe9149599d520ac9179d5fe1f0d7f42a5eba34dffe2f700efd982e1e1",
    "size": 26181662,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g7-thumbs1.pack?v=9582557fe9149599"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g7-thumbs1.pack"
   },
   "g8-full1.pack": {
    "sha": "8cc06f5c7abb981e73604ef0de47b8a665e4ae5b279b895725d6011784b4f80d",
    "size": 92259152,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g8-full1.pack?v=8cc06f5c7abb981e"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g8-full1.pack"
   },
   "g8-full2.pack": {
    "sha": "e4f4eb41651651327937542aa5931cb8337a3f18239133eaf8408c012a360aac",
    "size": 72261906,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g8-full2.pack?v=e4f4eb4165165132"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g8-full2.pack"
   },
   "g8-thumbs1.pack": {
    "sha": "d08dee3d0ba7b7ab3857a70d521545397841a4a127f6799e5943d1e0381708be",
    "size": 23602972,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g8-thumbs1.pack?v=d08dee3d0ba7b7ab"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g8-thumbs1.pack"
   },
   "g9-full1.pack": {
    "sha": "f7ca6a556aa4c40c16cedd709ada0adaaa39f28df30fff04ca104a3f15c6bddf",
    "size": 92214756,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-full1.pack?v=f7ca6a556aa4c40c"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g9-full1.pack"
   },
   "g9-full2.pack": {
    "sha": "9eb7908361120f1b2db1d292d3fa127323c9623c824b5203f19e1aae728b3627",
    "size": 63163436,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-full2.pack?v=9eb7908361120f1b"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g9-full2.pack"
   },
   "g9-thumbs1.pack": {
    "sha": "5cc8a555aa2450a138e2d04217b007b7b1cfec648e887426e31dae36fb6b26f0",
    "size": 22765584,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/g9-thumbs1.pack"
   },
   "index.html": {
    "sha": "f3d62328103157118d97b7fa6eea33212741a23a9ad7db0ca3daba735551a6eb",
    "size": 15953617,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=f3d6232810315711"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/index.html"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",
    "size": 67151080,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/tr1-full1.pack?v=d52691bd1930cc8b"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/tr1-full1.pack"
   },
   "tr1-thumbs1.pack": {
    "sha": "123ea44cfa7475de12974a727c9b77c301fae2f037f99df5facfdee732cd5dc9",
    "size": 9761320,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/tr1-thumbs1.pack?v=123ea44cfa7475de"
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/14a0b90d2c9485c003867419f5c32a886c44f9ac/data/tr1-thumbs1.pack"
   }
  }
 }
