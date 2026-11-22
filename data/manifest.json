@@ -1,6 +1,6 @@
 {
- "version": 10,
- "label": "Profil : stats \u00e0 c\u00f4t\u00e9, drapeau japonais",
+ "version": 11,
+ "label": "Booster Dresseurs (Supporters)",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,19 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "34cec0862c73364543267590619a3f19de814ac2ca3fd90dee9ccea7e96ea514",
-   "size": 15712725,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=34cec0862c733645"
+   "sha": "1b48bbe5b6062c6a3afba7ec038c57e8cbba36db5e81858a03a764ef1dffa699",
+   "size": 15933806,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=1b48bbe5b6062c6a"
+  },
+  "tr1-full1.pack": {
+   "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",
+   "size": 67151080,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/tr1-full1.pack?v=d52691bd1930cc8b"
+  },
+  "tr1-thumbs1.pack": {
+   "sha": "123ea44cfa7475de12974a727c9b77c301fae2f037f99df5facfdee732cd5dc9",
+   "size": 9761320,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/tr1-thumbs1.pack?v=123ea44cfa7475de"
   }
  }
 }

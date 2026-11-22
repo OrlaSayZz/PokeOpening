@@ -629,10 +629,10 @@ const FULLB={"abo":{"1":"079c2badb5d81573fb14cf98fbc2b52e"},"arbok":{"1":"d5b3e9
 const PACKV=2,packUrl=(pid,k)=>`cartes/${pid}.${k}.webp?v=${PACKV}`;
 const CARDS={};
 const natural=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true});
-const POKEMON=Object.entries(POKEDATA).map(([id,p])=>({id,name:p.name,cards:p.cards}))
+const POKEMON=Object.entries(POKEDATA).map(([id,p])=>({id,name:p.name,cards:p.cards,tr:!!p.tr}))
   .sort((a,b)=>{const ia=DEX.indexOf(a.id),ib=DEX.indexOf(b.id);return (ia<0?999:ia)-(ib<0?999:ib)||a.name.localeCompare(b.name)});
 POKEMON.forEach(p=>{p.cards.sort((a,b)=>(a.y||9999)-(b.y||9999)||natural(a.code,b.code)||natural(a.num,b.num));
-  p.gen=genOf(p.id);p.cards.forEach(c=>{c.key=p.id+"/"+c.id;c.gen=p.gen;if(c.pk){c.th=c.img=BLANK+"#"+c.key}c.name=p.name;c.pokemon=p;c.label=c.code+(c.num?" · "+c.num:"");CARDS[c.key]=c})});
+  p.gen=p.tr?0:genOf(p.id);p.cards.forEach(c=>{c.tr=p.tr;c.key=p.id+"/"+c.id;c.gen=p.gen;if(c.pk){c.th=c.img=BLANK+"#"+c.key}c.name=p.name;c.pokemon=p;c.label=c.code+(c.num?" · "+c.num:"");CARDS[c.key]=c})});
 const TW={};Object.values(CARDS).forEach(c=>{if(c.tw&&CARDS[c.tw])TW[c.key]=c.tw});
 const canon=k=>TW[k]||k;
 {const G={};for(const k in TW)(G[TW[k]]=G[TW[k]]||[TW[k]]).push(k);for(const ck in G){const nm=G[ck].map(k=>CARDS[k].pokemon.name).join(" & ");G[ck].forEach(k=>CARDS[k].name=nm)}}
@@ -797,32 +797,42 @@ const RATES={
 const LADDER=["R","H","DR","UR","IR","SIR","HR"];
 const BOOSTERS=[
   {id:"intl",name:"Booster International",sub:"Cartes internationales + Pocket",region:"intl",c1:"#2d5ba3",c2:"#5fa8ff"},
-  {id:"jp",name:"Booster Japonais",sub:"Cartes japonaises",region:"jp",c1:"#b3261e",c2:"#ff7a6b"}
+  {id:"jp",name:"Booster Japonais",sub:"Cartes japonaises",region:"jp",c1:"#b3261e",c2:"#ff7a6b"},
+  {id:"tr",name:"Booster Dresseurs",sub:"Cartes Supporter · 5 cartes",region:"tr",tr:1,n:5,c1:"#1f7a4d",c2:"#5fd39a"}
 ];
+const boosterOf=x=>typeof x==="string"?BOOSTERS.find(b=>b.region===x):x;
+const inBooster=(c,b)=>b.tr?!!c.tr:(!c.tr&&c.region===b.region);
 const tierName=t=>TIERS[t]?TIERS[t].n:"";
 const srcset=c=>c.th?`srcset="${c.th} 180w, ${c.img} 600w" sizes="(min-resolution:1.8dppx) 300px, 120px"`:"";
 const isBig=c=>["H","DR","UR","IR","SIR","HR"].includes(c.r);
 function rollTable(tab){let tot=0;for(const k in tab)tot+=tab[k];let x=Math.random()*tot;for(const k in tab){x-=tab[k];if(x<0)return k}return Object.keys(tab)[0]}
 const pickOne=a=>a[Math.floor(Math.random()*a.length)];
-function poolOf(region){const P={};for(const t in TIERS)P[t]=[];UNIQ.forEach(c=>{if(c.region===region&&c.r&&P[c.r])P[c.r].push(c)});return P}
+function poolOf(x){const b=boosterOf(x),P={};for(const t in TIERS)P[t]=[];UNIQ.forEach(c=>{if(inBooster(c,b)&&c.r&&P[c.r])P[c.r].push(c)});return P}
 function fromTier(P,t,dir){ /* dir -1 : on redescend si vide, puis on remonte */
   const ord=Object.keys(TIERS).sort((a,b)=>TIERS[a].o-TIERS[b].o);let k=ord.indexOf(t);
   for(let i=k;i>=0;i--)if(P[ord[i]].length)return pickOne(P[ord[i]]);
   for(let i=k+1;i<ord.length;i++)if(P[ord[i]].length)return pickOne(P[ord[i]]);return null}
 function makeGod(region){const P=poolOf(region),out=[],used=new Set();
-  const pick=t=>{for(let k=0;k<12;k++){const c=fromTier(P,t);if(c&&!used.has(c.key)){used.add(c.key);return c}}return fromTier(P,t)};
-  for(let i=0;i<8;i++)out.push({c:pick(rollTable(RATES.godMain)),slot:"god"});
-  for(let i=0;i<2;i++)out.push({c:pick(rollTable(RATES.godTop)),slot:"god"});
+  const up=t=>{const ord=Object.keys(TIERS).sort((a,b)=>TIERS[a].o-TIERS[b].o);let k=ord.indexOf(t);for(let i=k;i<ord.length;i++)if(P[ord[i]].length)return pickOne(P[ord[i]]);return fromTier(P,t)};
+  const pick=t=>{for(let k=0;k<12;k++){const c=up(t);if(c&&!used.has(c.key)){used.add(c.key);return c}}return up(t)};
+  const b=boosterOf(region),big=b.tr?1:2;
+  for(let i=0;i<(b.n||10)-big;i++)out.push({c:pick(rollTable(RATES.godMain)),slot:"god"});
+  for(let i=0;i<big;i++)out.push({c:pick(rollTable(RATES.godTop)),slot:"god"});
   return out.filter(x=>x.c).sort((a,b)=>TIERS[a.c.r].o-TIERS[b.c.r].o)}
 let forceGod=false;window.__god=()=>{forceGod=true;return "Le prochain booster sera un god pack"};
 function makePack(region){if(forceGod||Math.random()*100<RATES.god){forceGod=false;const g=makeGod(region);g.god=true;return g}
-  const P=poolOf(region),out=[];
+  const P=poolOf(region),out=[],b=boosterOf(region);
+  if(b.tr){ /* booster Dresseurs : 3 cartes, 1 reverse, 1 rare */
+    for(let i=0;i<3;i++)out.push({c:fromTier(P,"C"),slot:"c"});
+    {let t=rollTable(RATES.reverse);if(t==="R")t=Math.random()<.5&&P.H.length?"H":"R";out.push({c:fromTier(P,t),slot:"rev"})}
+    out.push({c:fromTier(P,rollTable(RATES.hit)),slot:"hit"});
+    return out.filter(x=>x.c)}
   for(let i=0;i<4;i++)out.push({c:fromTier(P,"C"),slot:"c"});
   for(let i=0;i<2;i++)out.push({c:fromTier(P,"U"),slot:"u"});
   for(let i=0;i<2;i++){let t=rollTable(RATES.reverse);if(t==="R")t=Math.random()<.5&&P.H.length?"H":"R";out.push({c:fromTier(P,t),slot:"rev"})}
   for(let i=0;i<2;i++)out.push({c:fromTier(P,rollTable(RATES.hit)),slot:"hit"});
   return out.filter(x=>x.c)}
-window.__dbg={makePack,god:()=>{forceGod=true}};
+window.__dbg={makePack,BOOSTERS,god:()=>{forceGod=true}};
 window.__simPacks=(region,n)=>{const cnt={};for(let i=0;i<n;i++)makePack(region).forEach(x=>{const k=x.slot+":"+x.c.r;cnt[k]=(cnt[k]||0)+1});return cnt};
 
 function packArt(b,big){return `<div class="pack ${big?"big":""}" style="--p1:${b.c1};--p2:${b.c2}">
@@ -830,23 +840,36 @@ function packArt(b,big){return `<div class="pack ${big?"big":""}" style="--p1:${
   <div class="pbody"><div class="pshine"></div>
     <div class="pstars">${"<i></i>".repeat(14)}</div>
     <div class="plogo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="9" y="3" width="17" height="23" rx="3" fill="#fff" opacity=".85" transform="rotate(10 17 14)"/><rect x="5" y="6" width="17" height="23" rx="3" fill="#ffcb05" stroke="#0b1530" stroke-width="1.5" transform="rotate(-8 13 17)"/></svg><b>POKEOPENING</b></div>
-    <div class="ptitle">${b.region==="jp"?"JAPONAIS":"INTERNATIONAL"}</div>
-    <div class="pcount">10 CARTES</div></div>
+    <div class="ptitle">${b.tr?"DRESSEURS":b.region==="jp"?"JAPONAIS":"INTERNATIONAL"}</div>
+    <div class="pcount">${b.n||10} CARTES</div></div>
   <div class="crimp bot"></div></div>`}
 
 function openerPage(){
   app.innerHTML=`<h1 class="h1">Pack Opener</h1>
     
-    <div class="po-grid">${BOOSTERS.map((b,i)=>{const P=poolOf(b.region),n=Object.values(P).reduce((a,x)=>a+x.length,0);const o=UNIQ.filter(c=>c.region===b.region&&qty(c.key)>0).length;
+    <div class="po-grid">${BOOSTERS.map((b,i)=>{const P=poolOf(b),n=Object.values(P).reduce((a,x)=>a+x.length,0);const o=UNIQ.filter(c=>inBooster(c,b)&&qty(c.key)>0).length;
       return `<article class="po">
       <div class="plinth">${packArt(b)}</div>
       <div class="po-info"><h3>${esc(b.name)}</h3><p>${esc(b.sub)}</p>
         <div class="pbar"><i style="width:${n?Math.round(o/n*100):0}%"></i></div><small>${o} / ${n} obtenues</small>
         <div class="row"><button class="btn" data-rates="${i}">Taux</button><button class="btn primary" data-open="${i}" ${n?"":"disabled"}>🎁 Ouvrir</button></div></div></article>`}).join("")}</div>`;
   app.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openBooster(BOOSTERS[+b.dataset.open]));
-  app.querySelectorAll("[data-rates]").forEach(b=>b.onclick=()=>showRates());
+  app.querySelectorAll("[data-rates]").forEach(b=>b.onclick=()=>showRates(BOOSTERS[+b.dataset.rates]));
 }
-function showRates(){const root=$("#modalRoot");
+function showRates(b){const root=$("#modalRoot");
+  if(b&&b.tr){const P=poolOf(b),ord=Object.keys(TIERS).sort((x,y)=>TIERS[x].o-TIERS[y].o);
+    const res=t=>{let k=ord.indexOf(t);for(let i=k;i>=0;i--)if(P[ord[i]].length)return ord[i];for(let i=k+1;i<ord.length;i++)if(P[ord[i]].length)return ord[i]};
+    const eff=tab=>{const o={};for(const t in tab){const r=res(t);o[r]=(o[r]||0)+tab[t]}return Object.entries(o).sort((x,y)=>TIERS[x[0]].o-TIERS[y[0]].o)};
+    const row=(t,v)=>`<tr><td><span class="rt rt-${t}">${tierName(t)}</span></td><td>${String(+v.toFixed(2)).replace(".",",")} %</td></tr>`;
+    root.innerHTML=`<div class="modal" id="modal"><div class="sheet"><h2>Booster Dresseurs (5 cartes)</h2>
+    <table class="rates"><tr><th colspan="2">Emplacements 1 à 3</th></tr>${eff({C:100}).map(([t,v])=>row(t,v)).join("")}
+    <tr><th colspan="2">Emplacement 4 — reverse</th></tr>${eff(RATES.reverse).map(([t,v])=>row(t,v)).join("")}
+    <tr><th colspan="2">Emplacement 5 — rare</th></tr>${eff(RATES.hit).map(([t,v])=>row(t,v)).join("")}
+    <tr><th colspan="2">✨ God pack — ${String(RATES.god).replace(".",",")} % (1 booster sur ${Math.round(100/RATES.god)})</th></tr>
+    <tr><th colspan="2">God pack — emplacements 1 à 4</th></tr>${eff(RATES.godMain).map(([t,v])=>row(t,v)).join("")}
+    <tr><th colspan="2">God pack — emplacement 5</th></tr>${eff(RATES.godTop).map(([t,v])=>row(t,v)).join("")}</table>
+    <div class="foot"><div class="r"><button class="btn" data-m="close">Fermer</button></div></div></div></div>`;
+    root.onclick=e=>{if(e.target.id==="modal"||e.target.closest('[data-m="close"]'))root.innerHTML=""};return}
   const row=(t,v)=>`<tr><td><span class="rt rt-${t}">${tierName(t)}</span></td><td>${String(v).replace(".",",")} %</td></tr>`;
   root.innerHTML=`<div class="modal" id="modal"><div class="sheet"><h2>Contenu d'un booster</h2>
     <table class="rates"><tr><th colspan="2">Emplacements 1 à 4</th></tr>${row("C",100)}
@@ -862,7 +885,7 @@ function showRates(){const root=$("#modalRoot");
 
 let packState=null;
 function openBooster(b){
-  const pack=makePack(b.region);pack.forEach(x=>ensureFull(x.c));const before={};pack.forEach(x=>{before[x.c.key]=before[x.c.key]??qty(x.c.key)});
+  const pack=makePack(b);pack.forEach(x=>ensureFull(x.c));const before={};pack.forEach(x=>{before[x.c.key]=before[x.c.key]??qty(x.c.key)});
   /* ajout immédiat à la collection */
   try{const o={...ST.owned};pack.forEach(x=>{const k=canon(x.c.key);o[k]=(o[k]||0)+1});ST.owned=o;ST.opened=(ST.opened||0)+1;save();updateStat()}catch(err){console.error(err)}
   const seen={};pack.forEach(x=>{x.isNew=!before[x.c.key]&&!seen[x.c.key];seen[x.c.key]=1});
@@ -1175,8 +1198,8 @@ function statsOf(list){const o=list.filter(c=>qty(c.key)>0).length;return {o,t:l
 function profilePage(){const P=prof();
   const all=statsOf(UNIQ),intl=statsOf(UNIQ.filter(c=>c.region==="intl")),jp=statsOf(UNIQ.filter(c=>c.region==="jp"));
   const copies=Object.values(ST.owned).reduce((a,b)=>a+b,0);
-  const done=POKEMON.filter(p=>p.cards.length&&p.cards.every(c=>qty(c.key)>0)).length;
-  const started=POKEMON.filter(p=>p.cards.some(c=>qty(c.key)>0)).length;
+  const done=POKEMON.filter(p=>!p.tr&&p.cards.length&&p.cards.every(c=>qty(c.key)>0)).length;
+  const started=POKEMON.filter(p=>!p.tr&&p.cards.some(c=>qty(c.key)>0)).length;const trs=statsOf(UNIQ.filter(c=>c.tr));
   const best=UNIQ.filter(c=>qty(c.key)>0).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o)[0];
   const tiers=Object.keys(TIERS).reverse().map(t=>{const L=UNIQ.filter(c=>c.r===t),a=statsOf(L),i=statsOf(L.filter(c=>c.region==="intl")),j=statsOf(L.filter(c=>c.region==="jp"));
     return `<div class="trow"><span class="rt rt-${t}">${tierName(t)}</span><div class="tbar"><i style="width:${a.p}%;background:${TCOL[t]}"></i></div><b>${a.o} / ${a.t}</b><small>🌍 ${i.o}/${i.t} · ${flag("ja")} ${j.o}/${j.t}</small></div>`}).join("");
@@ -1191,7 +1214,7 @@ function profilePage(){const P=prof();
     </section>
     <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
     </div>
-    <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}</div>
+    <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}${ring(trs.p,"🧑 Dresseurs",`${trs.o} / ${trs.t}`,"#5fd39a")}</div>
       <div class="kpis"><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
     <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
   </div>`;
