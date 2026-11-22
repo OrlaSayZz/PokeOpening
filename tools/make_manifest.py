@@ -10,6 +10,7 @@ for f in sorted(os.listdir(d)):
   p=os.path.join(d,f);h=hashlib.sha256()
   with open(p,'rb') as fh:
     for b in iter(lambda:fh.read(1<<20),b''):h.update(b)
-  files[f]={'sha':h.hexdigest(),'size':os.path.getsize(p)}
+  # ?v=... : adresse unique par version du fichier, pour ne jamais recevoir une ancienne copie en cache
+  files[f]={'sha':h.hexdigest(),'size':os.path.getsize(p),'url':f'https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/{f}?v={h.hexdigest()[:16]}'}
 json.dump({'version':ver,'label':label,'files':files},open(os.path.join(d,'manifest.json'),'w'),indent=1)
 print(len(files),'fichiers, version',ver)
