@@ -565,6 +565,37 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 .mct.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.mct b{color:var(--muted);font-weight:700}.mct.clr{padding:6px 12px;color:var(--muted)}
 .rt.mini{font-size:10px;padding:1px 6px}.mcmore{display:flex;justify-content:center;margin:24px 0}
 .mcdup.on{background:var(--gold);color:#2a1d00;border-color:transparent}
+.slab{position:relative;width:100%;max-width:300px;padding:12px;border-radius:18px;cursor:pointer;background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(210,220,240,.25) 40%,rgba(255,255,255,.4));box-shadow:0 0 0 2px rgba(255,255,255,.65) inset,0 0 0 7px rgba(200,210,230,.22) inset,0 22px 44px rgba(0,0,0,.5);transition:transform .25s}
+.slab:hover{transform:translateY(-4px)}.slab.gem{box-shadow:0 0 0 2px rgba(255,230,140,.9) inset,0 0 0 7px rgba(255,210,90,.18) inset,0 22px 44px rgba(0,0,0,.5),0 0 40px rgba(255,200,60,.35)}
+.slab.big{max-width:min(420px,86vw);cursor:default}.slab.big:hover{transform:none}
+.slab-lab{display:grid;grid-template-columns:52px 1fr 58px;gap:6px;background:linear-gradient(#fdfdfd,#eef1f6);border-radius:7px;padding:7px;border:1px solid #c9cfdb;color:#3a4256;min-height:70px}
+.slab.big .slab-lab{grid-template-columns:70px 1fr 78px;padding:10px;gap:8px}
+.slab.gem .slab-lab{background:linear-gradient(#fffdf3,#f6ecc9);border-color:#d9b956}
+.slab-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-right:1px solid #d4d9e3}
+.slab-logo .mk{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#1c2a6b,#3d56c7);color:#ffcb05;font-weight:900;display:grid;place-items:center;font-size:14px;letter-spacing:-1px}.slab.big .slab-logo .mk{width:42px;height:42px;font-size:18px}
+.slab-logo .bt{font-size:5.5px;font-weight:800;text-align:center;letter-spacing:.05em;color:#24305e}.slab.big .slab-logo .bt{font-size:7.5px}
+.slab-info{display:flex;flex-direction:column;font-size:7.5px;line-height:1.35;text-transform:uppercase;min-width:0}.slab-info>*{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slab.big .slab-info{font-size:9.5px}.slab-info b{font-size:9.5px;color:#141a2b}.slab.big .slab-info b{font-size:12.5px}
+.slab-info i{font-style:normal;font-weight:800;text-transform:none;filter:brightness(.6) saturate(1.6)}.slab-info small{font-size:7px;color:#7a8296}.slab.big .slab-info small{font-size:8.5px}
+.subs{display:grid;grid-template-columns:1fr 1fr;gap:0 7px;margin-top:3px;font-size:6.5px;font-weight:700}.slab.big .subs{font-size:8.5px;margin-top:5px}.subs span{display:flex;justify-content:space-between}.subs b{color:#141a2b}
+.slab-gr{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid #d4d9e3}.slab-gr b{font-size:32px;line-height:1;font-weight:900;color:#141a2b;font-family:var(--disp)}.slab.big .slab-gr b{font-size:48px}
+.slab.gem .slab-gr b{background:linear-gradient(#c8961a,#ffd86b,#b37e0c);-webkit-background-clip:text;background-clip:text;color:transparent}.slab-gr small{font-size:6.5px;font-weight:800;text-align:center}.slab.big .slab-gr small{font-size:9px}
+.slab-well{margin-top:10px;padding:11px;border-radius:10px;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(255,255,255,.12));box-shadow:0 0 0 1px rgba(255,255,255,.5) inset}
+.slab-well img{display:block;width:100%;aspect-ratio:63/88;object-fit:contain;border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.slab-shine{position:absolute;inset:0;border-radius:18px;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.25) 42%,transparent 52%)}
+.gwall{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:26px;justify-items:center;padding:6px 0 30px}
+.glast{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;justify-items:center}
+.gpage{display:grid;gap:18px}.gsel{display:flex;gap:28px;align-items:center}.gcard{width:min(260px,40vw);flex:none}.gcard img{width:100%;border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.ginfo h2{font-size:26px;margin-bottom:6px}.ginfo p{color:var(--muted);margin:4px 0}.gch{margin:16px 0;background:var(--tile);border-radius:12px;padding:12px 16px;display:inline-flex;flex-direction:column}.gch b{font-size:26px;font-family:var(--disp);color:var(--gold)}.gch small{color:var(--muted)}
+.gempty{display:flex;gap:28px;align-items:center}.slab.ghost{width:170px;opacity:.5;cursor:default}.slab.ghost .slab-well{aspect-ratio:63/88}
+.greveal{background:rgba(5,8,20,.88)}.grv{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}.grv-txt{font-family:var(--disp);font-size:24px;font-weight:800;color:#fff}
+.greveal .slab{animation:slabIn .5s cubic-bezier(.2,.9,.3,1.2)}@keyframes slabIn{from{transform:translateY(40px) scale(.9);opacity:0}}
+.greveal .slab.done.gem{animation:gemPulse 1.6s ease-in-out 2}@keyframes gemPulse{50%{box-shadow:0 0 0 2px rgba(255,230,140,.9) inset,0 0 80px rgba(255,200,60,.8)}}
+@media(max-width:800px){.gsel,.gempty{flex-direction:column;align-items:flex-start}}
+nav a{white-space:nowrap}
+@media (max-width:1650px){nav a{padding:8px 10px;font-size:14px;gap:6px}.mechip span{display:none}.mechip{padding:4px;margin-left:8px}}
+@media (max-width:1380px){nav a span.l{display:none}nav a{font-size:18px}}
+.slab-info .subs{overflow:visible;gap:0 5px}.gwall{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 </style>
 </head>
 <body>
@@ -579,6 +610,8 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
       <a href="#mes-cartes" data-nav="mine">🃏 <span class="l">Cartes</span></a>
       <a href="#collection" data-nav="collection">🗂️ <span class="l">Collection</span></a>
       <a href="#pack-opener" data-nav="opener">🎁 <span class="l">Pack Opener</span></a>
+      <a href="#gradation" data-nav="grade">🔍 <span class="l">Gradation</span></a>
+      <a href="#gradees" data-nav="graded">🏆 <span class="l">Gradées</span></a>
       <a href="#echanges" data-nav="trade">🔄 <span class="l">Échanges</span></a>
     </nav>
     <div class="stat" id="globalStat"></div><a href="#profil" class="mechip" id="meChip"></a>
@@ -1228,7 +1261,7 @@ function profilePage(){const P=prof();
     <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
     </div>
     <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}${ring(trs.p,"🧑 Dresseurs",`${trs.o} / ${trs.t}`,"#5fd39a")}</div>
-      <div class="kpis"><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
+      <div class="kpis"><div><b>${gState().length}</b><small>Cartes gradées</small></div><div><b>${ST.graded.filter(s=>s.g===10).length}</b><small>Notes de 10</small></div><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
     <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
   </div>`;
   const ps=$("#pseudo");ps.oninput=()=>{P.name=ps.value.trim();save();drawMe()};
@@ -1257,20 +1290,20 @@ const b64u={enc:u8=>{let s="";u8.forEach(b=>s+=String.fromCharCode(b));return bt
 async function zip(str,inflate){const cs=inflate?new DecompressionStream("deflate-raw"):new CompressionStream("deflate-raw");const w=cs.writable.getWriter();w.write(inflate?str:new TextEncoder().encode(str));w.close();
   const buf=await new Response(cs.readable).arrayBuffer();return inflate?new TextDecoder().decode(buf):new Uint8Array(buf)}
 async function chk(body){const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(TSALT+body));return b64u.enc(new Uint8Array(h).slice(0,5))}
-async function makeCode(items){const P=prof();const pl={v:1,i:Math.random().toString(36).slice(2,12),f:P.name||"Anonyme",u:P.uid,d:Date.now(),c:items.map(([k,n])=>n>1?[k,n]:k)};
+async function makeCode(items,slabs){const P=prof();const pl={v:1,i:Math.random().toString(36).slice(2,12),f:P.name||"Anonyme",u:P.uid,d:Date.now(),c:items.map(([k,n])=>n>1?[k,n]:k)};if(slabs&&slabs.length)pl.s=slabs.map(x=>[x.k,x.g,x.sub,x.id]);
   const body=b64u.enc(await zip(JSON.stringify(pl)));return {code:`PKO-${body}.${await chk(body)}`,pl}}
 async function readCode(code){code=(code||"").replace(/\s+/g,"");const m=code.match(/^PKO-([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)$/);if(!m)throw new Error("Ce n'est pas un code d'échange PokeOpening.");
   if(await chk(m[1])!==m[2])throw new Error("Code invalide ou incomplet (vérifie qu'il est copié en entier).");
   let pl;try{pl=JSON.parse(await zip(b64u.dec(m[1]),true))}catch(e){throw new Error("Code illisible.")}
-  pl.c=(pl.c||[]).map(x=>Array.isArray(x)?x:[x,1]);return pl}
-let tBasket={};
+  pl.c=(pl.c||[]).map(x=>Array.isArray(x)?x:[x,1]);pl.s=(pl.s||[]).map(([k,g,sub,id])=>({k,g,sub,id}));return pl}
+let tBasket={},tSlabs=new Set();
 function tradePage(){const T=(prof(),ST.trades);
-  const items=Object.entries(tBasket).filter(([k,n])=>n>0&&CARDS[k]);const tot=items.reduce((a,[,n])=>a+n,0);
+  const items=Object.entries(tBasket).filter(([k,n])=>n>0&&CARDS[k]);const slabs=gState().filter(x=>tSlabs.has(x.id));const tot=items.reduce((a,[,n])=>a+n,0)+slabs.length;
   const hist=[...T.sent.map(x=>({...x,s:1})),...T.got.map(x=>({...x,s:0}))].sort((a,b)=>b.d-a.d).slice(0,30);
   app.innerHTML=`<h1 class="h1">Échanges</h1><div class="trade">
     <section class="pcard"><h2>📤 Donner des cartes</h2><p class="pnote">Choisis les cartes à donner, puis crée un code. Les cartes quittent ta collection et ton ami les reçoit en entrant le code dans son appli.</p>
-      <div class="basket">${items.map(([k,n])=>{const c=CARDS[k];return `<div class="bk"><img src="${c.th}" alt=""><div><b>${esc(c.name)}</b><small>${esc(c.label)} · <span class="rt rt-${c.r}">${tierName(c.r)}</span></small></div><div class="qn2"><button data-dec="${k}">−</button><span>${n}</span><button data-inc="${k}" ${n>=qty(k)?"disabled":""}>+</button></div></div>`}).join("")||`<p class="empty">Aucune carte sélectionnée.</p>`}</div>
-      <div class="tact"><button class="btn" id="tAdd">+ Ajouter des cartes</button><button class="btn gold" id="tMake" ${tot?"":"disabled"}>Créer le code${tot?` (${tot} carte${tot>1?"s":""})`:""}</button></div></section>
+      <div class="basket">${items.map(([k,n])=>{const c=CARDS[k];return `<div class="bk"><img src="${c.th}" alt=""><div><b>${esc(c.name)}</b><small>${esc(c.label)} · <span class="rt rt-${c.r}">${tierName(c.r)}</span></small></div><div class="qn2"><button data-dec="${k}">−</button><span>${n}</span><button data-inc="${k}" ${n>=qty(k)?"disabled":""}>+</button></div></div>`}).join("")}${slabs.map(x=>{const c=CARDS[x.k];return `<div class="bk"><img src="${c.th}" alt=""><div><b>${esc(c.name)} · gradée ${fmtG(x.g)}</b><small>${esc(x.id)} · <span class="rt rt-${c.r}">${tierName(c.r)}</span></small></div><div class="qn2"><button data-unslab="${x.id}">×</button></div></div>`}).join("")}${items.length||slabs.length?"":`<p class="empty">Aucune carte sélectionnée.</p>`}</div>
+      <div class="tact"><button class="btn" id="tAdd">+ Ajouter des cartes</button><button class="btn" id="tAddG" ${gState().length?"":"disabled"}>+ Cartes gradées</button><button class="btn gold" id="tMake" ${tot?"":"disabled"}>Créer le code${tot?` (${tot} carte${tot>1?"s":""})`:""}</button></div></section>
     <section class="pcard"><h2>📥 Recevoir des cartes</h2><p class="pnote">Colle ici le code que ton ami t'a envoyé.</p>
       <textarea id="tIn" placeholder="PKO-…" spellcheck="false"></textarea><div class="tact"><button class="btn gold" id="tRead">Valider le code</button></div></section>
     <section class="pcard tfull"><h2>Historique</h2>${hist.length?hist.map(h=>`<div class="hrow"><span class="hs ${h.s?"out":"in"}">${h.s?"Envoyé":"Reçu"}</span><span>${h.n} carte${h.n>1?"s":""}${h.s?"":` de <b>${esc(h.f||"?")}</b>`}</span><small>${new Date(h.d).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"})}</small>${h.s&&h.code?`<button class="btn sm" data-copy="${esc(h.code)}">Copier le code</button>`:""}</div>`).join(""):`<p class="empty">Aucun échange pour l'instant.</p>`}</section>
@@ -1278,20 +1311,23 @@ function tradePage(){const T=(prof(),ST.trades);
   app.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const k=b.dataset.inc;tBasket[k]=Math.min(qty(k),(tBasket[k]||0)+1);tradePage()});
   app.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const k=b.dataset.dec;tBasket[k]=(tBasket[k]||0)-1;if(tBasket[k]<=0)delete tBasket[k];tradePage()});
   app.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>copyTxt(b.dataset.copy));
+  app.querySelectorAll("[data-unslab]").forEach(b=>b.onclick=()=>{tSlabs.delete(b.dataset.unslab);tradePage()});
+  $("#tAddG").onclick=()=>{const L=gState().filter(x=>!tSlabs.has(x.id)&&CARDS[x.k]);$("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet"><h2>Cartes gradées à donner</h2><div class="gwall" style="grid-template-columns:repeat(auto-fill,minmax(170px,1fr));max-height:62vh;overflow:auto">${L.map(x=>slabHtml(x)).join("")||'<p class="empty">Aucune.</p>'}</div><div class="tact"><button class="btn" id="pkClose">Fermer</button></div></div></div>`;
+    $("#pkClose").onclick=()=>$("#modalRoot").innerHTML="";document.querySelectorAll("#modal [data-slab]").forEach(el=>el.onclick=()=>{tSlabs.add(el.dataset.slab);$("#modalRoot").innerHTML="";tradePage()})};
   $("#tAdd").onclick=()=>cardPicker({title:"Cartes à donner",note:"Clique sur une carte pour l'ajouter (clique plusieurs fois pour en donner plusieurs exemplaires).",onPick:(c,redraw)=>{const n=tBasket[c.key]||0;if(n>=qty(c.key)){toast("Tu n'as pas plus d'exemplaires");return}tBasket[c.key]=n+1;toast(`${c.name} ajouté (${n+1})`);tradePage()}});
   $("#tMake").onclick=()=>{if(!tot)return;confirmBox(`Donner ${tot} carte${tot>1?"s":""} ?`,"Elles vont quitter ta collection tout de suite. Envoie bien le code à ton ami : il ne peut être utilisé qu'une fois.","Créer le code",async()=>{
     const ok=items.filter(([k,n])=>qty(k)>=n);if(ok.length!==items.length){toast("Certaines cartes ne sont plus dans ta collection");tBasket={};tradePage();return}
-    const {code,pl}=await makeCode(ok.map(([k,n])=>[canon(k),n]));ok.forEach(([k,n])=>takeOut(k,n));
+    const {code,pl}=await makeCode(ok.map(([k,n])=>[canon(k),n]),slabs);ok.forEach(([k,n])=>takeOut(k,n));ST.graded=gState().filter(x=>!tSlabs.has(x.id));tSlabs=new Set();
     T.sent.push({i:pl.i,d:pl.d,n:tot,code});T.used.push(pl.i);tBasket={};save();updateStat();tradePage();showCode(code,tot)})};
   $("#tRead").onclick=async()=>{let pl;try{pl=await readCode($("#tIn").value)}catch(e){toast(e.message);return}
     if(T.used.includes(pl.i)){toast(T.sent.some(s=>s.i===pl.i)?"C'est ton propre code : envoie-le à ton ami.":"Ce code a déjà été utilisé.");return}
-    const miss=pl.c.filter(([k])=>!CARDS[k]);if(miss.length){toast("Certaines cartes sont inconnues : mets à jour l'appli puis réessaie.");return}
-    const n=pl.c.reduce((a,[,x])=>a+x,0);
+    const miss=[...pl.c,...pl.s.map(x=>[x.k])].filter(([k])=>!CARDS[k]);if(miss.length){toast("Certaines cartes sont inconnues : mets à jour l'appli puis réessaie.");return}
+    const n=pl.c.reduce((a,[,x])=>a+x,0)+pl.s.length;
     $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(760px,100%)"><h2>${esc(pl.f)} t'envoie ${n} carte${n>1?"s":""}</h2>
-      <div class="tgrid">${pl.c.map(([k,x])=>{const c=CARDS[k];return `<div class="tg"><img src="${c.th}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><small>${esc(c.name)}${x>1?` ×${x}`:""}${qty(k)?"":` · <b class="nw">nouvelle</b>`}</small></div>`}).join("")}</div>
+      <div class="tgrid">${pl.c.map(([k,x])=>{const c=CARDS[k];return `<div class="tg"><img src="${c.th}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><small>${esc(c.name)}${x>1?` ×${x}`:""}${qty(k)?"":` · <b class="nw">nouvelle</b>`}</small></div>`}).join("")}${pl.s.map(x=>{const c=CARDS[x.k];return `<div class="tg"><img src="${c.th}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><small>${esc(c.name)} · <b class="nw">gradée ${fmtG(x.g)}</b></small></div>`}).join("")}</div>
       <div class="tact"><button class="btn" id="tNo">Annuler</button><button class="btn gold" id="tYes">Ajouter à ma collection</button></div></div></div>`;
     $("#tNo").onclick=()=>$("#modalRoot").innerHTML="";
-    $("#tYes").onclick=()=>{if(T.used.includes(pl.i))return;const o={...ST.owned};pl.c.forEach(([k,x])=>{const ck=canon(k);o[ck]=(o[ck]||0)+x});ST.owned=o;
+    $("#tYes").onclick=()=>{if(T.used.includes(pl.i))return;const o={...ST.owned};pl.c.forEach(([k,x])=>{const ck=canon(k);o[ck]=(o[ck]||0)+x});ST.owned=o;gState();pl.s.forEach(x=>{if(!ST.graded.some(y=>y.id===x.id))ST.graded.push({...x,d:Date.now(),from:pl.f})});
       T.used.push(pl.i);T.got.push({i:pl.i,d:Date.now(),n,f:pl.f});save();updateStat();$("#modalRoot").innerHTML="";toast(`${n} carte${n>1?"s":""} ajoutée${n>1?"s":""} !`);tradePage()}};
 }
 function copyTxt(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast("Code copié"),()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();toast("Code copié")})}
@@ -1345,6 +1381,70 @@ function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
   app.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{MC.reg=b.dataset.reg;mcSave();minePage()});
   app.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{const t=b.dataset.t;if(!t)MC.tiers.clear();else MC.tiers.has(t)?MC.tiers.delete(t):MC.tiers.add(t);mcSave();minePage()});
 }
+const SETN={"A1": "Puissance Génétique", "A3": "Gardiens Astraux", "B1A": "Embrasement Écarlate", "J:M-P": "メガ プロモカード", "MEP": "MEP Black Star Promos", "BASE1": "Set de Base", "BASE4": "Base Set 2", "J:BW4": "ダークラッシュ", "BW5": "Explorateurs Obscurs", "DET1": "Détective Pikachu", "DP3": "Merveilles Secrètes", "J:DP3": "ひかる闇", "ECARD1": "Expedition", "EX14": "EX Gardiens de Cristal", "EX4": "EX Team Magma vs Team Aqua", "EX6": "EX Rouge Feu & Vert Feuille", "GYM2": "Gym Challenge", "J:M1L": "メガブレイブ", "ME01": "Méga-Évolution", "J:MISCP": "Miscellaneous Promos", "J:PCG8": "きせきの結晶", "PL3": "Vainqueurs Suprêmes", "POP2": "POP Série 2", "J:PT3": "フロンティアの鼓動", "SM35": "Légendes Brillantes", "J:SM3P": "ひかる伝説", "J:SM8B": "GXウルトラシャイニー", "SMP": "Promos Soleil et Lune", "J:SMP2": "名探偵ピカチュウ", "J:SV2A": "ポケモンカード151", "SV3PT5": "151", "SV7": "Couronne Stellaire", "SVP": "Promos Écarlate et Violet", "J:SVP": "スカーレット&バイオレット プロモカード", "SWSHP": "Promos Épée et Bouclier", "BASEP": "Wizards Black Star Promos", "J:CP6": "ポケットモンスターカードゲーム 拡張パック 20th Anniversary", "G1": "Générations", "RU1": "Pokémon Rumble", "J:SM11A": "リミックスバウト", "SM12": "Éclipse Cosmique", "SM9": "Duo de Choc", "J:SM9": "タッグボルト", "SWSH35": "La Voie du Maître", "J:WEB1": "ポケモンカード★web", "XY1": "XY", "XY12": "Évolutions", "XYP": "Promos XY", "POP3": "POP Série 3", "SI1": "Southern Islands", "A2B": "Réjouissances Rayonnantes", "BASE5": "Team Rocket", "BW11": "Trésors Légendaires", "BW7": "Frontières Franchies", "J:CP3": "ポケキュンコレクション", "J:DP6": "破空の激闘", "DP7": "Tempête", "EX16": "EX Gardiens du Pouvoir", "EX3": "EX Dragon", "GYM1": "Gym Heroes", "J:M2": "インフェルノX", "ME02": "Flammes Fantasmagoriques", "ME02PT5": "Héros Transcendants", "J:PCG10": "ワールドチャンピオンズパック", "PL4": "Arceus", "POP5": "POP Series 5", "J:PT4": "アルセウス光臨", "SM115": "Destinées Occultes", "SM3": "Ombres Ardentes", "J:SM3H": "闘う虹を見たか", "J:SM6A": "ドラゴンストーム", "SM75": "Majesté Des Dragons", "SMA": "Destinées Occultes Coffre Étincelant", "SV3": "Flammes Obsidiennes", "J:SV3": "黒炎の支配者", "J:SV4A": "シャイニートレジャーex", "SV4PT5": "Destinées de Paldea", "SWSH4": "Voltage Éclatant", "EX7": "Team Rocket Returns", "J:SVK": "デッキビルドBOX ステラミラクル", "J:BW7": "プラズマゲイル", "BW8": "Tempète Plasma", "DPP": "Promos Diamant et Perle", "ECARD3": "Skyridge", "EX15": "EX Île des Dragons", "J:M2A": "MEGAドリームex", "J:M6A": "30th CELEBRATION", "NEO4": "Neo Destiny", "J:NEO4": "闇、そして光へ...", "J:PCG9": "さいはての攻防", "SM10": "Alliance Infaillible", "J:SM10": "ダブルブレイズ", "J:SM12A": "TAG TEAM GX タッグオールスターズ", "SWSH11TG": "Origine Perdue Galerie de Dresseurs", "SWSH12PT5": "Zénith Suprême", "SWSH3": "Ténèbres Embrasées", "SWSH45SV": "Destinées Radieuses Coffre Étincelant", "SWSH9": "Stars Étincelantes", "J:VS1": "ポケモンカード★VS", "XY2": "Étincelles", "J:XY2": "ワイルドブレイズ", "BW10": "Explosion Plasma", "HGSS2": "Déchaînement", "PL1": "Platine", "POP4": "POP Série 4", "J:PT1": "ギンガの覇道", "J:SM9B": "フルメタルウォール", "DP4": "Duels au Sommets", "HGSS1": "HeartGold SoulSilver", "NEO2": "Neo Discovery", "J:NEO2": "遺跡をこえて...", "J:PCG1": "伝説の飛翔", "SM1": "Soleil et Lune", "J:SM1S": "コレクションサン", "J:SM3N": "光を喰らう闇", "SV9": "Aventures Ensemble", "J:SV9": "バトルパートナーズ", "SWSH2": "Clash des Rebelles", "SWSH8": "Poing de Fusion", "BW9": "Glaciation Plasma", "EX11": "EX Espèces Delta", "J:M4": "ニンジャスピナー", "ME04": "Chaos Ascendant", "J:PCG6": "ホロンの研究塔", "PL2": "Rivaux Émergeants", "J:PT2": "時の果ての絆", "SM4": "Invasion Carmin", "J:SM4A": "超次元の暴獣", "SWSH6": "Règne de Glace", "XY0": "Bienvenue à Kalos", "XY5": "Primo-Choc", "J:CP4": "プレミアムチャンピオンパック EX×M×BREAK", "SWSH10": "Astres Radieux", "BASE2": "Jungle", "A1A": "L’Île Fabuleuse", "A3A": "Crise Interdimensionnelle", "B1": "Méga-Ascension", "COL1": "L", "EX13": "EX Fantômes Holon", "HGSS4": "Triomphant", "J:L3": "頂上大激突", "J:PCG7": "ホロンの幻影", "SWSH11": "Origine Perdue", "HGSS3": "Indomptable", "J:L2": "よみがえる伝説", "J:M3": "ムニキスゼロ", "ME03": "Équilibre Parfait", "J:PCG3": "ロケット団の逆襲", "J:SM1M": "コレクションムーン", "J:SM1P": "サン＆ムーン", "SM7": "Tempête Céleste", "J:SM9A": "ナイトユニゾン", "SV10": "Rivalités Destinées", "J:SV10": "ロケット団の栄光", "XY9": "Rupture Turbo", "J:XY9": "破天の怒り", "A4": "Sagesse Entre Ciel et Mer", "DP5": "Aube Majestueuse", "EX2": "EX Tempête de sable", "SWSH5": "Styles de combat", "XY4": "Vigueur Spectrale", "J:XY4": "ファントムゲート", "XY6": "Ciel Rugissant", "J:XY6": "エメラルドブレイク", "A3B": "La Clairière d", "J:ADV4": "強化拡張パックex1マグマVSアクア ふたつの野望", "BASE3": "Fossile", "J:SM10B": "スカイレジェンド", "SV5": "Forces Temporelles", "J:SV5K": "ワイルドフォース", "A2A": "Lumière Triomphale", "B2": "Parade Onirique", "J:ADV2": "砂漠のきせき", "BW1": "Noir & Blanc", "J:BW1B": "ホワイトコレクション", "BW4": "Destinées Futures", "BWP": "Promos Noir et Blanc", "CEL25": "Célébrations", "J:CP2": "伝説キラコレクション", "DP2": "Trésors Mystérieux", "J:DP2": "湖の秘密", "EX12": "EX Créateurs de légendes", "EX9": "EX Émeraude", "NEO1": "Neo Genesis", "J:NEO1": "金、銀、新世界へ...", "NP": "Promo Nintendo", "POP6": "POP Series 6", "POP9": "POP Série 9", "J:SM0": "ピカチュウと新しい仲間たち", "J:SM10A": "ジージーエンド", "SM11": "Harmonie des Esprits", "J:SM11B": "ドリームリーグ", "J:SM4P": "GXバトルブースト", "SV2": "Évolutions à Paldea", "J:SV2D": "クレイバースト", "J:SV5M": "サイバージャッジ", "SV8": "Étincelles Déferlantes", "J:SV8": "超電ブレイカー", "J:SV8A": "テラスタルフェスex", "SV8PT5": "Évolutions Prismatiques", "SWSH1": "Épée et Bouclier", "SWSH12": "Tempête Argentée", "SWSH12PT5GG": "Zénith Suprême Galerie Galaroise", "SWSH7": "Évolution Céleste", "XY3": "Poings Furieux", "XY8": "Impulsion Turbo", "J:XY": "THE BEST OF XY", "NEO3": "Neo Revelation", "J:NEO3": "めざめる伝説", "J:M6": "ストームエメラルダ", "ME06": "Règne Delta", "J:SM12": "オルタージェネシス", "SM2": "Gardiens Ascendants", "J:SM2K": "キミを待つ島々", "J:SM2P": "新たなる試練の向こう", "SM5": "Ultra-Prisme", "J:SM5M": "ウルトラムーン", "SV6": "Mascarade Crépusculaire", "J:SV6": "変幻の仮面", "J:XY8B": "赤い閃光", "ECARD2": "Aquapolis", "XY11": "Offensive Vapeur", "DP1": "Diamant & Perle", "EX10": "EX Forces Cachées", "J:XY3": "ライジングフィスト", "J:SVLS": "スターターセット テラスタイプ：ステラ ソウブレイズex", "J:ADV5": "とかれた封印", "BW6": "Dragons Éxaltés", "EX5": "EX Légendes Oubliées", "J:MF": "30th CELEBRATION プレミアムデッキセット エーフィ・ブラッキー", "J:SM7B": "フェアリーライズ", "SM8": "Tonnerre Perdu", "J:SV5A": "クリムゾンヘイズ", "XY10": "Impact des Destins", "J:XY10": "めざめる超王", "EX8": "EX Deoxys", "J:PCG2": "蒼空の激突", "SV4": "Faille Paradoxe", "J:SV4K": "古代の咆哮", "J:SV6A": "ナイトワンダラー", "SV6PT5": "Fable Nébuleuse", "A2": "Choc Spatio-Temporel", "DP6": "Éveil des Légendes", "J:PCG4": "金の空、銀の海", "XY7": "Origines Antiques", "J:XY7": "バンデットリング", "A4A": "Source Secrète", "J:SM5S": "ウルトラサン", "J:SM7A": "迅雷スパーク", "J:SV1A": "トリプレットビート", "J:BW2": "レッドコレクション", "BW3": "Nobles Victoires", "J:SM8": "超爆インパクト", "J:SM11": "ミラクルツイン", "J:SV9A": "熱風のアリーナ", "B2A": "Merveilles de Paldea", "J:M5": "アビスアイ", "ME05": "Nuit Noire", "SV1": "Écarlate et Violet", "J:SV1V": "バイオレットex", "J:SV2P": "スノーハザード", "J:PCG5": "まぼろしの森", "J:M1S": "メガシンフォニア", "J:BW9": "メガロキャノン", "J:SM6B": "チャンピオンロード", "J:SM2L": "アローラの月光", "J:ADV3": "天空の覇者", "J:SM4S": "覚醒の勇者", "J:SV7": "ステラミラクル", "J:SM5P": "ウルトラフォース", "SM6": "Lumière Interdite", "J:CP1": "マグマ団VSアクア団 ダブルクライシス", "DC1": "Double Danger", "J:SM8A": "ダークオーダー", "J:SV1S": "スカーレットex", "J:MBG": "スターターセットMEGA メガゲンガーex", "J:SV3A": "レイジングサーフ", "J:SV4M": "未来の一閃", "J:SM6": "禁断の光", "J:SV7A": "楽園ドラゴーナ", "J:ADV1": "拡張パック", "EX1": "EX Rubis & Saphir", "SWSH45": "Destinées Radieuses", "SWSH10TG": "Astres Radieux Galerie de Dresseurs", "SWSH12TG": "Tempête Argentée Galerie de Dresseurs", "J:SVLN": "スターターセット テラスタイプ：ステラ ニンフィアex", "SWSH9TG": "Stars Étincelantes Galerie de Dresseurs", "J:CP5": "冷酷の反逆者", "DV1": "Coffre des Dragons", "POP7": "POP Série 7", "POP1": "POP Série 1", "J:SM7": "裂空のカリスマ", "POP8": "POP Series 8", "J:SV11B": "ブラックボルト", "J:SV11W": "ホワイトフレア", "BW2": "Pouvoirs Émergents", "HSP": "Promos HeartGold SoulSilver", "BASE6": "Legendary Collection", "CEL25C": "Célébrations – Collection Classique", "CEL30C": "Célébrations 30 ans – Classique", "PGO": "Pokémon GO", "A4B": "Pocket A4b", "B4B": "Pocket B4b"};
+/* ============================================================
+   GRADATION & CARTES GRADÉES
+   ============================================================ */
+const G10={C:18,U:15,R:12,H:9,DR:7.5,UR:6,IR:5.25,SIR:3.75,HR:3};   /* % de chance d'avoir un 10 (×0,7 pour les cartes d'avant 2003) */
+const GLAB={10:"GEM MINT",9.5:"MINT+",9:"MINT",8.5:"NM-MT+",8:"NM-MT",7.5:"NM+",7:"NM",6.5:"EX-MT+",6:"EX-MT",5.5:"EX+",5:"EX",4:"VG-EX",3:"VG",2:"GOOD",1:"POOR"};
+const GDIST=[[9.5,6],[9,24],[8.5,16],[8,16],[7.5,10],[7,9],[6.5,5],[6,5],[5.5,2],[5,3],[4,1.8],[3,1],[2,.7],[1,.5]];
+const fmtG=g=>String(g).replace(".",",");
+function chance10(c){return G10[c.r]*((c.y||2010)<2003?.7:1)}
+function rollGrade(c){
+  if(Math.random()*100<chance10(c)){const sub=[10,10,10,10];if(Math.random()<.6)sub[Math.floor(Math.random()*4)]=9.5;return {g:10,sub}}
+  const old=(c.y||2010)<2003;const tab=GDIST.map(([g,w])=>[g,old&&g>=8.5?w*.6:w]);let t=Math.random()*tab.reduce((a,x)=>a+x[1],0),g=1;
+  for(const [gg,w] of tab){t-=w;if(t<=0){g=gg;break}}
+  const sub=[0,0,0,0].map(()=>Math.min(10,g+[0,0,.5,.5,1,-.5][Math.floor(Math.random()*6)]));sub[Math.floor(Math.random()*4)]=g;
+  if(g>=9.5)sub.forEach((x,i)=>sub[i]=Math.max(x,9));return {g,sub:sub.map(x=>Math.max(1,x))}}
+function gState(){ST.graded=ST.graded||[];ST.gseq=ST.gseq||0;return ST.graded}
+function newCert(){const P=prof();ST.gseq=(ST.gseq||0)+1;return "PO-"+(P.uid||"x").slice(0,3).toUpperCase()+String(ST.gseq).padStart(5,"0")}
+function setName(c){const k=(c.lang==="ja"?"J:":"")+c.code;return SETN[k]||SETN[c.code]||(/P$/.test(c.code)?"Promos "+c.code.slice(0,-1):c.code)}
+function slabHtml(s,big){const c=CARDS[s.k];if(!c)return"";const gem=s.g===10;
+  const nm=c.name.toUpperCase(),lang=c.tr?"FR":c.lang==="ja"?"JP":"EN";
+  return `<div class="slab ${gem?"gem":""} ${big?"big":""}" data-slab="${s.id}"><div class="slab-lab">
+    <div class="slab-logo"><div class="mk">PO</div><div class="bt">POKEOPENING<br>GRADING</div></div>
+    <div class="slab-info"><b>${esc(nm)}</b><span>${esc(setName(c))} · ${esc(c.num||"")}</span><span>${c.y||""} · ${lang} · <i class="rt-${c.r}">${tierName(c.r)}</i></span><small>N° ${esc(s.id)}</small>
+      <div class="subs"><span>CENTRAGE <b>${fmtG(s.sub[0])}</b></span><span>COINS <b>${fmtG(s.sub[1])}</b></span><span>CÔTÉS <b>${fmtG(s.sub[2])}</b></span><span>SURFACE <b>${fmtG(s.sub[3])}</b></span></div></div>
+    <div class="slab-gr"><b>${fmtG(s.g)}</b><small>${GLAB[s.g]||""}</small></div></div>
+    <div class="slab-well"><img src="${c.img||c.th}" alt="" loading="lazy"></div><div class="slab-shine"></div></div>`}
+/* --- onglet Gradation --- */
+let gPick=null;
+function gradePage(){gState();const c=gPick&&CARDS[gPick]&&qty(gPick)>0?CARDS[gPick]:(gPick=null,null);
+  const last=ST.graded.slice(-6).reverse();
+  app.innerHTML=`<h1 class="h1">Gradation</h1><div class="gpage">
+   <section class="pcard gsel">${c?`<div class="gcard"><img src="${c.img||c.th}" alt=""></div>
+      <div class="ginfo"><h2>${esc(c.name)}</h2><p>${esc(setName(c))} · ${esc(c.num||"")} · ${c.y||""}</p><p><span class="rt rt-${c.r}">${tierName(c.r)}</span> &nbsp;Tu en as ×${qty(c.key)}</p>
+      <div class="gch"><b>${fmtG(+chance10(c).toFixed(2))} %</b><small>de chance d'obtenir un 10 GEM MINT</small></div>
+      <p class="pnote">La carte quitte ta collection (−1 exemplaire) et revient dans un boîtier avec sa note. Plus la carte est rare (et ancienne), plus le 10 est dur.</p>
+      <div class="tact" style="justify-content:flex-start"><button class="btn" id="gChange">Changer de carte</button><button class="btn gold" id="gGo">Envoyer en gradation</button></div></div>`
+     :`<div class="gempty"><div class="slab ghost"><div class="slab-lab"></div><div class="slab-well"></div></div><div><h2>Choisis une carte à grader</h2><p class="pnote">Elle sera retirée de ta collection et notée de 1 à 10.</p><button class="btn gold" id="gChange">Choisir une carte</button></div></div>`}</section>
+   ${last.length?`<section class="pcard"><h2>Dernières gradations</h2><div class="glast">${last.map(s=>slabHtml(s)).join("")}</div><div class="tact"><a class="btn" href="#gradees">Voir toutes mes cartes gradées</a></div></section>`:""}
+  </div>`;
+  $("#gChange").onclick=()=>cardPicker({title:"Carte à grader",onPick:cc=>{gPick=cc.key;$("#modalRoot").innerHTML="";gradePage()}});
+  const go=$("#gGo");if(go)go.onclick=()=>confirmBox(`Grader ${c.name} ?`,"La carte quitte ta collection (−1). Le résultat est définitif.","Grader",()=>doGrade(c));
+  app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab));
+}
+function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newCert(),k:canon(c.key),g:r.g,sub:r.sub,d:Date.now()};
+  takeOut(c.key,1);gState().push(s);save();updateStat();if(qty(c.key)<1)gPick=null;
+  $("#modalRoot").innerHTML=`<div class="modal greveal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt">${s.g===10?"✨ GEM MINT 10 ✨":`Note : ${fmtG(s.g)} — ${GLAB[s.g]}`}</div><div class="tact" style="justify-content:center"><button class="btn" id="gAgain">Grader une autre carte</button><button class="btn gold" id="gSee">Voir mes cartes gradées</button></div></div></div>`;
+  const sl=document.querySelector(".greveal .slab-gr b");let n=0;const tgt=s.g;sl.textContent="–";
+  setTimeout(()=>{const iv=setInterval(()=>{n++;const v=Math.min(tgt,Math.round(Math.random()*9+1));sl.textContent=n>14?fmtG(tgt):fmtG(v);if(n>14){clearInterval(iv);document.querySelector(".greveal .slab").classList.add("done")}},70)},450);
+  $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
+}
+function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
+  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div></div></div>`;
+  $("#modal").onclick=()=>$("#modalRoot").innerHTML=""}
+/* --- onglet Cartes gradées --- */
+const GV={sort:"note"};
+function gradedPage(){const L=[...gState()];
+  const by={note:(a,b)=>b.g-a.g||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||b.g-a.g,date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
+  L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
+  app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10 · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
+   ${L.length?`<div class="mcbar"><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   <div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+  const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gradedPage()};
+  app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
+
 /* ============================================================
    ROUTAGE
    ============================================================ */
@@ -1358,6 +1458,8 @@ function route(keep){document.body.classList.remove('wide');document.body.classL
   else if(id==="profil"){navOn="profil";profilePage()}
   else if(id==="echanges"){navOn="trade";tradePage()}
   else if(id==="mes-cartes"){navOn="mine";minePage()}
+  else if(id==="gradation"){navOn="grade";gradePage()}
+  else if(id==="gradees"){navOn="graded";gradedPage()}
   else cardsPage();
   document.querySelectorAll("[data-nav]").forEach(a=>a.classList.toggle("on",a.dataset.nav===navOn));const mc=$("#meChip");if(mc)mc.classList.toggle("on",navOn==="profil");drawMe();
   if(!keep)scrollTo(0,0);updateStat();
