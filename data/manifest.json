@@ -1,6 +1,6 @@
 {
- "version": 17,
- "label": "Promos HGSS en Holo rare",
+ "version": 18,
+ "label": "Onglet Cartes, Codex, promos M-P japonaises",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "bac95dccc5188637edd21be2829accee0a3cac7a69044840dba23d813eba5ce9",
-   "size": 15892927,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=bac95dccc5188637"
+   "sha": "289e95bf86bf5ae11b5262e563bec6684224269006c78e88fd17d14d6e9c3bad",
+   "size": 15898439,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=289e95bf86bf5ae1"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",
