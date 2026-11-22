@@ -1432,9 +1432,8 @@ function gradePage(){gState();const c=gPick&&CARDS[gPick]&&qty(gPick)>0?CARDS[gP
    <section class="pcard gsel">${c?`<div class="gcard"><img src="${c.img||c.th}" alt=""></div>
       <div class="ginfo"><h2>${esc(c.name)}</h2><p>${esc(setName(c))} · ${esc(c.num||"")} · ${c.y||""}</p><p><span class="rt rt-${c.r}">${tierName(c.r)}</span> &nbsp;Tu en as ×${qty(c.key)}</p>
       <div class="gch"><b>${fmtG(+chance10(c).toFixed(2))} %</b><small>de chance d'obtenir un 10 GEM MINT</small></div>
-      <p class="pnote">La carte quitte ta collection (−1 exemplaire) et revient dans un boîtier avec sa note. Plus la carte est rare (et ancienne), plus le 10 est dur.</p>
       <div class="tact" style="justify-content:flex-start"><button class="btn" id="gChange">Changer de carte</button><button class="btn gold" id="gGo">Envoyer en gradation</button></div></div>`
-     :`<div class="gempty"><div class="slab ghost"><div class="slab-lab"></div><div class="slab-well"></div></div><div><h2>Choisis une carte à grader</h2><p class="pnote">Elle sera retirée de ta collection et notée de 1 à 10.</p><button class="btn gold" id="gChange">Choisir une carte</button></div></div>`}</section>
+     :`<div class="gempty"><div class="slab ghost"><div class="slab-lab"></div><div class="slab-well"></div></div><div><h2>Choisis une carte à grader</h2><button class="btn gold" id="gChange">Choisir une carte</button></div></div>`}</section>
    ${last.length?`<section class="pcard"><h2>Dernières gradations</h2><div class="glast">${last.map(s=>slabHtml(s)).join("")}</div><div class="tact"><a class="btn" href="#gradees">Voir toutes mes cartes gradées</a></div></section>`:""}
   </div>`;
   $("#gChange").onclick=()=>cardPicker({title:"Carte à grader",onPick:cc=>{gPick=cc.key;$("#modalRoot").innerHTML="";gradePage()}});
