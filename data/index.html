@@ -658,7 +658,16 @@ nav a{white-space:nowrap}
 .gbf.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.gbf img{width:34px;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.4)}.gbf b{display:block;font-size:13px}.gbf small{font-size:11.5px;color:var(--muted)}
 .gbg{display:inline-block;min-width:26px;text-align:center;font-weight:800;border-radius:6px;padding:0 4px;background:#e9eef8;color:#141a2b}.gbg.gold{background:linear-gradient(135deg,#e3b43c,#fff1b8);color:#3d2a00}.gbg.black{background:#111;color:#e8c66a}
 .gbtools{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.gbtools .btn{width:100%;justify-content:center}
-.gbchips{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}.gbchips .bchips{flex:1}.gbib{display:inline-flex;align-items:center;gap:6px}
+.gbbar{display:flex;gap:8px;align-items:center;order:3;margin-left:auto}
+.gbdd{position:relative}.gbddb,.gbddi{display:flex;align-items:center;gap:10px;font:inherit;color:var(--txt);cursor:pointer;text-align:left}
+.gbddb{min-width:230px;max-width:320px;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:700;font-size:14px;transition:border-color .15s}.gbddb:hover,.gbdd.open .gbddb{border-color:var(--gold)}
+.gbddb i{margin-left:auto;font-style:normal;color:var(--muted);transition:transform .15s}.gbdd.open .gbddb i{transform:rotate(180deg)}
+.gbddn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gbddb small,.gbddi small{background:var(--tile);color:var(--muted);border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700}
+.gbcov{flex:none;width:16px;height:21px;border-radius:2px 4px 4px 2px;background:linear-gradient(90deg,rgba(0,0,0,.3) 0 3px,transparent 3px),var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.gbddp{position:absolute;right:0;top:calc(100% + 6px);z-index:30;min-width:100%;max-height:340px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 18px 40px rgba(0,0,0,.5);display:grid;gap:2px}
+.gbddi{width:100%;background:none;border:0;border-radius:10px;padding:8px 10px;font-size:14px;font-weight:600}.gbddi:hover{background:var(--tile)}.gbddi.on{background:var(--tile-h)}.gbddi.on .gbddn:after{content:" ✓";color:var(--gold)}
+.gbddi small{margin-left:auto}.gbddnew{color:var(--gold);border-top:1px solid var(--line);border-radius:0 0 10px 10px;margin-top:4px;padding-top:10px}
+.gbic{width:40px;height:40px;padding:0;justify-content:center;font-size:17px}
 .gbmain{display:flex;flex-direction:column;align-items:center;min-width:0}.gbchips{align-self:stretch}
 .gbbook{--c:#2d5ba3;display:flex;padding:16px;border-radius:20px;position:relative;
   background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.14),transparent 60%),linear-gradient(135deg,color-mix(in srgb,var(--c) 78%,#000),color-mix(in srgb,var(--c) 45%,#000));
@@ -1573,7 +1582,7 @@ function gbHtml(L){const B=gb(),per=gbPer(),n=gbPages(),two=gbTwo(),nS=Math.ceil
      return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;const rings=`<div class="gbring">${"<i></i>".repeat(B.rows>2?4:3)}</div>`;
   return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Nom du Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden></p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont rangées.</p>'}</div>
      <div class="gbtools"><button class="btn sm" id="gbAll" ${free.length?"":"disabled"} title="Range toutes les cartes dans « ${esc(B.name)} »">Tout ranger ici</button></div></aside>
-   <div class="gbmain"><div class="gbchips"><div class="bchips">${Object.values(gbAll()).sort((a,b)=>a.created-b.created).map(x=>`<button class="bchip ${x.id===B.id?"on":""}" data-gbsel="${x.id}" style="--c:${esc(x.color)}"><span class="cov"></span>${esc(x.name)} <small style="color:var(--muted)">${Object.keys(x.slots).length}</small></button>`).join("")}</div><button class="btn sm gbib" id="gbSet">⚙ Réglages</button><button class="btn sm primary gbib" id="gbNew">＋ Nouveau</button></div><div class="gbbook ${two?"two":""} ${gbTurn} ${gbPick?"gbpick":""}" id="gbBook" style="--c:${esc(B.color||"#2d5ba3")}">${pages.map(page).join(two?rings:"")}</div>
+   <div class="gbmain"><div class="gbbook ${two?"two":""} ${gbTurn} ${gbPick?"gbpick":""}" id="gbBook" style="--c:${esc(B.color||"#2d5ba3")}">${pages.map(page).join(two?rings:"")}</div>
      <div class="gbnav"><button class="btn" id="gbPrev" ${gbSpread?"":"disabled"}>◀</button>${nS<=14?`<div class="gbdots">${Array.from({length:nS},(_,i)=>`<button data-gbsp="${i}" class="${i===gbSpread?"on":""}" title="${two?`Pages ${i*2+1}–${i*2+2}`:`Page ${i+1}`}"></button>`).join("")}</div>`:""}<span>${two?`Pages ${first+1}–${first+2}`:`Page ${first+1}`} / ${n}</span><button class="btn" id="gbNext" ${gbSpread<nS-1?"":"disabled"}>▶</button></div></div></div>`}
 function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   const put=(pos,id)=>{for(const p in B.slots)if(B.slots[p]===id)delete B.slots[p];B.slots[pos]=id;gbPick=null;redraw()};
@@ -1581,8 +1590,10 @@ function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   const q=$("#gbQ");if(q){const f=()=>{const v=gbNorm(q.value.trim());let n=0;app.querySelectorAll("[data-gn]").forEach(b=>{const ok=!!v&&b.dataset.gn.includes(v);b.hidden=!ok;if(ok)n++});const no=$("#gbNone");no.textContent=v?"Aucune carte trouvée.":"Tape le nom d'un Pokémon pour voir tes cartes à ranger.";no.hidden=!!n};
     q.oninput=()=>{gbQ=q.value;f()};f();if(gbQ){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
   $("#gbPrev").onclick=()=>turn(-1);$("#gbNext").onclick=()=>turn(1);
-  app.querySelectorAll("[data-gbsel]").forEach(c=>c.onclick=()=>{ST.gbcur=c.dataset.gbsel;gbSpread=0;gbPick=null;save();gradedPage()});
-  $("#gbNew").onclick=()=>gbModal(null);$("#gbSet").onclick=()=>gbModal(B);
+  app.querySelectorAll("[data-gbsel]").forEach(c=>c.onclick=()=>{ST.gbcur=c.dataset.gbsel;gbDD=false;gbSpread=0;gbPick=null;save();gradedPage()});
+  $("#gbDDb").onclick=e=>{e.stopPropagation();gbDD=!gbDD;gradedPage()};const n2=$("#gbNew2");if(n2)n2.onclick=()=>{gbDD=false;gbModal(null)};
+  if(gbDD)setTimeout(()=>document.addEventListener("click",function cl(e){if(!e.target.closest("#gbDD")){gbDD=false;document.removeEventListener("click",cl);if($("#gbDD"))gradedPage()}}),0);
+  $("#gbNew").onclick=()=>{gbDD=false;gbModal(null)};$("#gbSet").onclick=()=>gbModal(B);
   $("#gbAll").onclick=()=>{const placed=gbPlaced();let pos=0;L.filter(x=>!placed.has(x.id)).forEach(x=>{while(B.slots[pos])pos++;B.slots[pos]=x.id});redraw()};
   app.querySelectorAll("[data-gfree]").forEach(b=>{b.onclick=()=>{gbPick=gbPick===b.dataset.gfree?null:b.dataset.gfree;gradedPage()};
     b.ondragstart=e=>{gbDrag={id:b.dataset.gfree};try{e.dataTransfer.setData("text/plain","x")}catch(_){}}});
@@ -1608,6 +1619,12 @@ function gbFit(){const m=app.querySelector(".gbmain"),bk=$("#gbBook");if(!m||!bk
   app.querySelectorAll(".gbs").forEach(x=>x.style.height=Math.round(w*R)+"px");
   app.querySelectorAll(".gbsc").forEach(el=>el.style.transform=`scale(${w/285})`)}
 const byIdG=id=>gState().find(x=>x.id===id);
+let gbDD=false;
+function gbBarHtml(){const all=Object.values(gbAll()).sort((a,b)=>a.created-b.created),B=gb();
+  const it=x=>`<span class="gbcov" style="--c:${esc(x.color)}"></span><span class="gbddn">${esc(x.name)}</span><small>${Object.keys(x.slots).length}</small>`;
+  return `<div class="gbbar"><div class="gbdd ${gbDD?"open":""}" id="gbDD"><button class="gbddb" id="gbDDb" title="Changer de classeur">${it(B)}<i>▾</i></button>
+    ${gbDD?`<div class="gbddp">${all.map(x=>`<button class="gbddi ${x.id===B.id?"on":""}" data-gbsel="${x.id}">${it(x)}</button>`).join("")}<button class="gbddi gbddnew" id="gbNew2">＋ Nouveau classeur</button></div>`:""}</div>
+    <button class="btn gbic" id="gbSet" title="Réglages du classeur">⚙</button><button class="btn primary" id="gbNew">＋ Nouveau classeur</button></div>`}
 const GPRE=[[2,2],[3,2],[3,3],[4,2],[4,3],[5,2]];
 function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,rows:2,color:COVERS[Object.keys(all).length%COVERS.length][1],created:Date.now(),slots:{}};
   const root=$("#modalRoot");let armed=false;
@@ -1636,7 +1653,7 @@ function gradedPage(){const L=[...gState()];
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view!=="grid"?gbBarHtml():""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
    ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
