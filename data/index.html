@@ -553,6 +553,11 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 .hs{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:99px}.hs.out{background:rgba(239,107,95,.15);color:var(--danger)}.hs.in{background:rgba(46,194,126,.15);color:var(--ok)}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;max-height:55vh;overflow:auto}.tg{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}.tg img{width:100%;border-radius:8px}.tg small{font-size:12px}.tg .rt{font-size:10.5px;padding:1px 7px}.nw{color:var(--gold)}
 @media(max-width:900px){.pcols,.trade{grid-template-columns:1fr}.favs{grid-template-columns:repeat(3,1fr);gap:10px}.trow{grid-template-columns:130px 1fr 80px}}
+.ptop{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:stretch}.pleft{display:grid;gap:18px;align-content:start}
+.pprog .prings{flex-direction:column;align-items:flex-start;gap:18px}.pprog .pring .pin{width:96px;height:96px}
+.pprog .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pprog .kpis>div{min-width:0}.pprog .kpis>div:last-child:nth-child(odd){grid-column:1/-1}
+.trow small .flag{width:16px;vertical-align:-1px}.plb .flag{vertical-align:-3px;margin-right:2px}
+@media(max-width:1000px){.ptop{grid-template-columns:1fr}.pprog .prings{flex-direction:row;flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -1175,18 +1180,20 @@ function profilePage(){const P=prof();
   const started=POKEMON.filter(p=>p.cards.some(c=>qty(c.key)>0)).length;
   const best=UNIQ.filter(c=>qty(c.key)>0).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o)[0];
   const tiers=Object.keys(TIERS).reverse().map(t=>{const L=UNIQ.filter(c=>c.r===t),a=statsOf(L),i=statsOf(L.filter(c=>c.region==="intl")),j=statsOf(L.filter(c=>c.region==="jp"));
-    return `<div class="trow"><span class="rt rt-${t}">${tierName(t)}</span><div class="tbar"><i style="width:${a.p}%;background:${TCOL[t]}"></i></div><b>${a.o} / ${a.t}</b><small>🌍 ${i.o}/${i.t} · 🇯🇵 ${j.o}/${j.t}</small></div>`}).join("");
+    return `<div class="trow"><span class="rt rt-${t}">${tierName(t)}</span><div class="tbar"><i style="width:${a.p}%;background:${TCOL[t]}"></i></div><b>${a.o} / ${a.t}</b><small>🌍 ${i.o}/${i.t} · ${flag("ja")} ${j.o}/${j.t}</small></div>`}).join("");
   const gens=GENS.map(g=>{const s=statsOf(UNIQ.filter(c=>c.gen===g[0]));return `<div class="grow"><span>Gén. ${g[0]}</span><div class="tbar"><i style="width:${s.p}%"></i></div><b>${s.p.toFixed(1).replace(".",",")} %</b></div>`}).join("");
   const favs=P.fav.map((k,i)=>{const c=k&&CARDS[k];return c?`<button class="fav has" data-fav="${i}"><img src="${c.img}" alt=""><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)} · ${esc(c.label)}</em><i class="fx" data-unfav="${i}" title="Retirer">×</i></button>`:`<button class="fav" data-fav="${i}"><span class="plus">+</span><em>Carte préférée n°${i+1}</em></button>`}).join("");
   app.innerHTML=`<div class="prof">
+    <div class="ptop"><div class="pleft">
     <section class="pcard phead">
       <label class="avbig" title="Changer l'image (PNG, GIF, JPG)">${avHtml("avimg")}<input type="file" id="avIn" accept="image/png,image/gif,image/jpeg,image/webp" hidden><span class="avedit">✎</span></label>
       <div class="pid"><input id="pseudo" maxlength="24" placeholder="Ton pseudo" value="${esc(P.name)}"><div class="pmeta">${all.o} cartes différentes · ${copies} au total · ${ST.opened||0} boosters ouverts</div>
         <div class="pmeta2">${AV.url?`<button class="lnk" id="avDel">Retirer l'image</button>`:`<span>Clique sur l'avatar pour mettre une image PNG ou GIF</span>`}</div></div>
     </section>
     <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
-    <section class="pcard"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,"🇯🇵 Japonais",`${jp.o} / ${jp.t}`,"#ff7b7b")}</div>
-      <div class="kpis"><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section>
+    </div>
+    <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}</div>
+      <div class="kpis"><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
     <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
   </div>`;
   const ps=$("#pseudo");ps.oninput=()=>{P.name=ps.value.trim();save();drawMe()};
@@ -1201,7 +1208,7 @@ function cardPicker({title,filter,onPick,note}){let q="",reg="all";const root=$(
     $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy"><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)}</small></button>`).join("")||`<p class="empty">Aucune carte obtenue${q?" pour cette recherche":""}.</p>`;
     $("#pkList").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>onPick(CARDS[b.dataset.k],draw))};
   root.innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet"><h2>${title}</h2>${note?`<p class="pnote">${note}</p>`:""}
-    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp","🇯🇵"]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div><button class="btn" id="pkClose">Fermer</button></div>
+    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp",flag("ja")]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div><button class="btn" id="pkClose">Fermer</button></div>
     <div class="pklist" id="pkList"></div></div></div>`;
   $("#pkQ").oninput=e=>{q=e.target.value;draw()};$("#pkClose").onclick=()=>root.innerHTML="";
   root.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{reg=b.dataset.reg;root.querySelectorAll("[data-reg]").forEach(x=>x.classList.toggle("on",x===b));draw()});
