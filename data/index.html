@@ -612,6 +612,24 @@ nav a{white-space:nowrap}
 .glast{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))!important}
 .slab-gr b.half{font-size:24px;letter-spacing:-.5px}.slab.big .slab-gr b.half{font-size:36px}.slab-gr small{margin-top:3px}
 .grv-left{color:var(--muted);font-size:14px;margin-top:-8px}
+
+.slab.gem{box-shadow:0 0 0 2px rgba(255,255,255,.85) inset,0 0 0 7px rgba(210,220,240,.25) inset,0 22px 44px rgba(0,0,0,.5),0 0 30px rgba(255,255,255,.18)}
+.slab.gem .slab-lab{background:linear-gradient(#ffffff,#f1f3f8);border-color:#c9cfdb}.slab.gem .slab-gr b{background:none;color:#141a2b}
+.slab.gem .slab-info .subs,.slab.gem .slab-info .subs span{border-color:#d4d9e3}
+.slab.gold{box-shadow:0 0 0 2px rgba(255,225,130,.95) inset,0 0 0 7px rgba(255,205,80,.22) inset,0 22px 44px rgba(0,0,0,.5),0 0 40px rgba(255,195,50,.45)}
+.slab.gold .slab-lab{background:linear-gradient(135deg,#b8860b,#f7d774 30%,#fff1b8 50%,#e3b43c 70%,#a8770a);border-color:#8a6408;color:#3d2a00}
+.slab.gold .slab-lab *,.slab.gold .slab-info .subs,.slab.gold .slab-info .subs span{border-color:rgba(70,45,0,.28)!important}
+.slab.gold .slab-gr b{background:none;color:#2b1c00;text-shadow:0 1px 0 rgba(255,255,255,.5)}.slab.gold .slab-info b,.slab.gold .subs b{color:#241700}.slab.gold .slab-info small{color:#5a4210}
+.slab.gold .slab-logo .mk{background:linear-gradient(135deg,#2b1c00,#5a3d05);color:#ffd86b}.slab.gold .slab-logo .bt{color:#3d2a00}.slab.gold .slab-info i{filter:none;color:#5a3000}
+.slab.black{box-shadow:0 0 0 2px rgba(40,40,40,.9) inset,0 0 0 7px rgba(0,0,0,.25) inset,0 22px 44px rgba(0,0,0,.6),0 0 46px rgba(180,150,255,.4)}
+.slab.black .slab-lab{background:linear-gradient(135deg,#050505,#1e1e22 45%,#0a0a0c);border-color:#000;color:#cfd3dc}
+.slab.black .slab-lab *,.slab.black .slab-info .subs,.slab.black .slab-info .subs span{border-color:rgba(255,255,255,.16)!important}
+.slab.black .slab-info b,.slab.black .subs b{color:#fff}.slab.black .slab-info small{color:#8d93a3}.slab.black .slab-info i{filter:none;color:#e8c66a}
+.slab.black .slab-gr b{background:linear-gradient(#f9e7a0,#d4a43a 55%,#fff3c4);-webkit-background-clip:text;background-clip:text;color:transparent}.slab.black .slab-gr small{color:#e8c66a}
+.slab.black .slab-logo .mk{background:linear-gradient(135deg,#d4a43a,#f9e7a0);color:#111}.slab.black .slab-logo .bt{color:#e8c66a}
+.greveal .slab.done.gold{animation:goldPulse 1.6s ease-in-out 2}@keyframes goldPulse{50%{box-shadow:0 0 0 2px rgba(255,225,130,.95) inset,0 0 90px rgba(255,195,50,.9)}}
+.greveal .slab.done.black{animation:blackPulse 1.6s ease-in-out 3}@keyframes blackPulse{50%{box-shadow:0 0 0 2px rgba(40,40,40,.9) inset,0 0 110px rgba(180,150,255,.95)}}
+.greveal .slab.done.gem{animation:none}
 </style>
 </head>
 <body>
@@ -1322,12 +1340,12 @@ const b64u={enc:u8=>{let s="";u8.forEach(b=>s+=String.fromCharCode(b));return bt
 async function zip(str,inflate){const cs=inflate?new DecompressionStream("deflate-raw"):new CompressionStream("deflate-raw");const w=cs.writable.getWriter();w.write(inflate?str:new TextEncoder().encode(str));w.close();
   const buf=await new Response(cs.readable).arrayBuffer();return inflate?new TextDecoder().decode(buf):new Uint8Array(buf)}
 async function chk(body){const h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(TSALT+body));return b64u.enc(new Uint8Array(h).slice(0,5))}
-async function makeCode(items,slabs){const P=prof();const pl={v:1,i:Math.random().toString(36).slice(2,12),f:P.name||"Anonyme",u:P.uid,d:Date.now(),c:items.map(([k,n])=>n>1?[k,n]:k)};if(slabs&&slabs.length)pl.s=slabs.map(x=>[x.k,x.g,x.sub,x.id]);
+async function makeCode(items,slabs){const P=prof();const pl={v:1,i:Math.random().toString(36).slice(2,12),f:P.name||"Anonyme",u:P.uid,d:Date.now(),c:items.map(([k,n])=>n>1?[k,n]:k)};if(slabs&&slabs.length)pl.s=slabs.map(x=>x.lb?[x.k,x.g,x.sub,x.id,x.lb]:[x.k,x.g,x.sub,x.id]);
   const body=b64u.enc(await zip(JSON.stringify(pl)));return {code:`PKO-${body}.${await chk(body)}`,pl}}
 async function readCode(code){code=(code||"").replace(/\s+/g,"");const m=code.match(/^PKO-([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)$/);if(!m)throw new Error("Ce n'est pas un code d'échange PokeOpening.");
   if(await chk(m[1])!==m[2])throw new Error("Code invalide ou incomplet (vérifie qu'il est copié en entier).");
   let pl;try{pl=JSON.parse(await zip(b64u.dec(m[1]),true))}catch(e){throw new Error("Code illisible.")}
-  pl.c=(pl.c||[]).map(x=>Array.isArray(x)?x:[x,1]);pl.s=(pl.s||[]).map(([k,g,sub,id])=>({k,g,sub,id}));return pl}
+  pl.c=(pl.c||[]).map(x=>Array.isArray(x)?x:[x,1]);pl.s=(pl.s||[]).map(([k,g,sub,id,lb])=>lb?{k,g,sub,id,lb}:{k,g,sub,id});return pl}
 let tBasket={},tSlabs=new Set();
 function tradePage(){const T=(prof(),ST.trades);
   const items=Object.entries(tBasket).filter(([k,n])=>n>0&&CARDS[k]);const slabs=gState().filter(x=>tSlabs.has(x.id));const tot=items.reduce((a,[,n])=>a+n,0)+slabs.length;
@@ -1423,7 +1441,11 @@ const GDIST=[[9.5,6],[9,24],[8.5,16],[8,16],[7.5,10],[7,9],[6.5,5],[6,5],[5.5,2]
 const fmtG=g=>String(g).replace(".",",");
 function chance10(c){return G10[c.r]*((c.y||2010)<2003?.7:1)}
 function rollGrade(c){
-  if(Math.random()*100<chance10(c)){const sub=[10,10,10,10];if(Math.random()<.6)sub[Math.floor(Math.random()*4)]=9.5;return {g:10,sub}}
+  if(Math.random()*100<chance10(c)){const r=Math.random(),sub=[10,10,10,10];
+    if(r<.05)return {g:10,sub,lb:"black"};
+    if(r<.20){sub[Math.floor(Math.random()*4)]=9.5;return {g:10,sub,lb:"gold"}}
+    if(Math.random()<.5)sub[0]=9;else{const i=Math.floor(Math.random()*4);let j=Math.floor(Math.random()*3);if(j>=i)j++;sub[i]=9.5;sub[j]=9.5}
+    return {g:10,sub}}
   const old=(c.y||2010)<2003;const tab=GDIST.map(([g,w])=>[g,old&&g>=8.5?w*.6:w]);let t=Math.random()*tab.reduce((a,x)=>a+x[1],0),g=1;
   for(const [gg,w] of tab){t-=w;if(t<=0){g=gg;break}}
   const sub=[0,0,0,0].map(()=>Math.min(10,g+[0,0,.5,.5,1,-.5][Math.floor(Math.random()*6)]));sub[Math.floor(Math.random()*4)]=g;
@@ -1431,13 +1453,14 @@ function rollGrade(c){
 function gState(){ST.graded=ST.graded||[];ST.gseq=ST.gseq||0;return ST.graded}
 function newCert(){const P=prof();ST.gseq=(ST.gseq||0)+1;return "PO-"+(P.uid||"x").slice(0,3).toUpperCase()+String(ST.gseq).padStart(5,"0")}
 function setName(c){const k=(c.lang==="ja"?"J:":"")+c.code;return SETN[k]||SETN[c.code]||(/P$/.test(c.code)?"Promos "+c.code.slice(0,-1):c.code)}
-function slabHtml(s,big){const c=CARDS[s.k];if(!c)return"";const gem=s.g===10;
+const lbOf=s=>s.g===10?(s.lb||"gem"):"";const gLabel=s=>s.lb==="black"?"BLACK LABEL":s.lb==="gold"?"PRISTINE":GLAB[s.g]||"";const gScore=s=>s.g+(s.lb==="black"?.2:s.lb==="gold"?.1:0);
+function slabHtml(s,big){const c=CARDS[s.k];if(!c)return"";
   const nm=c.name.toUpperCase(),lang=c.tr?"FR":c.lang==="ja"?"JP":"EN";
-  return `<div class="slab ${gem?"gem":""} ${big?"big":""}" data-slab="${s.id}"><div class="slab-lab">
+  return `<div class="slab ${lbOf(s)} ${big?"big":""}" data-slab="${s.id}"><div class="slab-lab">
     <div class="slab-logo"><div class="mk">PO</div><div class="bt">POKEOPENING<br>GRADING</div></div>
     <div class="slab-info"><b>${esc(nm)}</b><span>${esc(setName(c))} · ${esc(c.num||"")}</span><span>${c.y||""} · ${lang} · <i class="rt-${c.r}">${tierName(c.r)}</i></span><small>N° ${esc(s.id)}</small>
       <div class="subs"><span>CENTRAGE <b>${fmtG(s.sub[0])}</b></span><span>COINS <b>${fmtG(s.sub[1])}</b></span><span>CÔTÉS <b>${fmtG(s.sub[2])}</b></span><span>SURFACE <b>${fmtG(s.sub[3])}</b></span></div></div>
-    <div class="slab-gr"><b class="${s.g%1?"half":""}">${fmtG(s.g)}</b><small>${GLAB[s.g]||""}</small></div></div>
+    <div class="slab-gr"><b class="${s.g%1?"half":""}">${fmtG(s.g)}</b><small>${gLabel(s)}</small></div></div>
     <div class="slab-well"><img src="${c.img||c.th}" alt="" loading="lazy"></div><div class="slab-shine"></div></div>`}
 /* --- onglet Gradation --- */
 let gPick=null;
@@ -1455,9 +1478,9 @@ function gradePage(){gState();const c=gPick&&CARDS[gPick]&&qty(gPick)>0?CARDS[gP
   const go=$("#gGo");if(go)go.onclick=()=>confirmBox(`Grader ${c.name} ?`,"La carte quitte ta collection (−1). Le résultat est définitif.","Grader",()=>doGrade(c));
   app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab));
 }
-function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newCert(),k:canon(c.key),g:r.g,sub:r.sub,d:Date.now()};
+function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newCert(),k:canon(c.key),g:r.g,sub:r.sub,d:Date.now()};if(r.lb)s.lb=r.lb;
   takeOut(c.key,1);gState().push(s);save();updateStat();gPick=null;const left=qty(c.key);
-  $("#modalRoot").innerHTML=`<div class="modal greveal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt">${s.g===10?"✨ GEM MINT 10 ✨":`Note : ${fmtG(s.g)} — ${GLAB[s.g]}`}</div><div class="grv-left">${left?`Il te reste ${left} exemplaire${left>1?"s":""} de cette carte`:"C'était ton dernier exemplaire de cette carte"}</div><div class="tact" style="justify-content:center"><button class="btn" id="gAgain">Grader une autre carte</button><button class="btn gold" id="gSee">Voir mes cartes gradées</button></div></div></div>`;
+  $("#modalRoot").innerHTML=`<div class="modal greveal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt">${s.lb==="black"?"🖤 BLACK LABEL — 10 PARFAIT 🖤":s.lb==="gold"?"✨ GOLD LABEL — 10 PRISTINE ✨":s.g===10?"10 — GEM MINT":`Note : ${fmtG(s.g)} — ${GLAB[s.g]}`}</div><div class="grv-left">${left?`Il te reste ${left} exemplaire${left>1?"s":""} de cette carte`:"C'était ton dernier exemplaire de cette carte"}</div><div class="tact" style="justify-content:center"><button class="btn" id="gAgain">Grader une autre carte</button><button class="btn gold" id="gSee">Voir mes cartes gradées</button></div></div></div>`;
   const sl=document.querySelector(".greveal .slab-gr b");let n=0;const tgt=s.g;sl.textContent="–";
   setTimeout(()=>{const iv=setInterval(()=>{n++;const v=Math.min(tgt,Math.round(Math.random()*9+1));sl.textContent=n>14?fmtG(tgt):fmtG(v);if(n>14){clearInterval(iv);document.querySelector(".greveal .slab").classList.add("done")}},70)},450);
   $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
@@ -1469,9 +1492,9 @@ function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
 /* --- onglet Cartes gradées --- */
 const GV={sort:"note"};
 function gradedPage(){const L=[...gState()];
-  const by={note:(a,b)=>b.g-a.g||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||b.g-a.g,date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
+  const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
-  app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10 · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
+  app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
    ${L.length?`<div class="mcbar"><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
    <div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gradedPage()};
