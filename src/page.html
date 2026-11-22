@@ -611,6 +611,7 @@ nav a{white-space:nowrap}
 .slab.big .slab-info .subs span{padding:3px 7px}
 .glast{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))!important}
 .slab-gr b.half{font-size:24px;letter-spacing:-.5px}.slab.big .slab-gr b.half{font-size:36px}.slab-gr small{margin-top:3px}
+.grv-left{color:var(--muted);font-size:14px;margin-top:-8px}
 </style>
 </head>
 <body>
@@ -1454,8 +1455,8 @@ function gradePage(){gState();const c=gPick&&CARDS[gPick]&&qty(gPick)>0?CARDS[gP
   app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab));
 }
 function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newCert(),k:canon(c.key),g:r.g,sub:r.sub,d:Date.now()};
-  takeOut(c.key,1);gState().push(s);save();updateStat();if(qty(c.key)<1)gPick=null;
-  $("#modalRoot").innerHTML=`<div class="modal greveal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt">${s.g===10?"✨ GEM MINT 10 ✨":`Note : ${fmtG(s.g)} — ${GLAB[s.g]}`}</div><div class="tact" style="justify-content:center"><button class="btn" id="gAgain">Grader une autre carte</button><button class="btn gold" id="gSee">Voir mes cartes gradées</button></div></div></div>`;
+  takeOut(c.key,1);gState().push(s);save();updateStat();gPick=null;const left=qty(c.key);
+  $("#modalRoot").innerHTML=`<div class="modal greveal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt">${s.g===10?"✨ GEM MINT 10 ✨":`Note : ${fmtG(s.g)} — ${GLAB[s.g]}`}</div><div class="grv-left">${left?`Il te reste ${left} exemplaire${left>1?"s":""} de cette carte`:"C'était ton dernier exemplaire de cette carte"}</div><div class="tact" style="justify-content:center"><button class="btn" id="gAgain">Grader une autre carte</button><button class="btn gold" id="gSee">Voir mes cartes gradées</button></div></div></div>`;
   const sl=document.querySelector(".greveal .slab-gr b");let n=0;const tgt=s.g;sl.textContent="–";
   setTimeout(()=>{const iv=setInterval(()=>{n++;const v=Math.min(tgt,Math.round(Math.random()*9+1));sl.textContent=n>14?fmtG(tgt):fmtG(v);if(n>14){clearInterval(iv);document.querySelector(".greveal .slab").classList.add("done")}},70)},450);
   $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
