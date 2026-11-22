@@ -509,10 +509,6 @@ body.bfull [data-c=fullscreen]::after{content:" (Échap)"}
 @media (max-width:900px){.cwrap{grid-template-columns:1fr}.finder{position:static;max-height:420px}}
 @media (max-width:640px){nav a span.l{display:none}.stat{display:none}.h1{font-size:26px}.cards{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .binder{padding:11px;border-radius:12px}.binder::before{inset:4px}.binder .corner{width:16px;height:16px}.page{padding:8px}.rings{width:24px}.ring{width:32px;height:9px;margin:0 -4px}.rings::before{width:9px}}
-.gsel{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:14px 0 24px}.gsel>span{font-size:13px;color:var(--muted);margin-right:6px}
-.gchip{min-width:38px;height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:inherit;font:inherit;font-weight:700;cursor:pointer}
-.gchip.on{background:var(--gold,#ffcb05);border-color:transparent;color:#1b1d23}
-.pgen{font-family:var(--disp);font-size:11px;letter-spacing:.14em;opacity:.85;margin-top:4px}
 </style>
 </head>
 <body>
@@ -587,6 +583,10 @@ const POKEMON=Object.entries(POKEDATA).map(([id,p])=>({id,name:p.name,cards:p.ca
   .sort((a,b)=>{const ia=DEX.indexOf(a.id),ib=DEX.indexOf(b.id);return (ia<0?999:ia)-(ib<0?999:ib)||a.name.localeCompare(b.name)});
 POKEMON.forEach(p=>{p.cards.sort((a,b)=>(a.y||9999)-(b.y||9999)||natural(a.code,b.code)||natural(a.num,b.num));
   p.gen=genOf(p.id);p.cards.forEach(c=>{c.key=p.id+"/"+c.id;c.gen=p.gen;if(c.pk){c.th=c.img=BLANK+"#"+c.key}c.name=p.name;c.pokemon=p;c.label=c.code+(c.num?" · "+c.num:"");CARDS[c.key]=c})});
+const TW={};Object.values(CARDS).forEach(c=>{if(c.tw&&CARDS[c.tw])TW[c.key]=c.tw});
+const canon=k=>TW[k]||k;
+{const G={};for(const k in TW)(G[TW[k]]=G[TW[k]]||[TW[k]]).push(k);for(const ck in G){const nm=G[ck].map(k=>CARDS[k].pokemon.name).join(" & ");G[ck].forEach(k=>CARDS[k].name=nm)}}
+const UNIQ=Object.values(CARDS).filter(c=>!TW[c.key]);
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -609,6 +609,7 @@ fixState();
 function fixState(){ST.owned=ST.owned||{};ST.slots=ST.slots||{};ST.opened=ST.opened||0;
   if(!Object.keys(ST.binders||{}).length){const f=freshState();ST.binders=f.binders;ST.slots=f.slots;ST.current=f.current}
   for(const id in ST.binders)ST.slots[id]=ST.slots[id]||{};
+  for(const k in ST.owned){const ck=TW[k];if(ck){ST.owned[ck]=(ST.owned[ck]||0)+ST.owned[k];delete ST.owned[k]}}
   if(!ST.binders[ST.current])ST.current=Object.keys(ST.binders)[0];
   for(const id in ST.slots){const m=ST.slots[id];for(const k in m)if(!CARDS[m[k]])delete m[k]}}
 let dbRef=null,saveT=null;
@@ -625,9 +626,9 @@ function save(){try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}
     else save();
   }catch(e){console.warn("stockage local uniquement",e)}})();
 
-const qty=k=>ST.owned[k]||0;
+const qty=k=>ST.owned[canon(k)]||0;
 const ownedIn=s=>s.cards.filter(c=>qty(c.key)>0).length;
-function updateStat(){const tot=Object.keys(CARDS).length;const own=Object.keys(CARDS).filter(k=>qty(k)>0).length;
+function updateStat(){const tot=UNIQ.length;const own=UNIQ.filter(c=>qty(c.key)>0).length;
   $("#globalStat").innerHTML=`<strong>${own}</strong> / ${tot} cartes obtenues`}
 
 /* ============================================================
@@ -648,7 +649,7 @@ const saveFold=()=>{try{localStorage.setItem("fold",JSON.stringify([...fold]))}c
 let selPk=null;
 function cardsPage(){
   if(selPk&&!POKEMON.find(p=>p.id===selPk))selPk=null;
-  app.innerHTML=`<div class="ctabs">${REGIONS.map(([k,l])=>`<button class="ctab ${region===k?"on":""}" data-r="${k}">${k==="jp"?flag("ja"):"🌍"} ${l} <small>${Object.values(CARDS).filter(c=>c.region===k).length}</small></button>`).join("")}</div>
+  app.innerHTML=`<div class="ctabs">${REGIONS.map(([k,l])=>`<button class="ctab ${region===k?"on":""}" data-r="${k}">${k==="jp"?flag("ja"):"🌍"} ${l} <small>${UNIQ.filter(c=>c.region===k).length}</small></button>`).join("")}</div>
     <div id="cview"></div>`;
   app.querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{region=b.dataset.r;try{localStorage.setItem("region",region)}catch(e){}app.querySelectorAll("[data-r]").forEach(x=>x.classList.toggle("on",x===b));draw()});
   function draw(){selPk?drawPk():drawList()}
@@ -753,9 +754,7 @@ const srcset=c=>c.th?`srcset="${c.th} 180w, ${c.img} 600w" sizes="(min-resolutio
 const isBig=c=>["H","DR","UR","IR","SIR","HR"].includes(c.r);
 function rollTable(tab){let tot=0;for(const k in tab)tot+=tab[k];let x=Math.random()*tot;for(const k in tab){x-=tab[k];if(x<0)return k}return Object.keys(tab)[0]}
 const pickOne=a=>a[Math.floor(Math.random()*a.length)];
-let pgen=0;try{pgen=+localStorage.getItem("pgen")||0}catch(e){}
-const inGen=c=>!pgen||c.gen===pgen;
-function poolOf(region){const P={};for(const t in TIERS)P[t]=[];Object.values(CARDS).forEach(c=>{if(c.region===region&&inGen(c)&&c.r&&P[c.r])P[c.r].push(c)});return P}
+function poolOf(region){const P={};for(const t in TIERS)P[t]=[];UNIQ.forEach(c=>{if(c.region===region&&c.r&&P[c.r])P[c.r].push(c)});return P}
 function fromTier(P,t,dir){ /* dir -1 : on redescend si vide, puis on remonte */
   const ord=Object.keys(TIERS).sort((a,b)=>TIERS[a].o-TIERS[b].o);let k=ord.indexOf(t);
   for(let i=k;i>=0;i--)if(P[ord[i]].length)return pickOne(P[ord[i]]);
@@ -773,7 +772,7 @@ function makePack(region){if(forceGod||Math.random()*100<RATES.god){forceGod=fal
   for(let i=0;i<2;i++){let t=rollTable(RATES.reverse);if(t==="R")t=Math.random()<.5&&P.H.length?"H":"R";out.push({c:fromTier(P,t),slot:"rev"})}
   for(let i=0;i<2;i++)out.push({c:fromTier(P,rollTable(RATES.hit)),slot:"hit"});
   return out.filter(x=>x.c)}
-window.__dbg={makePack,setGen:g=>{pgen=g},god:()=>{forceGod=true}};
+window.__dbg={makePack,god:()=>{forceGod=true}};
 window.__simPacks=(region,n)=>{const cnt={};for(let i=0;i<n;i++)makePack(region).forEach(x=>{const k=x.slot+":"+x.c.r;cnt[k]=(cnt[k]||0)+1});return cnt};
 
 function packArt(b,big){return `<div class="pack ${big?"big":""}" style="--p1:${b.c1};--p2:${b.c2}">
@@ -781,21 +780,20 @@ function packArt(b,big){return `<div class="pack ${big?"big":""}" style="--p1:${
   <div class="pbody"><div class="pshine"></div>
     <div class="pstars">${"<i></i>".repeat(14)}</div>
     <div class="plogo"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="9" y="3" width="17" height="23" rx="3" fill="#fff" opacity=".85" transform="rotate(10 17 14)"/><rect x="5" y="6" width="17" height="23" rx="3" fill="#ffcb05" stroke="#0b1530" stroke-width="1.5" transform="rotate(-8 13 17)"/></svg><b>POKEOPENING</b></div>
-    <div class="ptitle">${b.region==="jp"?"JAPONAIS":"INTERNATIONAL"}</div>${pgen?`<div class="pgen">GÉNÉRATION ${pgen}</div>`:""}
+    <div class="ptitle">${b.region==="jp"?"JAPONAIS":"INTERNATIONAL"}</div>
     <div class="pcount">10 CARTES</div></div>
   <div class="crimp bot"></div></div>`}
 
 function openerPage(){
   app.innerHTML=`<h1 class="h1">Pack Opener</h1>
-    <div class="gsel"><span>Génération</span>${[[0,"Toutes"],...GENS.map(g=>[g[0],String(g[0])])].map(([k,l])=>`<button class="gchip ${pgen===k?"on":""}" data-g="${k}" title="${k?esc(GENS[k-1][1]):"Toutes les générations"}">${l}</button>`).join("")}</div>
-    <div class="po-grid">${BOOSTERS.map((b,i)=>{const P=poolOf(b.region),n=Object.values(P).reduce((a,x)=>a+x.length,0);const o=Object.values(CARDS).filter(c=>c.region===b.region&&inGen(c)&&qty(c.key)>0).length;
+    
+    <div class="po-grid">${BOOSTERS.map((b,i)=>{const P=poolOf(b.region),n=Object.values(P).reduce((a,x)=>a+x.length,0);const o=UNIQ.filter(c=>c.region===b.region&&qty(c.key)>0).length;
       return `<article class="po">
       <div class="plinth">${packArt(b)}</div>
       <div class="po-info"><h3>${esc(b.name)}</h3><p>${esc(b.sub)}</p>
         <div class="pbar"><i style="width:${n?Math.round(o/n*100):0}%"></i></div><small>${o} / ${n} obtenues</small>
         <div class="row"><button class="btn" data-rates="${i}">Taux</button><button class="btn primary" data-open="${i}" ${n?"":"disabled"}>🎁 Ouvrir</button></div></div></article>`}).join("")}</div>`;
   app.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openBooster(BOOSTERS[+b.dataset.open]));
-  app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{pgen=+b.dataset.g;try{localStorage.setItem("pgen",pgen)}catch(e){}openerPage()});
   app.querySelectorAll("[data-rates]").forEach(b=>b.onclick=()=>showRates());
 }
 function showRates(){const root=$("#modalRoot");
@@ -816,7 +814,7 @@ let packState=null;
 function openBooster(b){
   const pack=makePack(b.region);pack.forEach(x=>ensureFull(x.c));const before={};pack.forEach(x=>{before[x.c.key]=before[x.c.key]??qty(x.c.key)});
   /* ajout immédiat à la collection */
-  try{const o={...ST.owned};pack.forEach(x=>{o[x.c.key]=(o[x.c.key]||0)+1});ST.owned=o;ST.opened=(ST.opened||0)+1;save();updateStat()}catch(err){console.error(err)}
+  try{const o={...ST.owned};pack.forEach(x=>{const k=canon(x.c.key);o[k]=(o[k]||0)+1});ST.owned=o;ST.opened=(ST.opened||0)+1;save();updateStat()}catch(err){console.error(err)}
   const seen={};pack.forEach(x=>{x.isNew=!before[x.c.key]&&!seen[x.c.key];seen[x.c.key]=1});
   packState={b,pack,i:-1,phase:"pack",god:!!pack.god};if(pack.god){ST.gods=(ST.gods||0)+1;save()}
   const root=$("#modalRoot");
@@ -904,15 +902,15 @@ function drawSsel(){const el=$("#ssel");if(!el)return;const s=POKEMON.find(x=>x.
       <span class="lg">${s?`${ico(s.id)||thumb(s)}${esc(s.name)}`:`${allIco}Tous les Pokémon`}</span></button>
     ${sselOpen?`<div class="ssel-pop" role="listbox">
       ${POKEMON.length>6?`<div class="input sq"><span>🔍</span><input id="sselQ" placeholder="Chercher un Pokémon…" value="${esc(sselQ)}"></div>`:""}
-      <button class="sopt all ${fser?"":"on"}" data-ser="">${allIco}<span class="lg"><span>Tous les Pokémon</span></span><small>${Object.keys(CARDS).length}</small></button>
+      <button class="sopt all ${fser?"":"on"}" data-ser="">${allIco}<span class="lg"><span>Tous les Pokémon</span></span><small>${UNIQ.length}</small></button>
       ${list.map(x=>{const o=ownedIn(x);return `<button class="sopt ${fser===x.id?"on":""}" data-ser="${x.id}">${ico(x.id)||thumb(x)}<span class="lg"><span>${esc(x.name)}</span></span><small class="${o===x.cards.length?"full":""}">${o}/${x.cards.length}</small></button>`}).join("")||`<p class="empty">Aucun Pokémon.</p>`}
     </div>`:""}`;
   const qi=$("#sselQ");if(qi){qi.oninput=e=>{sselQ=e.target.value;const pos=qi.selectionStart;drawSsel();const n=$("#sselQ");n.focus();n.setSelectionRange(pos,pos)}}}
-function drawFinder(){const q=norm(fq.trim());const inBinder=new Set(binder()?Object.values(slotsOf(binder())):[]);
+function drawFinder(){const q=norm(fq.trim());const inBinder=new Set(binder()?Object.values(slotsOf(binder())).map(canon):[]);
   const fl=$("#flist");const fi=$("#fq");if(fi)fi.closest(".input").style.display=fser?"none":"";
   if(!fser){
     const ps=q?POKEMON.filter(p=>countR(p,freg)>0&&norm(p.name).includes(q)).sort((x,y)=>norm(y.name).startsWith(q)-norm(x.name).startsWith(q)):[];
-    if(!q){const lst=POKEMON.flatMap(p=>p.cards).filter(c=>qty(c.key)>0&&inRegion(c,freg)&&!inBinder.has(c.key)).sort((a,b)=>(TIERS[b.r]?.o??0)-(TIERS[a.r]?.o??0));
+    if(!q){const lst=UNIQ.filter(c=>qty(c.key)>0&&inRegion(c,freg)&&!inBinder.has(c.key)).sort((a,b)=>(TIERS[b.r]?.o??0)-(TIERS[a.r]?.o??0));
       fl.innerHTML=`<div class="toplace"><div class="tph"><b>À ranger</b><small>${lst.length} carte${lst.length>1?"s":""} obtenue${lst.length>1?"s":""} pas encore dans ce classeur</small></div>
         ${lst.length?`<button class="btn fillall" data-c="addowned">＋ Tout ranger</button>`:""}
         ${lst.slice(0,80).map(c=>`<button class="fres ${pick===c.key?"sel":""}" data-k="${c.key}" draggable="true"><img src="${c.th||c.img}" alt="" draggable="false"><span class="t"><b>${esc(c.name)} <span class="qn">×${qty(c.key)}</span></b><small>${esc(c.label)} · ${esc(tierName(c.r))}</small></span></button>`).join("")||`<p class="empty">${Object.keys(ST.owned).length?"Toutes tes cartes sont rangées ici 🎉":"Ouvre des boosters pour obtenir des cartes, puis range-les ici."}</p>`}
@@ -927,7 +925,7 @@ function drawFinder(){const q=norm(fq.trim());const inBinder=new Set(binder()?Ob
   html+=list.map(c=>{const n=qty(c.key);
       return `<button class="fres ${pick===c.key?"sel":""}" data-k="${c.key}" draggable="true"><img src="${c.th||c.img}" alt="" draggable="false">
         <span class="t"><b>${esc(c.name)} <span class="qn">×${n}</span></b><small>${esc(c.label)}</small></span>
-        ${inBinder.has(c.key)?'<span class="inb" title="Déjà dans ce classeur">📒</span>':""}</button>`}).join("")||`<p class="empty">Vous n'avez encore aucune carte de ${esc(p.name)}.</p>`;
+        ${inBinder.has(canon(c.key))?'<span class="inb" title="Déjà dans ce classeur">📒</span>':""}</button>`}).join("")||`<p class="empty">Vous n'avez encore aucune carte de ${esc(p.name)}.</p>`;
   fl.innerHTML=html;
   document.body.classList.toggle("placing",!!(pick&&CARDS[pick]));
 }
@@ -988,7 +986,7 @@ function flipPages(dir,oldPages){const el=$("#binderEl");if(!el)return;
   leaf.addEventListener("transitionend",end);setTimeout(end,1000);
 }
 let turnDir="";
-function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!inB.has(k)).length}
+function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)).map(canon));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!TW[k]&&!inB.has(k)).length}
 function toggleFull(force){const on=force??!document.body.classList.contains("bfull");document.body.classList.toggle("bfull",on);
   try{if(on&&!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});if(!on&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{})}catch(e){}
   setTimeout(drawBinder,60)}
@@ -1000,8 +998,8 @@ function reorder(mode){const b=binder(),sl=slotsOf(b);const keys=Object.keys(sl)
   if(mode==="got")keys.sort((a,b)=>(qty(b)>0)-(qty(a)>0)||dex(a)-dex(b));
   if(mode==="reg")keys.sort((a,b)=>(CARDS[a].region==="jp")-(CARDS[b].region==="jp")||dex(a)-dex(b));
   const m={};keys.forEach((k,i)=>m[i]=k);ST.slots[b.id]=m;save();spread[b.id]=0;drawBinder();drawChips();drawFinder()}
-function addOwned(){const b=binder(),sl=slotsOf(b);const inB=new Set(Object.values(sl));
-  const list=POKEMON.flatMap(p=>p.cards).filter(c=>qty(c.key)>0&&!inB.has(c.key));
+function addOwned(){const b=binder(),sl=slotsOf(b);const inB=new Set(Object.values(sl).map(canon));
+  const list=UNIQ.filter(c=>qty(c.key)>0&&!inB.has(c.key));
   if(!list.length){toast("Toutes tes cartes obtenues sont déjà dans ce classeur");return}
   let pos=0;for(const c of list){while(sl[pos])pos++;sl[pos]=c.key}
   const need=Math.ceil((pos+1)/perPage(b));if(need>b.pages)b.pages=need;save();drawBinder();drawChips();drawFinder();toast(`${list.length} carte${list.length>1?"s":""} ajoutée${list.length>1?"s":""}`)}
