@@ -992,10 +992,10 @@ function drawFinder(){const q=norm(fq.trim());const inBinder=new Set(binder()?Ob
   const fl=$("#flist");const fi=$("#fq");if(fi)fi.closest(".input").style.display=fser?"none":"";
   if(!fser){
     const ps=q?POKEMON.filter(p=>countR(p,freg)>0&&norm(p.name).includes(q)).sort((x,y)=>norm(y.name).startsWith(q)-norm(x.name).startsWith(q)):[];
-    if(!q){const lst=UNIQ.filter(c=>qty(c.key)>0&&inRegion(c,freg)&&!inBinder.has(c.key)).sort((a,b)=>(TIERS[b.r]?.o??0)-(TIERS[a.r]?.o??0));
+    if(!q){const lst=UNIQ.filter(c=>freeQ(c.key)>0&&inRegion(c,freg)&&!inBinder.has(c.key)).sort((a,b)=>(TIERS[b.r]?.o??0)-(TIERS[a.r]?.o??0));
       fl.innerHTML=`<div class="toplace"><div class="tph"><b>À ranger</b><small>${lst.length} carte${lst.length>1?"s":""} obtenue${lst.length>1?"s":""} pas encore dans ce classeur</small></div>
         ${lst.length?`<button class="btn fillall" data-c="addowned">＋ Tout ranger</button>`:""}
-        ${lst.slice(0,80).map(c=>`<button class="fres ${pick===c.key?"sel":""}" data-k="${c.key}" draggable="true"><img src="${c.th||c.img}" alt="" draggable="false"><span class="t"><b>${esc(c.name)} <span class="qn">×${qty(c.key)}</span></b><small>${esc(c.label)} · ${esc(tierName(c.r))}</small></span></button>`).join("")||`<p class="empty">${Object.keys(ST.owned).length?"Toutes tes cartes sont rangées ici 🎉":"Ouvre des boosters pour obtenir des cartes, puis range-les ici."}</p>`}
+        ${lst.slice(0,80).map(c=>`<button class="fres ${pick===c.key?"sel":""}" data-k="${c.key}" draggable="true"><img src="${c.th||c.img}" alt="" draggable="false"><span class="t"><b>${esc(c.name)} <span class="qn" title="exemplaires pas encore rangés">${freeQ(c.key)} dispo</span></b><small>${esc(c.label)} · ${esc(tierName(c.r))}</small></span></button>`).join("")||`<p class="empty">${Object.keys(ST.owned).length?"Toutes tes cartes sont rangées ici 🎉":"Ouvre des boosters pour obtenir des cartes, puis range-les ici."}</p>`}
         ${lst.length>80?`<p class="empty">… et ${lst.length-80} autres : cherche un Pokémon ci-dessus.</p>`:""}</div>`;
       document.body.classList.toggle("placing",!!(pick&&CARDS[pick]));return}
     fl.innerHTML=q?(ps.map(p=>{const o=ownedR(p,freg),t=countR(p,freg);return `<button class="sug" data-ser="${p.id}"><span class="pki">${ico1(p.id)||thumb(p)}</span><span class="pkn">${esc(p.name)}</span><span class="pkc ${o===t?"full":""}">${o} / ${t}</span></button>`}).join("")||`<p class="empty">Aucun Pokémon trouvé.</p>`):"";
@@ -1068,7 +1068,7 @@ function flipPages(dir,oldPages){const el=$("#binderEl");if(!el)return;
   leaf.addEventListener("transitionend",end);setTimeout(end,1000);
 }
 let turnDir="";
-function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)).map(canon));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!TW[k]&&!inB.has(k)).length}
+function toPlaceCount(){const b=binder();if(!b)return 0;const inB=new Set(Object.values(slotsOf(b)).map(canon));return Object.keys(ST.owned).filter(k=>ST.owned[k]>0&&CARDS[k]&&!TW[k]&&!inB.has(k)&&freeQ(k)>0).length}
 function toggleFull(force){const on=force??!document.body.classList.contains("bfull");document.body.classList.toggle("bfull",on);
   try{if(on&&!document.fullscreenElement)document.documentElement.requestFullscreen?.().catch(()=>{});if(!on&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{})}catch(e){}
   setTimeout(drawBinder,60)}
@@ -1081,8 +1081,8 @@ function reorder(mode){const b=binder(),sl=slotsOf(b);const keys=Object.keys(sl)
   if(mode==="reg")keys.sort((a,b)=>(CARDS[a].region==="jp")-(CARDS[b].region==="jp")||dex(a)-dex(b));
   const m={};keys.forEach((k,i)=>m[i]=k);ST.slots[b.id]=m;save();spread[b.id]=0;drawBinder();drawChips();drawFinder()}
 function addOwned(){const b=binder(),sl=slotsOf(b);const inB=new Set(Object.values(sl).map(canon));
-  const list=UNIQ.filter(c=>qty(c.key)>0&&!inB.has(c.key));
-  if(!list.length){toast("Toutes tes cartes obtenues sont déjà dans ce classeur");return}
+  const list=UNIQ.filter(c=>freeQ(c.key)>0&&!inB.has(c.key));
+  if(!list.length){toast("Toutes tes cartes disponibles sont déjà rangées");return}
   let pos=0;for(const c of list){while(sl[pos])pos++;sl[pos]=c.key}
   const need=Math.ceil((pos+1)/perPage(b));if(need>b.pages)b.pages=need;save();drawBinder();drawChips();drawFinder();toast(`${list.length} carte${list.length>1?"s":""} ajoutée${list.length>1?"s":""}`)}
 function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
@@ -1095,9 +1095,13 @@ function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
   const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap)/b.rows)*63/88,full?420:340)));
   el.style.setProperty("--sw",sw+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
   el.classList.toggle("small",sw<80)}
-function place(pos,key){const b=binder();slotsOf(b)[pos]=key;save();pick=null;drawFinder();drawBinder();drawChips()}
+function placedAll(k){k=canon(k);let n=0;for(const id in ST.slots){const m=ST.slots[id];for(const s in m)if(canon(m[s])===k)n++}return n}
+const freeQ=k=>qty(k)-placedAll(k);
+function place(pos,key){const b=binder(),m=slotsOf(b);const same=m[pos]&&canon(m[pos])===canon(key);
+  if(!same&&freeQ(key)<=0){toast(qty(key)>1?`Tes ${qty(key)} exemplaires sont déjà rangés dans tes classeurs`:"Ton exemplaire est déjà rangé dans un classeur : il t'en faut un 2e");pick=null;drawFinder();return}
+  m[pos]=key;save();pick=null;drawFinder();drawBinder();drawChips()}
 function fillSeries(sid){const b=binder(),sl=slotsOf(b),s=POKEMON.find(x=>x.id===sid);let pos=0,first=null;
-  const lst=s.cards.filter(c=>inRegion(c,freg)&&qty(c.key)>0);
+  const lst=s.cards.filter(c=>inRegion(c,freg)&&freeQ(c.key)>0&&!Object.values(sl).some(k=>canon(k)===canon(c.key)));
   for(const c of lst){while(sl[pos])pos++;sl[pos]=c.key;if(first==null)first=pos}
   const need=Math.ceil((pos+1)/perPage(b));if(need>b.pages)b.pages=need;
   save();spread[b.id]=Math.floor(Math.floor(first/perPage(b))/(twoUp()?2:1));drawBinder();drawChips();toast(`${lst.length} cartes placées dans « ${b.name} »`)}
@@ -1199,7 +1203,7 @@ async function avLoad(){const b=await avGet();if(AV.url)URL.revokeObjectURL(AV.u
 function avHtml(cls){const P=prof();return AV.url?`<img class="${cls}" src="${AV.url}" alt="">`:`<span class="${cls} avph">${esc((P.name||"?").trim().slice(0,1).toUpperCase()||"?")}</span>`}
 function drawMe(){const m=$("#meChip");if(!m)return;const P=prof();m.innerHTML=`${avHtml("meav")}<span>${esc(P.name||"Mon profil")}</span>`}
 /* retire une carte de la collection (et du classeur / des favoris si plus aucun exemplaire) */
-function takeOut(key,n){const k=canon(key);const q=(ST.owned[k]||0)-n;if(q>0)ST.owned[k]=q;else{delete ST.owned[k];
+function takeOut(key,n){const k=canon(key);const q=(ST.owned[k]||0)-n;if(q>0){ST.owned[k]=q;let ex=placedAll(k)-q;for(const id in ST.slots){const m=ST.slots[id];for(const s of Object.keys(m).reverse())if(ex>0&&canon(m[s])===k){delete m[s];ex--}}}else{delete ST.owned[k];
   for(const id in ST.slots){const m=ST.slots[id];for(const s in m)if(canon(m[s])===k)delete m[s]}
   const P=prof();P.fav=P.fav.map(f=>f&&canon(f)===k?null:f)}}
 const ring=(p,lbl,sub,col)=>`<div class="pring" style="--p:${p.toFixed(1)};--c:${col||"var(--gold)"}"><div class="pin"><b>${(p<10&&p>0?p.toFixed(1):String(Math.round(p))).replace(".",",")} %</b></div><div class="plb"><strong>${lbl}</strong><small>${sub}</small></div></div>`;
