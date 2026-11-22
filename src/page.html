@@ -649,6 +649,25 @@ nav a{white-space:nowrap}
 .sh-row.wrap{flex-wrap:wrap;overflow:visible}.sh-hint{color:var(--muted);font-size:14px;align-self:center;padding:0 10px}
 .sh-item[draggable]{cursor:grab}.sh-item.dragging{opacity:.35}.shelf.tray{background:transparent;border-style:dashed;padding-bottom:10px}
 .vpick{display:grid;gap:8px}
+.gbwrap{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;align-items:start;padding-bottom:30px}
+.gbside{position:sticky;top:90px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;max-height:calc(100vh - 120px);display:flex;flex-direction:column}
+.gbside h3{font-family:var(--disp);font-size:16px;display:flex;justify-content:space-between;margin-bottom:10px}.gbside h3 b{color:var(--muted);font-size:13px}
+.gbfree{overflow:auto;display:grid;gap:6px;flex:1}.gbf{display:flex;gap:10px;align-items:center;text-align:left;background:var(--tile);border:1px solid transparent;border-radius:10px;padding:6px 8px;color:var(--txt);font:inherit;cursor:grab}
+.gbf.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}.gbf img{width:34px;border-radius:4px}.gbf b{display:block;font-size:13px}.gbf small{font-size:11.5px;color:var(--muted)}
+.gbg{display:inline-block;min-width:26px;text-align:center;font-weight:800;border-radius:6px;padding:0 4px;background:#e9eef8;color:#141a2b}.gbg.gold{background:linear-gradient(135deg,#e3b43c,#fff1b8);color:#3d2a00}.gbg.black{background:#111;color:#e8c66a}
+.gbtools{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:12px;font-size:13px;color:var(--muted)}.gbtools select{font:inherit;padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--tile);color:var(--txt)}
+.gbbook{display:flex;gap:0;padding:14px;border-radius:16px;background:linear-gradient(135deg,#1d2b5e,#121a3c);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06) inset}
+.gbp{flex:1;min-width:0;background:linear-gradient(180deg,#0e1532,#0b112a);border-radius:10px;padding:14px;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
+.gbring{width:26px;flex:none;background:repeating-linear-gradient(180deg,transparent 0 30px,rgba(200,210,230,.55) 30px 38px,transparent 38px 60px);margin:20px 0;border-radius:6px}
+.gbgrid{display:grid;gap:14px}.gbs{position:relative;border-radius:14px;min-height:120px;border:1px dashed rgba(255,255,255,.12);overflow:visible}
+.gbs.full{border-color:transparent;cursor:grab}.gbs.over{box-shadow:0 0 0 2px var(--gold) inset;background:rgba(255,203,5,.06)}
+.gbs:not(.full){aspect-ratio:285/470;cursor:pointer}.gbs:not(.full):hover{background:rgba(255,255,255,.03)}
+.gbsc{width:285px;transform-origin:top left;pointer-events:none}.gbsc .slab{max-width:285px}
+.gbn{position:absolute;bottom:4px;right:10px;font-size:11px;color:var(--muted)}
+.gbnav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;color:var(--muted)}
+.gbbook.tn .gbp{animation:gbIn .35s ease}.gbbook.tp .gbp{animation:gbIn2 .35s ease}@keyframes gbIn{from{opacity:0;transform:translateX(30px)}}@keyframes gbIn2{from{opacity:0;transform:translateX(-30px)}}
+@media(max-width:900px){.gbwrap{grid-template-columns:1fr}.gbside{position:static;max-height:300px}}
+.gbsc{position:absolute;left:0;top:0}.gbs.full{aspect-ratio:285/470}
 </style>
 </head>
 <body>
@@ -1517,62 +1536,56 @@ function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
   $("#modal").onclick=e=>{if(e.target.id==="modal")$("#modalRoot").innerHTML=""};$("#zClose").onclick=()=>$("#modalRoot").innerHTML="";
   $("#zDel").onclick=()=>confirmBox("Supprimer cette carte gradée ?",`${esc(CARDS[s.k]?.name||"")} · note ${fmtG(s.g)} — elle sera définitivement supprimée.`,"Supprimer",()=>{ST.graded=gState().filter(x=>x.id!==id);if(typeof tSlabs!=="undefined")tSlabs.delete(id);save();toast("Carte gradée supprimée");route()})}
 /* --- onglet Cartes gradées --- */
-const GV={sort:"note",view:"shelf",group:"note"};try{Object.assign(GV,JSON.parse(localStorage.getItem("gv")||"{}"))}catch(e){}
+const GV={sort:"note",view:"binder"};try{Object.assign(GV,JSON.parse(localStorage.getItem("gv")||"{}"))}catch(e){}if(GV.view!=="grid")GV.view="binder";
 const gvSave=()=>{try{localStorage.setItem("gv",JSON.stringify(GV))}catch(e){}};
 
-function shelvesHtml(L){const G=[];const add=(key,title,sub,cls,f)=>G.push({key,title,sub,cls,items:L.filter(f)});
-  if(GV.group==="note"){add("bl","Black Label","10 parfait","sh-black",s=>s.lb==="black");add("gl","Gold Label","10 Pristine","sh-gold",s=>s.lb==="gold");add("10","Gem Mint 10","","sh-gem",s=>s.g===10&&!s.lb);
-    add("9","Mint","9 – 9,5","",s=>s.g>=9&&s.g<10);add("8","Near Mint – Mint","8 – 8,5","",s=>s.g>=8&&s.g<9);add("7","Near Mint","7 – 7,5","",s=>s.g>=7&&s.g<8);add("low","Les abîmées","6,5 et moins","",s=>s.g<7)}
-  else if(GV.group==="rare"){Object.keys(TIERS).sort((a,b)=>TIERS[b].o-TIERS[a].o).forEach(t=>add(t,tierName(t),"","sh-t sh-"+t,s=>CARDS[s.k].r===t))}
-  else if(GV.group==="gen"){GENS.forEach(g=>add("g"+g[0],g[1],"","",s=>!CARDS[s.k].tr&&CARDS[s.k].gen===g[0]));add("tr","Dresseurs","","",s=>CARDS[s.k].tr)}
-  else{const E=[[0,1998,"Avant 1999"],[1999,2002,"Wizards (1999–2002)"],[2003,2006,"Époque EX (2003–2006)"],[2007,2010,"Diamant & Perle / HGSS (2007–2010)"],[2011,2013,"Noir & Blanc (2011–2013)"],[2014,2016,"XY (2014–2016)"],[2017,2019,"Soleil & Lune (2017–2019)"],[2020,2022,"Épée & Bouclier (2020–2022)"],[2023,2099,"Écarlate & Violet et après (2023+)"]];
-    E.reverse().forEach(([a,b,t])=>add(t,t,"","",s=>{const y=CARDS[s.k].y||2010;return y>=a&&y<=b}))}
-  return `<div class="shelves">${G.filter(g=>g.items.length).map(g=>`<section class="shelf ${g.cls}"><div class="sh-head"><h3>${esc(g.title)}</h3>${g.sub?`<span>${esc(g.sub)}</span>`:""}<b>${g.items.length}</b></div>
-    <div class="sh-row">${g.items.map(s=>`<div class="sh-item">${slabHtml(s)}</div>`).join("")}</div><div class="sh-board"></div></section>`).join("")}</div>`}
 
-/* --- Ma vitrine : étagères rangées à la main --- */
-function vit(){ST.vitrine=ST.vitrine||[{id:uid(),name:"Étagère 1",items:[]}];const ids=new Set(gState().map(x=>x.id));ST.vitrine.forEach(sh=>sh.items=sh.items.filter(i=>ids.has(i)));return ST.vitrine}
-function myShelvesHtml(L){const V=vit(),placed=new Set(V.flatMap(s=>s.items)),byId=Object.fromEntries(gState().map(x=>[x.id,x]));
-  const tray=L.filter(x=>!placed.has(x.id));
-  const item=x=>`<div class="sh-item" draggable="true" data-vid="${x.id}">${slabHtml(x)}</div>`;
-  return `<div class="shelves mine">${V.map((sh,i)=>`<section class="shelf" data-shelf="${sh.id}"><div class="sh-head"><input class="sh-name" data-rn="${sh.id}" value="${esc(sh.name)}" maxlength="40">
-      <b>${sh.items.length}</b><div class="sh-tools"><button class="btn sm" data-up="${sh.id}" ${i?"":"disabled"} title="Monter">▲</button><button class="btn sm" data-down="${sh.id}" ${i<V.length-1?"":"disabled"} title="Descendre">▼</button><button class="btn sm" data-delsh="${sh.id}" title="Supprimer l'étagère">🗑</button></div></div>
-    <div class="sh-row drop" data-drop="${sh.id}">${sh.items.map(id=>byId[id]&&item(byId[id])).join("")}<div class="sh-hint">${sh.items.length?"":"Glisse des cartes gradées ici"}</div></div><div class="sh-board"></div></section>`).join("")}
-    <button class="btn" id="vAdd">＋ Ajouter une étagère</button>
-    <section class="shelf tray"><div class="sh-head"><h3>Pas encore rangées</h3><b>${tray.length}</b></div><div class="sh-row drop wrap" data-drop="tray">${tray.map(item).join("")||'<div class="sh-hint">Toutes tes cartes gradées sont rangées 👍</div>'}</div></section></div>`}
-let vDrag=null;
-function bindMyShelves(){const V=vit(),find=id=>V.find(s=>s.id===id);
-  const redraw=()=>{save();gradedPage()};
-  $("#vAdd").onclick=()=>{V.push({id:uid(),name:"Étagère "+(V.length+1),items:[]});redraw()};
-  app.querySelectorAll("[data-rn]").forEach(inp=>inp.onchange=()=>{find(inp.dataset.rn).name=inp.value.trim()||"Étagère";save()});
-  app.querySelectorAll("[data-up],[data-down]").forEach(b=>b.onclick=()=>{const id=b.dataset.up||b.dataset.down,i=V.findIndex(s=>s.id===id),j=i+(b.dataset.up?-1:1);[V[i],V[j]]=[V[j],V[i]];redraw()});
-  app.querySelectorAll("[data-delsh]").forEach(b=>b.onclick=()=>confirmBox("Supprimer cette étagère ?","Ses cartes retournent dans « Pas encore rangées ».","Supprimer",()=>{ST.vitrine=V.filter(s=>s.id!==b.dataset.delsh);redraw()}));
-  app.querySelectorAll("[data-vid]").forEach(el=>{el.ondragstart=e=>{vDrag=el.dataset.vid;el.classList.add("dragging");try{e.dataTransfer.setData("text/plain",vDrag)}catch(_){}};el.ondragend=()=>{vDrag=null;el.classList.remove("dragging")}});
-  app.querySelectorAll("[data-drop]").forEach(row=>{
-    row.ondragover=e=>{if(!vDrag)return;e.preventDefault();row.classList.add("over")};
-    row.ondragleave=()=>row.classList.remove("over");
-    row.ondrop=e=>{e.preventDefault();row.classList.remove("over");if(!vDrag)return;const id=vDrag;vDrag=null;
-      V.forEach(s=>s.items=s.items.filter(x=>x!==id));
-      if(row.dataset.drop!=="tray"){const sh=find(row.dataset.drop);const tgt=e.target.closest("[data-vid]");
-        let idx=sh.items.length;if(tgt&&tgt.dataset.vid!==id){const r=tgt.getBoundingClientRect();idx=sh.items.indexOf(tgt.dataset.vid)+(e.clientX>r.left+r.width/2?1:0)}
-        sh.items.splice(Math.max(0,idx),0,id)}
-      redraw()}});
-  /* clic = zoom ; clic droit / bouton = ranger sans glisser */
-  app.querySelectorAll("[data-vid]").forEach(el=>el.oncontextmenu=e=>{e.preventDefault();const id=el.dataset.vid;
-    $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(420px,100%)"><h2>Ranger dans…</h2><div class="vpick">${V.map(s=>`<button class="btn" data-to="${s.id}">${esc(s.name)}</button>`).join("")}<button class="btn" data-to="tray">Pas encore rangées</button></div></div></div>`;
-    $("#modal").onclick=ev=>{if(ev.target.id==="modal")$("#modalRoot").innerHTML=""};
-    document.querySelectorAll("[data-to]").forEach(b=>b.onclick=()=>{V.forEach(s=>s.items=s.items.filter(x=>x!==id));if(b.dataset.to!=="tray")find(b.dataset.to).items.push(id);$("#modalRoot").innerHTML="";redraw()})})}
+/* --- Classeur des cartes gradées --- */
+let gbSpread=0,gbPick=null,gbDrag=null,gbTurn="";
+function gb(){ST.gbinder=ST.gbinder||{cols:3,rows:2,slots:{}};const B=ST.gbinder,ids=new Set(gState().map(x=>x.id));for(const p in B.slots)if(!ids.has(B.slots[p]))delete B.slots[p];return B}
+const gbPer=()=>{const B=gb();return B.cols*B.rows};const gbTwo=()=>innerWidth>=1100;
+function gbPages(){const B=gb();let m=-1;for(const p in B.slots)m=Math.max(m,+p);const per=gbPer();return Math.max(gbTwo()?2:1,Math.ceil((m+2)/per)+(gbTwo()?((Math.ceil((m+2)/per))%2):0))}
+function gbHtml(L){const B=gb(),per=gbPer(),n=gbPages(),two=gbTwo(),nS=Math.ceil(n/(two?2:1));gbSpread=Math.min(gbSpread,nS-1);
+  const placed=new Set(Object.values(B.slots)),byId=Object.fromEntries(gState().map(x=>[x.id,x]));const free=L.filter(x=>!placed.has(x.id));
+  const first=gbSpread*(two?2:1),pages=[first].concat(two?[first+1]:[]);
+  const page=pi=>`<div class="gbp"><div class="gbgrid" style="grid-template-columns:repeat(${B.cols},minmax(0,1fr))">${Array.from({length:per},(_,j)=>{const pos=pi*per+j,id=B.slots[pos],x=id&&byId[id];
+     return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;
+  return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3><div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont dans le classeur.</p>'}</div>
+     <div class="gbtools"><label>Format <select id="gbFmt">${[[2,2],[3,2],[3,3],[4,2]].map(([c,r])=>`<option value="${c}x${r}" ${B.cols===c&&B.rows===r?"selected":""}>${c} × ${r}</option>`).join("")}</select></label><button class="btn sm" id="gbAll" ${free.length?"":"disabled"}>Tout ranger</button></div></aside>
+   <div class="gbmain"><div class="gbbook ${two?"two":""} ${gbTurn}" id="gbBook">${pages.map(page).join(two?'<div class="gbring"></div>':"")}</div>
+     <div class="gbnav"><button class="btn" id="gbPrev" ${gbSpread?"":"disabled"}>◀</button><span>${two?`Pages ${first+1}–${first+2}`:`Page ${first+1}`} / ${n}</span><button class="btn" id="gbNext" ${gbSpread<nS-1?"":"disabled"}>▶</button></div></div></div>`}
+function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
+  const put=(pos,id)=>{for(const p in B.slots)if(B.slots[p]===id)delete B.slots[p];B.slots[pos]=id;gbPick=null;redraw()};
+  const turn=d=>{gbTurn=d>0?"tn":"tp";gbSpread=Math.max(0,gbSpread+d);gradedPage();setTimeout(()=>gbTurn="",400)};
+  $("#gbPrev").onclick=()=>turn(-1);$("#gbNext").onclick=()=>turn(1);
+  $("#gbFmt").onchange=e=>{const [c,r]=e.target.value.split("x").map(Number);const ids=Object.keys(B.slots).sort((a,b)=>a-b).map(k=>B.slots[k]);B.cols=c;B.rows=r;B.slots={};ids.forEach((id,i)=>B.slots[i]=id);gbSpread=0;redraw()};
+  $("#gbAll").onclick=()=>{const placed=new Set(Object.values(B.slots));let pos=0;L.filter(x=>!placed.has(x.id)).forEach(x=>{while(B.slots[pos])pos++;B.slots[pos]=x.id});redraw()};
+  app.querySelectorAll("[data-gfree]").forEach(b=>{b.onclick=()=>{gbPick=gbPick===b.dataset.gfree?null:b.dataset.gfree;gradedPage()};
+    b.ondragstart=e=>{gbDrag={id:b.dataset.gfree};try{e.dataTransfer.setData("text/plain","x")}catch(_){}}});
+  app.querySelectorAll("[data-gpos]").forEach(sl=>{const pos=+sl.dataset.gpos;
+    sl.ondragstart=e=>{if(!B.slots[pos])return;gbDrag={from:pos};try{e.dataTransfer.setData("text/plain","x")}catch(_){}};
+    sl.ondragover=e=>{if(gbDrag){e.preventDefault();sl.classList.add("over")}};sl.ondragleave=()=>sl.classList.remove("over");
+    sl.ondrop=e=>{e.preventDefault();sl.classList.remove("over");const d=gbDrag;gbDrag=null;if(!d)return;
+      if(d.id)return put(pos,d.id);if(d.from===pos)return;const a=B.slots[d.from],o=B.slots[pos];B.slots[pos]=a;if(o)B.slots[d.from]=o;else delete B.slots[d.from];redraw()};
+    sl.onclick=e=>{e.stopPropagation();const id=B.slots[pos];
+      if(!id){if(gbPick)put(pos,gbPick);return}
+      $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="sheet" style="width:min(380px,100%)"><h2>${esc(CARDS[byIdG(id).k].name)} · ${fmtG(byIdG(id).g)}</h2><div class="vpick"><button class="btn" id="gbZ">Agrandir</button><button class="btn" id="gbR">Retirer du classeur</button></div></div></div>`;
+      $("#modal").onclick=ev=>{if(ev.target.id==="modal")$("#modalRoot").innerHTML=""};
+      $("#gbZ").onclick=()=>slabZoom(id);$("#gbR").onclick=()=>{delete B.slots[pos];$("#modalRoot").innerHTML="";redraw()}}});
+  const fit=()=>app.querySelectorAll(".gbsc").forEach(el=>{const w=el.parentElement.clientWidth;if(w)el.style.transform=`scale(${w/285})`});addEventListener("resize",fit,{once:true});
+  fit();requestAnimationFrame(fit);}
+const byIdG=id=>gState().find(x=>x.id===id);
 function gradedPage(){const L=[...gState()];
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><div class="pseg">${[["mine","✋ Ma vitrine"],["shelf","🗄️ Vitrine auto"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view==="shelf"?`<label class="mcsort">Étagères par <select id="gG">${[["note","Note"],["rare","Rareté"],["gen","Génération"],["serie","Époque"]].map(([k,l])=>`<option value="${k}" ${GV.group===k?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   ${GV.view==="mine"?myShelvesHtml(L):GV.view==="shelf"?shelvesHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
-  if(GV.view==="mine")bindMyShelves();
-  app.querySelectorAll("[data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
+  if(GV.view!=="grid")bindGB(L);
+  app.querySelectorAll(".gwall [data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
 
 /* ============================================================
    ROUTAGE
