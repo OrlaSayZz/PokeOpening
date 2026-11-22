@@ -1,6 +1,6 @@
 {
- "version": 24,
- "label": "Gradation sans texte explicatif",
+ "version": 25,
+ "label": "\u00c9tiquettes grad\u00e9es : chiffres align\u00e9s",
  "files": {
   "dos.png": {
    "sha": "331c89ec00676ab7ea777b46fc3b73ac6475f9e44017606333e8328df6f39de3",
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "aa1e4173ab1369558d6a5d12ce4b875a15f49fc246d583dcadebfb699d6623cc",
-   "size": 15926310,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=aa1e4173ab136955"
+   "sha": "8ba24b1681acaa6262a505b80ba358210ca8c28b33658b63aa1465f85e14d280",
+   "size": 15926658,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=8ba24b1681acaa62"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",
