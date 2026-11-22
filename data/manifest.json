@@ -1,5 +1,5 @@
 {
- "version": 12,
+ "version": 13,
  "label": "Correction des reflets reverse",
  "files": {
   "dos.png": {
@@ -228,9 +228,9 @@
    "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/g9-thumbs1.pack?v=5cc8a555aa2450a1"
   },
   "index.html": {
-   "sha": "bc57bd3a323ecd416baedfa21fce67e8af34c4abb85a5064dacc452a94fc4761",
-   "size": 15894751,
-   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=bc57bd3a323ecd41"
+   "sha": "3be0ab37dccc40706c3eb0b06871edf17702012ca6e1a6b52668e30d7e434f30",
+   "size": 15894789,
+   "url": "https://raw.githubusercontent.com/OrlaSayZz/PokeOpening/main/data/index.html?v=3be0ab37dccc4070"
   },
   "tr1-full1.pack": {
    "sha": "d52691bd1930cc8b8fcbeca6cdd69f1bfb0044d3e1ff8b3f91db5c11c57f1635",

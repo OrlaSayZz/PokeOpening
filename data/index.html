@@ -833,7 +833,7 @@ function makePack(region){if(forceGod||Math.random()*100<RATES.god){forceGod=fal
   for(let i=0;i<2;i++){let t=rollTable(RATES.reverse);if(t==="R")t=Math.random()<.5&&P.H.length?"H":"R";out.push({c:fromTier(P,t),slot:"rev"})}
   for(let i=0;i<2;i++)out.push({c:fromTier(P,rollTable(RATES.hit)),slot:"hit"});
   return out.filter(x=>x.c)}
-window.__dbg={makePack,BOOSTERS,god:()=>{forceGod=true}};
+window.__dbg={makePack,BOOSTERS,CARDS,cardFace:(...a)=>cardFace(...a),god:()=>{forceGod=true}};
 window.__simPacks=(region,n)=>{const cnt={};for(let i=0;i<n;i++)makePack(region).forEach(x=>{const k=x.slot+":"+x.c.r;cnt[k]=(cnt[k]||0)+1});return cnt};
 
 function packArt(b,big){return `<div class="pack ${big?"big":""}" style="--p1:${b.c1};--p2:${b.c2}">
