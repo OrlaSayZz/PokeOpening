@@ -413,6 +413,7 @@ table.rates td{padding:5px 4px;border-top:1px solid var(--line)}table.rates td:l
 .slot:not(.filled)::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.09) 47%,transparent 57%)}
 .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;image-rendering:auto}
 .slot.filled{background:transparent;border-color:transparent;border-radius:4.5%/3.3%;box-shadow:0 3px 8px rgba(0,0,0,.45)}
+body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
 .slot.missing img{filter:grayscale(.95) brightness(.7);opacity:.45}
@@ -1159,6 +1160,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
       <div class="btools"><button class="btn ${finderOpen?"":"gold"}" data-c="togglefinder">${finderOpen?"◧ Masquer le panneau":"＋ Ajouter des cartes"}${(()=>{const n=toPlaceCount();return !finderOpen&&n?` <span class="nbadge">${n}</span>`:""})()}</button><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
         <div class="ddm" id="sortMenu" hidden><button data-sort="dex">Par Pokémon</button><button data-sort="rar">Par rareté</button><button data-sort="got">Obtenues d'abord</button><button data-sort="reg">International puis Japonais</button></div></div>
         <button class="btn" data-c="compact" title="Supprimer les cases vides entre les cartes">⇤ Boucher les trous</button>
+        <button class="btn holotg ${noHolo()?"":"on"}" data-c="holo" title="Activer ou désactiver les reflets holographiques dans le classeur">✨ Holo : ${noHolo()?"Off":"On"}</button>
         <button class="btn" data-c="addowned" title="Ajouter toutes les cartes obtenues qui ne sont pas encore dans ce classeur">＋ Mes cartes obtenues</button>
         <button class="btn" data-c="edit">⚙️ Réglages</button>
         <button class="btn" data-c="fullscreen" title="Afficher le classeur en grand (touche F)">⛶ Plein écran</button></div>
@@ -1288,6 +1290,7 @@ document.addEventListener("click",e=>{if(location.hash!=="#collection")return;co
   if(a){const b=binder(),c=a.dataset.c;
     if(c==="new")binderModal(null);else if(c==="edit")binderModal(b);else if(c==="unpick"){pick=null;drawFinder()}
     else if(c==="prev"){spread[b.id]--;turnDir="prev";drawBinder()}else if(c==="next"){spread[b.id]++;turnDir="next";drawBinder()}
+    else if(c==="holo"){const v=!noHolo();try{localStorage.setItem('noHolo',v?'1':'0')}catch(e){}document.body.classList.toggle('noholo',v);a.classList.toggle("on",!v);a.textContent="✨ Holo : "+(v?"Off":"On")}
     else if(c==="sortmenu"){const m=$("#sortMenu");m.hidden=!m.hidden}
     else if(c==="compact")reorder("keep")
     else if(c==="togglefinder"){finderOpen=!finderOpen;try{localStorage.setItem('finderOpen',finderOpen?'1':'0')}catch(e){}$("#cwrap").classList.toggle("nofinder",!finderOpen);drawBinder();if(finderOpen)drawFinder()}
@@ -1564,6 +1567,7 @@ const gvSave=()=>{try{localStorage.setItem("gv",JSON.stringify(GV))}catch(e){}};
 
 
 /* --- Classeur des cartes gradées --- */
+const noHolo=()=>{try{return localStorage.getItem("noHolo")==="1"}catch(e){return false}};try{if(localStorage.getItem("noHolo")==="1")document.body.classList.add("noholo")}catch(e){}
 let gbSpread=0,gbPick=null,gbDrag=null,gbTurn="",gbQ="";const gbNorm=t=>(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function gbAll(){if(!ST.gbinders){const o=ST.gbinder||{cols:3,rows:2,slots:{}},id=uid();ST.gbinders={[id]:{id,name:"Mes cartes gradées",cols:o.cols,rows:o.rows,color:"#d9a600",created:Date.now(),slots:o.slots||{}}};ST.gbcur=id;delete ST.gbinder}
   if(!Object.keys(ST.gbinders).length){const id=uid();ST.gbinders[id]={id,name:"Mes cartes gradées",cols:3,rows:2,color:"#d9a600",created:Date.now(),slots:{}}}
