@@ -1003,7 +1003,7 @@ function pullMap(){if(PULL)return PULL;PULL={};
 const AGE=y=>!y?1:y<=2000?6:y<=2003?3.6:y<=2007?3:y<=2010?2:y<=2014?1.4:y<=2018?1.15:1;
 const BASEC={};
 /* cotes réelles approximatives (€, carte brute) des grosses cartes modernes */
-const COTE_OV={"SWSH7|215":1900,"SWSH7|218":550,"SWSH7|189":350,"SWSH7|184":160,"SWSH7|192":380,"SWSH7|212":230,"SWSH7|209":180,"SWSH7|205":170,"SWSH8|270":380,"SWSH8|271":400,"SWSH11|186":700,"SWSH12|186":280,"SM9|170":1900,"SM9|165":700,"SV3PT5|199":190,"SV8PT5|161":1200,"SV8|238":320,"SV3|223":90,"SV4PT5|234":130,"SWSH9|154":240,"ME01|178":220,
+const COTE_OV={"MISC|MEW":45,"jp:MISCP|101":60,"jp:MISCP|196":110,"XYP|XY150A":95,"XYP|XY150":45,"SWSH7|215":1900,"SWSH7|218":550,"SWSH7|189":350,"SWSH7|184":160,"SWSH7|192":380,"SWSH7|212":230,"SWSH7|209":180,"SWSH7|205":170,"SWSH8|270":380,"SWSH8|271":400,"SWSH11|186":700,"SWSH12|186":280,"SM9|170":1900,"SM9|165":700,"SV3PT5|199":190,"SV8PT5|161":1200,"SV8|238":320,"SV3|223":90,"SV4PT5|234":130,"SWSH9|154":240,"ME01|178":220,
   "jp:SWSH6A|95":1100,"jp:SV8A|217":700,"jp:SWSH7R|83":450,"jp:SWSH11|111":450,"jp:SV2A|201":160,"jp:SWSH8B|245":300,"jp:SWSH8B|244":180,"jp:SV8|132":200,"jp:SWSH8B|223":150,"jp:M2|110":400,"jp:M2A|223":250,"jp:SWSH12A|211":120,"jp:M6|110":300,"jp:SWSH8B|252":220};
 function coteBase(c){c=CARDS[canon(c.key)]||c;if(BASEC[c.key])return BASEC[c.key];
   const ov=COTE_OV[(c.region==="jp"?"jp:":"")+c.code+"|"+String(c.num).replace(/^0+/,"")];if(ov)return BASEC[c.key]=ov*(.93+.14*hsh(c.key));const p=pullMap()[c.key]||1e-5;
