@@ -423,6 +423,16 @@ table.rates td{padding:5px 4px;border-top:1px solid var(--line)}table.rates td:l
 .pvalc .pvbig{font-family:var(--disp);font-size:40px;color:var(--gold);line-height:1.1}.pvsub{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);margin:6px 0 12px}.pvsub b{color:var(--txt)}
 .pvtop{display:grid;gap:8px}.pvt{display:flex;align-items:center;gap:10px;background:var(--tile);border-radius:12px;padding:6px 10px}.pvt img{width:34px;border-radius:4px}.pvt div{flex:1;min-width:0}.pvt b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pvt small{color:var(--muted);font-size:12px}.pvt em{font-style:normal;font-weight:800;color:var(--gold)}
 .pvr{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a1400;font-weight:800;font-size:12px;display:grid;place-items:center;flex:none}.pvnote{font-size:12px;color:var(--muted);margin:10px 0 0}
+.slot .scote{position:absolute;top:calc(100% + 3px);left:1px;right:1px;display:flex;justify-content:space-between;align-items:baseline;gap:3px;font-size:11.5px;line-height:1.1;white-space:nowrap;pointer-events:none;z-index:3}
+.scote b{color:var(--gold);font-weight:800}.scote .up{color:#3ccf7f;font-weight:700;font-size:.9em}.scote .dn{color:#ff6b6b;font-weight:700;font-size:.9em}
+body:not(.nocote) .page{row-gap:calc(var(--gap) + var(--cap,18px))}body:not(.nocote) .slot.filled{overflow:visible}body:not(.nocote) .slot.filled img{border-radius:5px}body:not(.nocote) .slot.filled .hl,body:not(.nocote) .slot.filled .hl2{border-radius:5px}
+.binder.small .scote .up,.binder.small .scote .dn,#binderEl.small .scote .up,#binderEl.small .scote .dn{display:none}#binderEl.small .scote{justify-content:center;font-size:10px}
+body.nocote .scote,body.nocote .gplq{display:none}
+.cpr .scote{display:flex;justify-content:space-between;align-items:baseline;gap:4px;font-size:12px;margin-top:3px;padding:0 2px}.cpr{color:inherit}
+.gplq{position:absolute;left:7%;right:7%;bottom:0;height:calc(var(--gw,200px)*.2);display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(180deg,#3a3f4f,#1d2130);border:1px solid #6d7385;border-radius:6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 4px 10px rgba(0,0,0,.5);pointer-events:none;line-height:1.1}
+.gplq small{font-size:calc(var(--gw,200px)*.05);color:#b8bed0;letter-spacing:.06em}.gplq b{font-family:var(--disp);color:#f1d37a;font-size:calc(var(--gw,200px)*.085)}
+.gwi{display:flex;flex-direction:column;align-items:center;width:100%;--gw:250px}.gwi .gplq{position:static;width:86%;height:auto;padding:6px 8px;margin-top:10px}.gwi .slab{width:100%}
+.gbic.on{border-color:var(--gold)}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
@@ -874,7 +884,7 @@ function cardsPage(){
     const list=p.cards.filter(c=>inRegion(c,region)&&(filt==="all"||(filt==="got")===(qty(c.key)>0)));
     $("#pk").innerHTML=list.length?`<div class="cards">${list.map((c,i)=>{const n=qty(c.key);
       return `<button class="card ${n?"":"missing"}" data-i="${i}"><span class="im ${n&&isBig(c)?"holo full soft t-"+c.r:""}"><img src="${c.th||c.img}" ${srcset(c)} alt="${esc(c.name)} ${esc(c.label)}" loading="lazy">${n&&isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}</span>
-        <span class="cap"><span>${n?`<b class="qn">×${n}</b> `:""}${esc(c.code)}</span><span>${esc(c.num)}</span></span></button>`}).join("")}</div>`:`<p class="empty">Aucune carte ici.</p>`;
+        <span class="cap"><span>${n?`<b class="qn">×${n}</b> `:""}${esc(c.code)}</span><span>${esc(c.num)}</span></span>${c.r?`<span class="cpr">${capB(c)}</span>`:""}</button>`}).join("")}</div>`:`<p class="empty">Aucune carte ici.</p>`;
     $("#pk").querySelectorAll(".card").forEach(el=>{el.onclick=()=>openLb("card",list,+el.dataset.i);
       const pre=()=>ensureFull(list[+el.dataset.i]);el.onpointerenter=pre;el.onpointerdown=pre});
   }
@@ -1017,6 +1027,9 @@ const varHtml=p=>`<span class="cvar ${p>=0?"up":"dn"}">${p>=0?"▲":"▼"} ${Mat
 const oneIn=c=>{const p=pullMap()[canon(c.key)];if(!p)return "";const n=1/p;return n<10?"très fréquente":`1 booster sur ${Math.round(n).toLocaleString("fr-FR")}`};
 function collValue(){let v=0;for(const k in ST.owned){const c=CARDS[k];if(c&&ST.owned[k]>0)v+=cote(c)*ST.owned[k]}let g=0;gState().forEach(s=>g+=coteSlab(s));return {cards:v,graded:g,total:v+g}}
 function coteBox(c){const n=qty(c.key),v=cote(c);return `<div class="cbox"><div class="cl"><span>Cote</span><b>${eur(v)}</b>${varHtml(coteVar(c))}</div><div class="cm">🎲 ${oneIn(c)}${n>1?` · tes ${n} exemplaires : <b>${eur(v*n)}</b>`:""}</div></div>`}
+const cvarTxt=c=>{const p=coteVar(c);return `<span class="${p>=0?"up":"dn"}">${p>=0?"▲":"▼"} ${Math.abs(p).toFixed(1).replace(".",",")} %</span>`};
+const capB=c=>c&&c.r?`<span class="scote"><b>${eur(cote(c))}</b>${cvarTxt(c)}</span>`:"";
+const plaque=s=>`<div class="gplq"><small>Valeur estimée</small><b>${eur(coteSlab(s))}</b></div>`;
 function slabCoteBox(s){const c=CARDS[s.k];if(!c)return "";const L=slabLuck(s),v=coteSlab(s),p=(v/coteSlab(s,DAY()-1)-1)*100;
   return `<div class="cbox slabc"><div class="cl"><span>Cote de ce boîtier</span><b>${eur(v)}</b>${varHtml(p)}${L.j?`<span class="jack">🔥 Jackpot</span>`:""}</div><div class="cm">Carte brute : ${eur(cote(c))} · note ${fmtG(s.g)}${s.lb==="black"?" Black Label":s.lb==="gold"?" Gold Label":""} · coup de cœur ×${L.f.toFixed(2).replace(".",",")}</div></div>`}
 let lpT=null,lpFired=false,lpXY=null;
@@ -1028,7 +1041,7 @@ document.addEventListener("click",e=>{if(lpFired){lpFired=false;e.stopPropagatio
 document.addEventListener("contextmenu",e=>{const el=e.target.closest&&e.target.closest(".slot.filled,.gbs.full");if(!el)return;e.preventDefault();lpOpen(el)});
 function lpOpen(el){if(el.classList.contains("gbs")){const id=gb().slots[el.dataset.gpos];if(id)slabZoom(id);return}
   const b=binder();if(!b)return;const k=slotsOf(b)[+el.dataset.pos],c=CARDS[k];if(!c)return;ensureFull(c);openLb("card",[c],0)}
-window.__cote={cote,coteSlab,coteBase,pullMap,CARDS,eur};
+window.__cote={cote,coteSlab,coteBase,pullMap,CARDS,eur,coteVar,slabHtml:(...a)=>slabHtml(...a),ensureFull:c=>ensureFull(c)};
 window.__dbg={st:()=>ST,gp:()=>gradedPage(),makePack,BOOSTERS,CARDS,cardFace:(...a)=>cardFace(...a),god:()=>{forceGod=true}};
 window.__simPacks=(region,n)=>{const cnt={};for(let i=0;i<n;i++)makePack(region).forEach(x=>{const k=x.slot+":"+x.c.r;cnt[k]=(cnt[k]||0)+1});return cnt};
 
@@ -1208,7 +1221,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
     if(i===1&&v.per===2)parts.push(rings);
     if(p<0){parts.push(`<div class="page add"><button data-c="addpage">+ Ajouter une page</button></div>`);return}
     let cells="";for(let k=0;k<pp;k++){const pos=p*pp+k;const key=sl[pos];const c=key&&CARDS[key];
-      cells+=c?`<button class="slot filled ${qty(key)?"":"missing"} ${qty(key)&&isBig(c)?"holo full soft t-"+c.r:""}" data-pos="${pos}" draggable="true" title="${esc(c.name)} · ${esc(c.label)} · ${esc(tierName(c.r))}"><img src="${c.th||c.img}" ${srcset(c)} alt="${esc(c.name)}" draggable="false">${qty(key)&&isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}</button>`
+      cells+=c?`<button class="slot filled ${qty(key)?"":"missing"} ${qty(key)&&isBig(c)?"holo full soft t-"+c.r:""}" data-pos="${pos}" draggable="true" title="${esc(c.name)} · ${esc(c.label)} · ${esc(tierName(c.r))}"><img src="${c.th||c.img}" ${srcset(c)} alt="${esc(c.name)}" draggable="false">${qty(key)&&isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}${capB(c)}</button>`
              :`<button class="slot" data-pos="${pos}" aria-label="Case vide ${k+1}"><span class="num">${k+1}</span><span class="hint">+</span></button>`}
     parts.push(`<div class="page ${v.per===2&&i===0?"pl":"pr"}">${cells}</div>`)});
   if(v.per===1)parts.unshift(rings);
@@ -1220,6 +1233,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
       <div class="btools"><button class="btn ${finderOpen?"":"gold"}" data-c="togglefinder">${finderOpen?"◧ Masquer le panneau":"＋ Ajouter des cartes"}${(()=>{const n=toPlaceCount();return !finderOpen&&n?` <span class="nbadge">${n}</span>`:""})()}</button><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
         <div class="ddm" id="sortMenu" hidden><button data-sort="dex">Par Pokémon</button><button data-sort="rar">Par rareté</button><button data-sort="got">Obtenues d'abord</button><button data-sort="reg">International puis Japonais</button></div></div>
         <button class="btn" data-c="compact" title="Supprimer les cases vides entre les cartes">⇤ Boucher les trous</button>
+        <button class="btn holotg ${noCote()?"":"on"}" data-c="cotes" title="Afficher ou masquer les cotes sous les cartes">💶 Cotes : ${noCote()?"Off":"On"}</button>
         <button class="btn holotg ${noHolo()?"":"on"}" data-c="holo" title="Activer ou désactiver les reflets holographiques dans le classeur">✨ Holo : ${noHolo()?"Off":"On"}</button>
         <button class="btn" data-c="addowned" title="Ajouter toutes les cartes obtenues qui ne sont pas encore dans ce classeur">＋ Mes cartes obtenues</button>
         <button class="btn" data-c="edit">⚙️ Réglages</button>
@@ -1281,8 +1295,9 @@ function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
   const top=el.getBoundingClientRect().top+scrollY;
   const full=document.body.classList.contains("bfull");
   const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?112:105))-pagePad;
-  const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap)/b.rows)*63/88,full?420:340)));
-  el.style.setProperty("--sw",sw+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
+  const cap=noCote()?0:18;
+  const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap-b.rows*cap)/b.rows)*63/88,full?420:340)));
+  el.style.setProperty("--sw",sw+"px");el.style.setProperty("--cap",cap+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
   el.classList.toggle("small",sw<80)}
 let PLC=null;
 function placedAll(k){if(!PLC){PLC={};for(const id in ST.slots){const m=ST.slots[id];for(const s in m){const c=canon(m[s]);PLC[c]=(PLC[c]||0)+1}}}return PLC[canon(k)]||0}
@@ -1350,6 +1365,7 @@ document.addEventListener("click",e=>{if(location.hash!=="#collection")return;co
   if(a){const b=binder(),c=a.dataset.c;
     if(c==="new")binderModal(null);else if(c==="edit")binderModal(b);else if(c==="unpick"){pick=null;drawFinder()}
     else if(c==="prev"){spread[b.id]--;turnDir="prev";drawBinder()}else if(c==="next"){spread[b.id]++;turnDir="next";drawBinder()}
+    else if(c==="cotes"){const v=!noCote();try{localStorage.setItem('noCote',v?'1':'0')}catch(e){}document.body.classList.toggle('nocote',v);drawBinder()}
     else if(c==="holo"){const v=!noHolo();try{localStorage.setItem('noHolo',v?'1':'0')}catch(e){}document.body.classList.toggle('noholo',v);a.classList.toggle("on",!v);a.textContent="✨ Holo : "+(v?"Off":"On")}
     else if(c==="sortmenu"){const m=$("#sortMenu");m.hidden=!m.hidden}
     else if(c==="compact")reorder("keep")
@@ -1555,7 +1571,7 @@ function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
   <div class="cards" id="mcGrid"></div><div class="mcmore" id="mcMore"></div>`;
   const grid=$("#mcGrid");
   const tile=(c,i)=>`<button class="card" data-i="${i}"><span class="im ${isBig(c)?"holo full soft t-"+c.r:""}"><img src="${c.th||c.img}" ${srcset(c)} alt="" loading="lazy">${isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}</span>
-    <span class="cap"><span><b class="qn">×${qty(c.key)}</b> ${esc(c.name)}</span><span class="rt rt-${c.r} mini">${tierName(c.r)}</span></span><span class="cpr">${eur(cote(c))}</span></button>`;
+    <span class="cap"><span><b class="qn">×${qty(c.key)}</b> ${esc(c.name)}</span><span class="rt rt-${c.r} mini">${tierName(c.r)}</span></span><span class="cpr">${capB(c)}</span></button>`;
   const more=()=>{$("#mcMore").innerHTML=MC.shown<L.length?`<button class="btn" id="mcMoreB">Afficher plus (${L.length-MC.shown} restantes)</button>`:"";
     const b=$("#mcMoreB");if(b)b.onclick=()=>{const a=MC.shown;MC.shown=Math.min(L.length,a+150);grid.insertAdjacentHTML("beforeend",L.slice(a,MC.shown).map((c,j)=>tile(c,a+j)).join(""));bind();more()}};
   const bind=()=>grid.querySelectorAll(".card:not([data-b])").forEach(el=>{el.dataset.b=1;el.onclick=()=>openLb("card",L,+el.dataset.i);const pre=()=>ensureFull(L[+el.dataset.i]);el.onpointerenter=pre;el.onpointerdown=pre});
@@ -1630,6 +1646,7 @@ const gvSave=()=>{try{localStorage.setItem("gv",JSON.stringify(GV))}catch(e){}};
 
 
 /* --- Classeur des cartes gradées --- */
+const noCote=()=>{try{return localStorage.getItem("noCote")==="1"}catch(e){return false}};try{if(localStorage.getItem("noCote")==="1")document.body.classList.add("nocote")}catch(e){}
 const noHolo=()=>{try{return localStorage.getItem("noHolo")==="1"}catch(e){return false}};try{if(localStorage.getItem("noHolo")==="1")document.body.classList.add("noholo")}catch(e){}
 let gbSpread=0,gbPick=null,gbDrag=null,gbTurn="",gbQ="";const gbNorm=t=>(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function gbAll(){if(!ST.gbinders){const o=ST.gbinder||{cols:3,rows:2,slots:{}},id=uid();ST.gbinders={[id]:{id,name:"Mes cartes gradées",cols:o.cols,rows:o.rows,color:"#d9a600",created:Date.now(),slots:o.slots||{}}};ST.gbcur=id;delete ST.gbinder}
@@ -1646,7 +1663,7 @@ function gbHtml(L){const B=gb(),per=gbPer(),n=gbPages(),two=gbTwo(),nS=Math.ceil
   const placed=gbPlaced(),byId=Object.fromEntries(gState().map(x=>[x.id,x]));const free=L.filter(x=>!placed.has(x.id));
   const first=gbSpread*(two?2:1),pages=[first].concat(two?[first+1]:[]);
   const page=(pi,ix)=>`<div class="gbp ${two?(ix?"r":"l"):""}"><div class="gbgrid" style="grid-template-columns:repeat(${B.cols},120px)">${Array.from({length:per},(_,j)=>{const pos=pi*per+j,id=B.slots[pos],x=id&&byId[id];
-     return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;const rings=`<div class="gbring">${"<i></i>".repeat(B.rows>2?4:3)}</div>`;
+     return `<div class="gbs ${x?"full":""}" data-gpos="${pos}" ${x?`draggable="true"`:""}>${x?`<div class="gbsc">${slabHtml(x)}</div>${plaque(x)}`:""}</div>`}).join("")}</div><div class="gbn">${pi+1}</div></div>`;const rings=`<div class="gbring">${"<i></i>".repeat(B.rows>2?4:3)}</div>`;
   return `<div class="gbwrap"><aside class="gbside"><h3>À ranger <b>${free.length}</b></h3>${free.length?`<input class="gbq" id="gbQ" type="search" placeholder="🔎 Nom du Pokémon…" value="${esc(gbQ)}" autocomplete="off"><p class="gbnone" id="gbNone" hidden></p>`:""}<div class="gbfree">${free.map(x=>{const c=CARDS[x.k];return `<button data-gn="${esc(gbNorm(c.name))}" class="gbf ${gbPick===x.id?"sel":""}" draggable="true" data-gfree="${x.id}"><img src="${c.th}" alt=""><span><b>${esc(c.name)}</b><small><span class="gbg ${lbOf(x)}">${fmtG(x.g)}</span> ${esc(gLabel(x))}</small></span></button>`}).join("")||'<p class="empty" style="font-size:13px">Toutes tes cartes gradées sont rangées.</p>'}</div>
      <div class="gbtools"><button class="btn sm" id="gbAll" ${free.length?"":"disabled"} title="Range toutes les cartes dans « ${esc(B.name)} »">Tout ranger ici</button></div></aside>
    <div class="gbmain"><div class="gbbook ${two?"two":""} ${gbTurn} ${gbPick?"gbpick":""}" id="gbBook" style="--c:${esc(B.color||"#2d5ba3")}">${pages.map(page).join(two?rings:"")}</div>
@@ -1660,7 +1677,7 @@ function bindGB(L){const B=gb(),redraw=()=>{save();gradedPage()};
   app.querySelectorAll("[data-gbsel]").forEach(c=>c.onclick=()=>{ST.gbcur=c.dataset.gbsel;gbDD=false;gbSpread=0;gbPick=null;save();gradedPage()});
   $("#gbDDb").onclick=e=>{e.stopPropagation();gbDD=!gbDD;gradedPage()};const n2=$("#gbNew2");if(n2)n2.onclick=()=>{gbDD=false;gbModal(null)};
   if(gbDD)setTimeout(()=>document.addEventListener("click",function cl(e){if(!e.target.closest("#gbDD")){gbDD=false;document.removeEventListener("click",cl);if($("#gbDD"))gradedPage()}}),0);
-  $("#gbNew").onclick=()=>{gbDD=false;gbModal(null)};$("#gbSet").onclick=()=>gbModal(B);
+  $("#gbNew").onclick=()=>{gbDD=false;gbModal(null)};$("#gbCote").onclick=()=>{const v=!noCote();try{localStorage.setItem('noCote',v?'1':'0')}catch(e){}document.body.classList.toggle('nocote',v);gradedPage()};$("#gbSet").onclick=()=>gbModal(B);
   $("#gbAll").onclick=()=>{const placed=gbPlaced();let pos=0;L.filter(x=>!placed.has(x.id)).forEach(x=>{while(B.slots[pos])pos++;B.slots[pos]=x.id});redraw()};
   app.querySelectorAll("[data-gfree]").forEach(b=>{b.onclick=()=>{gbPick=gbPick===b.dataset.gfree?null:b.dataset.gfree;gradedPage()};
     b.ondragstart=e=>{gbDrag={id:b.dataset.gfree};try{e.dataTransfer.setData("text/plain","x")}catch(_){}}});
@@ -1681,9 +1698,10 @@ function gbFit(){const m=app.querySelector(".gbmain"),bk=$("#gbBook");if(!m||!bk
   if(!gbR){const sc=app.querySelector(".gbsc .slab");if(sc&&sc.offsetHeight)gbR=sc.offsetHeight/285}const R=gbR||1.62;
   const avW=(m.clientWidth-32-(two?34:0))/(two?2:1)-32-2;
   const top=bk.getBoundingClientRect().top+scrollY,avH=innerHeight-top-32-32-56-16;
-  const w=Math.max(56,Math.floor(Math.min((avW-(B.cols-1)*G)/B.cols,(avH-(B.rows-1)*G)/B.rows/R)));
-  app.querySelectorAll(".gbgrid").forEach(g=>g.style.gridTemplateColumns=`repeat(${B.cols},${w}px)`);
-  app.querySelectorAll(".gbs").forEach(x=>x.style.height=Math.round(w*R)+"px");
+  const pr=noCote()?0:.2,pa=noCote()?0:8;
+  const w=Math.max(56,Math.floor(Math.min((avW-(B.cols-1)*G)/B.cols,((avH-(B.rows-1)*G)/B.rows-pa)/(R+pr))));
+  app.querySelectorAll(".gbgrid").forEach(g=>{g.style.gridTemplateColumns=`repeat(${B.cols},${w}px)`;g.style.setProperty("--gw",w+"px")});
+  app.querySelectorAll(".gbs").forEach(x=>x.style.height=Math.round(w*(R+pr)+pa)+"px");
   app.querySelectorAll(".gbsc").forEach(el=>el.style.transform=`scale(${w/285})`)}
 const byIdG=id=>gState().find(x=>x.id===id);
 let gbDD=false;
@@ -1691,7 +1709,7 @@ function gbBarHtml(){const all=Object.values(gbAll()).sort((a,b)=>a.created-b.cr
   const it=x=>`<span class="gbcov" style="--c:${esc(x.color)}"></span><span class="gbddn">${esc(x.name)}</span><small>${Object.keys(x.slots).length}</small>`;
   return `<div class="gbbar"><div class="gbdd ${gbDD?"open":""}" id="gbDD"><button class="gbddb" id="gbDDb" title="Changer de classeur">${it(B)}<i>▾</i></button>
     ${gbDD?`<div class="gbddp">${all.map(x=>`<button class="gbddi ${x.id===B.id?"on":""}" data-gbsel="${x.id}">${it(x)}</button>`).join("")}<button class="gbddi gbddnew" id="gbNew2">＋ Nouveau classeur</button></div>`:""}</div>
-    <button class="btn gbic" id="gbSet" title="Réglages du classeur">⚙</button><button class="btn primary" id="gbNew">＋ Nouveau classeur</button></div>`}
+    <button class="btn gbic ${noCote()?"":"on"}" id="gbCote" title="Afficher ou masquer les cotes">💶</button><button class="btn gbic" id="gbSet" title="Réglages du classeur">⚙</button><button class="btn primary" id="gbNew">＋ Nouveau classeur</button></div>`}
 const GPRE=[[2,2],[3,2],[3,3],[4,2],[4,3],[5,2]];
 function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,rows:2,color:COVERS[Object.keys(all).length%COVERS.length][1],created:Date.now(),slots:{}};
   const root=$("#modalRoot");let armed=false;
@@ -1721,7 +1739,7 @@ function gradedPage(){const L=[...gState()];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))} · valeur <b class="cval">${eur(L.reduce((a,x)=>a+coteSlab(x),0))}</b>`:""}</small></h1>
    ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view!=="grid"?gbBarHtml():""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["cote","Cote"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+   ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>`<div class="gwi">${slabHtml(s)}${plaque(s)}</div>`).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
