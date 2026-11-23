@@ -417,7 +417,7 @@ table.rates td{padding:5px 4px;border-top:1px solid var(--line)}table.rates td:l
 .cbox .cl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.cbox .cl span:first-child{font-size:12px;color:var(--muted);text-transform:none}.cbox .cl b{font-family:var(--disp);font-size:24px;color:var(--gold)}
 .cbox .cm{font-size:13px;color:var(--muted);margin-top:2px}.cbox .cm b{color:var(--txt)}
 .cvar{font-size:13px;font-weight:700}.cvar.up{color:#3ccf7f}.cvar.dn{color:#ff6b6b}.jack{background:linear-gradient(135deg,#ff7a00,#ffcb05);color:#2a1500;font-weight:800;font-size:12px;border-radius:999px;padding:2px 9px}
-.grv .slabc{max-width:420px;margin:12px auto 0}
+.grv .slabc{max-width:420px;margin:12px auto 0}.modal.mzoom{background:rgba(3,6,16,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow:auto}.mzoom .cbox{background:linear-gradient(135deg,#2a2610,#15172a);border-color:rgba(255,203,5,.55)}.mzoom .grv-txt{opacity:1!important;color:var(--muted)}
 .cpr{display:block;font-size:12px;font-weight:700;color:var(--gold);margin-top:2px}.bsv{display:block;font-size:12px;font-weight:700;color:var(--gold);margin-top:3px;text-align:center}.bcount.pval{color:var(--gold);font-weight:700}
 .cval{color:var(--gold)}
 .pvalc .pvbig{font-family:var(--disp);font-size:40px;color:var(--gold);line-height:1.1}.pvsub{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);margin:6px 0 12px}.pvsub b{color:var(--txt)}
@@ -1642,7 +1642,7 @@ function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newC
   $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
 }
 function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
-  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}${slabCoteBox(s)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div><div class="tact" style="justify-content:center"><button class="btn" id="zClose">Fermer</button><button class="btn danger" id="zDel">Supprimer cette carte gradée</button></div></div></div>`;
+  $("#modalRoot").innerHTML=`<div class="modal mzoom" id="modal"><div class="grv">${slabHtml(s,true)}${slabCoteBox(s)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div><div class="tact" style="justify-content:center"><button class="btn" id="zClose">Fermer</button><button class="btn danger" id="zDel">Supprimer cette carte gradée</button></div></div></div>`;
   $("#modal").onclick=e=>{if(e.target.id==="modal")$("#modalRoot").innerHTML=""};$("#zClose").onclick=()=>$("#modalRoot").innerHTML="";
   $("#zDel").onclick=()=>confirmBox("Supprimer cette carte gradée ?",`${esc(CARDS[s.k]?.name||"")} · note ${fmtG(s.g)} — elle sera définitivement supprimée.`,"Supprimer",()=>{ST.graded=gState().filter(x=>x.id!==id);if(typeof tSlabs!=="undefined")tSlabs.delete(id);save();toast("Carte gradée supprimée");route()})}
 /* --- onglet Cartes gradées --- */
