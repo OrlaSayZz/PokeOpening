@@ -413,6 +413,16 @@ table.rates td{padding:5px 4px;border-top:1px solid var(--line)}table.rates td:l
 .slot:not(.filled)::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.09) 47%,transparent 57%)}
 .slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;image-rendering:auto}
 .slot.filled{background:transparent;border-color:transparent;border-radius:4.5%/3.3%;box-shadow:0 3px 8px rgba(0,0,0,.45)}
+.cbox{margin-top:10px;background:linear-gradient(135deg,rgba(255,203,5,.10),rgba(255,203,5,.03));border:1px solid rgba(255,203,5,.35);border-radius:12px;padding:10px 12px;text-align:left}
+.cbox .cl{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.cbox .cl span:first-child{font-size:12px;color:var(--muted);text-transform:none}.cbox .cl b{font-family:var(--disp);font-size:24px;color:var(--gold)}
+.cbox .cm{font-size:13px;color:var(--muted);margin-top:2px}.cbox .cm b{color:var(--txt)}
+.cvar{font-size:13px;font-weight:700}.cvar.up{color:#3ccf7f}.cvar.dn{color:#ff6b6b}.jack{background:linear-gradient(135deg,#ff7a00,#ffcb05);color:#2a1500;font-weight:800;font-size:12px;border-radius:999px;padding:2px 9px}
+.grv .slabc{max-width:420px;margin:12px auto 0}
+.cpr{display:block;font-size:12px;font-weight:700;color:var(--gold);margin-top:2px}.bsv{display:block;font-size:12px;font-weight:700;color:var(--gold);margin-top:3px;text-align:center}.bcount.pval{color:var(--gold);font-weight:700}
+.cval{color:var(--gold)}
+.pvalc .pvbig{font-family:var(--disp);font-size:40px;color:var(--gold);line-height:1.1}.pvsub{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);margin:6px 0 12px}.pvsub b{color:var(--txt)}
+.pvtop{display:grid;gap:8px}.pvt{display:flex;align-items:center;gap:10px;background:var(--tile);border-radius:12px;padding:6px 10px}.pvt img{width:34px;border-radius:4px}.pvt div{flex:1;min-width:0}.pvt b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pvt small{color:var(--muted);font-size:12px}.pvt em{font-style:normal;font-weight:800;color:var(--gold)}
+.pvr{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#1a1400;font-weight:800;font-size:12px;display:grid;place-items:center;flex:none}.pvnote{font-size:12px;color:var(--muted);margin:10px 0 0}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
@@ -911,7 +921,7 @@ function renderLb(){const it=lbList[lbIdx];lb.classList.toggle("wide",lbMode==="
   $("#lbc").className="lbc"+(lbMode==="card"&&qty(it.key)&&isBig(it)?" holo full t-"+it.r:"");
   if(lbMode==="card"){const n=qty(it.key);lb.classList.toggle("gray",!n);
     $("#lbInfo").innerHTML=`<h3>${esc(it.name)}${lbMode==="card"&&qty(it.key)?` <span class="qn">×${qty(it.key)}</span>`:""}</h3><p>${esc(it.code)}${it.num?" · n°"+esc(it.num):""}</p><p>${esc(langName(it.lang))}${it.r?` · <span class="rt rt-${it.r}">${tierName(it.r)}</span>`:""}</p>
-      <span class="state ${n?"got":"no"}">${n?`✔ Obtenue${n>1?" ×"+n:""}`:"Pas encore obtenue"}</span>`}
+      <span class="state ${n?"got":"no"}">${n?`✔ Obtenue${n>1?" ×"+n:""}`:"Pas encore obtenue"}</span>${it.r?coteBox(it):""}`}
   else{lb.classList.remove("gray");$("#lbInfo").innerHTML=`<h3>${esc(it.name)}</h3><p>${esc(it.desc||"")}</p>`}}
 lb.addEventListener("pointermove",e=>{const c=$("#lbc");if(!c.classList.contains("holo"))return;const r=c.getBoundingClientRect();c.style.setProperty("--mx",((e.clientX-r.left)/r.width*100).toFixed(1)+"%");c.style.setProperty("--my",((e.clientY-r.top)/r.height*100).toFixed(1)+"%")});
 lb.addEventListener("click",e=>{const a=e.target.closest("[data-lb]");
@@ -969,6 +979,57 @@ function makePack(region){if(forceGod||Math.random()*100<RATES.god){forceGod=fal
   for(let i=0;i<2;i++){let t=rollTable(RATES.reverse);if(t==="R")t=Math.random()<.5&&P.H.length?"H":"R";out.push({c:fromTier(P,t),slot:"rev"})}
   for(let i=0;i<2;i++)out.push({c:fromTier(P,rollTable(RATES.hit)),slot:"hit"});
   return out.filter(x=>x.c)}
+/* ---------- COTE (valeur des cartes en €) ---------- */
+const POP={dracaufeu:4,pikachu:2.6,mewtwo:2.3,mew:2.3,lugia:2.8,rayquaza:2.8,evoli:2,aquali:1.8,voltali:1.8,pyroli:1.8,mentali:2,noctali:2.4,phyllali:1.6,givrali:1.6,nymphali:1.8,ectoplasma:2,tortank:2.2,florizarre:1.8,leviator:1.8,"ho-oh":2,amphinobi:1.5,lucario:1.5,giratina:1.7,arceus:1.5,celebi:1.5,ronflex:1.5,dracolosse:1.6,darkrai:1.5,raichu:1.4,salameche:1.6,carapuce:1.4,bulbizarre:1.3,latias:1.5,latios:1.5,groudon:1.4,kyogre:1.4,deoxys:1.4,jirachi:1.4,suicune:1.5,entei:1.3,raikou:1.3,tyranocif:1.5,dialga:1.3,palkia:1.3,zekrom:1.3,reshiram:1.3,gardevoir:1.6,alakazam:1.3,magicarpe:1.3};
+const hsh=s=>{let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}h^=h>>>13;h=Math.imul(h,0x5bd1e995);h^=h>>>15;return (h>>>0)/4294967296};
+const DAY=()=>Math.floor((Date.now()+36e5)/864e5);
+let PULL=null;
+function pullMap(){if(PULL)return PULL;PULL={};
+  BOOSTERS.forEach(b=>{const P=poolOf(b),n=t=>P[t].length||1,rv=RATES.reverse,h=RATES.hit,tot=Object.values(h).reduce((a,x)=>a+x,0);
+    const k=b.tr?{c:3,rev:1,hit:1,u:0}:{c:4,rev:2,hit:2,u:2};
+    const p={C:(k.c+k.rev*rv.C/100)/n("C"),U:(k.u+k.rev*rv.U/100)/n("U"),R:(k.rev*rv.R/200+k.hit*h.R/tot)/n("R"),H:(k.rev*rv.R/200+k.hit*h.H/tot)/n("H")};
+    ["DR","UR","IR","SIR","HR"].forEach(t=>p[t]=k.hit*h[t]/tot/n(t));
+    for(const t in P)P[t].forEach(c=>PULL[c.key]=p[t]||1e-6)});
+  return PULL}
+const AGE=y=>!y?1:y<=2000?6:y<=2003?3.6:y<=2007?3:y<=2010?2:y<=2014?1.4:y<=2018?1.15:1;
+const BASEC={};
+function coteBase(c){c=CARDS[canon(c.key)]||c;if(BASEC[c.key])return BASEC[c.key];const p=pullMap()[c.key]||1e-5;
+  let v=0.12*Math.pow((1/p)/1100,1.18);
+  const big=["H","DR","UR","IR","SIR","HR"].includes(c.r);
+  const a=AGE(c.y);v*=1+(a-1)*(big?1:c.r==="R"?.6:.25);
+  const pop=POP[c.pokemon.id]||1;v*=1+(pop-1)*(big?1:.4);
+  if(c.r==="HR"&&c.y&&c.y<2010)v*=1.8;
+  v*={H:3,UR:1.3,IR:1.6,SIR:5}[c.r]||1;if(c.r==="H"&&c.y&&c.y<=2000)v*=2.5*((POP[c.pokemon.id]||1)>=2?2.5:1);
+  if(c.region==="jp")v*=c.y&&c.y<2010?1.1:.85;
+  v*=0.7+0.7*hsh(c.key);
+  v=Math.max(0.05,v);if(v>2500)v=2500*Math.pow(v/2500,.5);
+  return BASEC[c.key]=v}
+function drift(key,d){const a=hsh(key+"a"),b=hsh(key+"b"),P1=18+a*40,P2=6+b*9;
+  return Math.exp(.13*Math.sin(2*Math.PI*d/P1+a*9)+.05*Math.sin(2*Math.PI*d/P2+b*9)+.03*(hsh(key+"|"+d)-.5))}
+const cote=(c,d=DAY())=>coteBase(c)*drift(canon(c.key),d);
+const coteVar=c=>(cote(c)/cote(c,DAY()-1)-1)*100;
+const GMUL=g=>g>=10?12:g>=9.5?6:g>=9?3.2:g>=8.5?2.3:g>=8?1.8:g>=7?1.3:g>=5.5?1:.8;
+const slabLuck=s=>{const u=hsh(s.id+"L"),v=hsh(s.id+"V");return u<.05?{f:2.5+1.5*v,j:1}:{f:.6+v,j:0}};
+function coteSlab(s,d=DAY()){const c=CARDS[s.k];if(!c)return 0;let v=cote(c,d)*GMUL(s.g)*(s.lb==="black"?4.2:s.lb==="gold"?2.1:1);
+  if(s.sub&&s.sub.every(x=>x>=10))v*=1.15;v*=slabLuck(s).f;
+  if(v>15000)v=15000*Math.pow(v/15000,.55);return v}
+const eur=v=>v>=1000?Math.round(v).toLocaleString("fr-FR")+" €":v.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})+" €";
+const varHtml=p=>`<span class="cvar ${p>=0?"up":"dn"}">${p>=0?"▲":"▼"} ${Math.abs(p).toFixed(1).replace(".",",")} %</span>`;
+const oneIn=c=>{const p=pullMap()[canon(c.key)];if(!p)return "";const n=1/p;return n<10?"très fréquente":`1 booster sur ${Math.round(n).toLocaleString("fr-FR")}`};
+function collValue(){let v=0;for(const k in ST.owned){const c=CARDS[k];if(c&&ST.owned[k]>0)v+=cote(c)*ST.owned[k]}let g=0;gState().forEach(s=>g+=coteSlab(s));return {cards:v,graded:g,total:v+g}}
+function coteBox(c){const n=qty(c.key),v=cote(c);return `<div class="cbox"><div class="cl"><span>Cote</span><b>${eur(v)}</b>${varHtml(coteVar(c))}</div><div class="cm">🎲 ${oneIn(c)}${n>1?` · tes ${n} exemplaires : <b>${eur(v*n)}</b>`:""}</div></div>`}
+function slabCoteBox(s){const c=CARDS[s.k];if(!c)return "";const L=slabLuck(s),v=coteSlab(s),p=(v/coteSlab(s,DAY()-1)-1)*100;
+  return `<div class="cbox slabc"><div class="cl"><span>Cote de ce boîtier</span><b>${eur(v)}</b>${varHtml(p)}${L.j?`<span class="jack">🔥 Jackpot</span>`:""}</div><div class="cm">Carte brute : ${eur(cote(c))} · note ${fmtG(s.g)}${s.lb==="black"?" Black Label":s.lb==="gold"?" Gold Label":""} · coup de cœur ×${L.f.toFixed(2).replace(".",",")}</div></div>`}
+let lpT=null,lpFired=false,lpXY=null;
+document.addEventListener("pointerdown",e=>{lpFired=false;const el=e.target.closest&&e.target.closest(".slot.filled,.gbs.full");if(!el||e.button>0)return;lpXY=[e.clientX,e.clientY];clearTimeout(lpT);
+  lpT=setTimeout(()=>{lpFired=true;lpOpen(el)},480)});
+document.addEventListener("pointermove",e=>{if(lpT&&lpXY&&Math.hypot(e.clientX-lpXY[0],e.clientY-lpXY[1])>8){clearTimeout(lpT);lpT=null}});
+["pointerup","pointercancel","dragstart"].forEach(ev=>document.addEventListener(ev,()=>{clearTimeout(lpT);lpT=null}));
+document.addEventListener("click",e=>{if(lpFired){lpFired=false;e.stopPropagation();e.preventDefault()}},true);
+document.addEventListener("contextmenu",e=>{const el=e.target.closest&&e.target.closest(".slot.filled,.gbs.full");if(!el)return;e.preventDefault();lpOpen(el)});
+function lpOpen(el){if(el.classList.contains("gbs")){const id=gb().slots[el.dataset.gpos];if(id)slabZoom(id);return}
+  const b=binder();if(!b)return;const k=slotsOf(b)[+el.dataset.pos],c=CARDS[k];if(!c)return;ensureFull(c);openLb("card",[c],0)}
+window.__cote={cote,coteSlab,coteBase,pullMap,CARDS,eur};
 window.__dbg={st:()=>ST,gp:()=>gradedPage(),makePack,BOOSTERS,CARDS,cardFace:(...a)=>cardFace(...a),god:()=>{forceGod=true}};
 window.__simPacks=(region,n)=>{const cnt={};for(let i=0;i<n;i++)makePack(region).forEach(x=>{const k=x.slot+":"+x.c.r;cnt[k]=(cnt[k]||0)+1});return cnt};
 
@@ -1069,8 +1130,8 @@ function drawStack(){const st=$("#bstage"),P=packState;const left=P.pack.length-
 }
 function next(){const P=packState;if(P.i>=P.pack.length-1){summary();return}P.i++;drawStack()}
 function summary(){const P=packState;P.phase="done";const nNew=P.pack.filter(x=>x.isNew).length;
-  $("#bstage").innerHTML=`<div class="bsum">${P.pack.map((x,k)=>`<div class="bsi" data-zoom="${k}" style="animation-delay:${k*45}ms">${cardFace(x)}${x.isNew?`<span class="badge new sm">NOUVELLE</span>`:""}<small class="rt rt-${x.c.r}">${tierName(x.c.r)}${x.slot==="rev"?" · Reverse":""}</small></div>`).join("")}</div>`;
-  $("#bbar").innerHTML=`${P.god?`<span class="godtag">✨ GOD PACK</span>`:""}<span class="bcount">${nNew} nouvelle${nNew>1?"s":""} carte${nNew>1?"s":""}</span><button class="btn primary" data-op="again">🎁 Ouvrir un autre</button><button class="btn" data-op="close">Fermer</button>`;
+  $("#bstage").innerHTML=`<div class="bsum">${P.pack.map((x,k)=>`<div class="bsi" data-zoom="${k}" style="animation-delay:${k*45}ms">${cardFace(x)}${x.isNew?`<span class="badge new sm">NOUVELLE</span>`:""}<small class="rt rt-${x.c.r}">${tierName(x.c.r)}${x.slot==="rev"?" · Reverse":""}</small><small class="bsv">${eur(cote(x.c))}</small></div>`).join("")}</div>`;
+  $("#bbar").innerHTML=`${P.god?`<span class="godtag">✨ GOD PACK</span>`:""}<span class="bcount">${nNew} nouvelle${nNew>1?"s":""} carte${nNew>1?"s":""}</span><span class="bcount pval">💶 ${eur(P.pack.reduce((a,x)=>a+cote(x.c),0))}</span><button class="btn primary" data-op="again">🎁 Ouvrir un autre</button><button class="btn" data-op="close">Fermer</button>`;
 }
 
 /* ============================================================
@@ -1156,7 +1217,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
   const lbl=shown.length===2?`Pages ${shown[0]}–${shown[1]} / ${v.n}`:shown.length?`Page ${shown[0]} / ${v.n}`:`Fin · ${v.n} pages`;
   const pct=placed.length?Math.round(got/placed.length*100):0;
   const own=placed.filter(k=>qty(k)>0).length;
-  z.innerHTML=`<div class="btitle"><div class="bhead"><span class="bcov" style="--c:${esc(b.color)}"></span><div class="bring" style="--p:${pct}"><b>${pct}%</b></div><div class="bname"><h2>${esc(b.name)}</h2><span class="m">${placed.length} carte${placed.length>1?"s":""} rangée${placed.length>1?"s":""} · ${own} obtenue${own>1?"s":""} · ${v.n} pages de ${b.cols}×${b.rows}</span></div></div>
+  z.innerHTML=`<div class="btitle"><div class="bhead"><span class="bcov" style="--c:${esc(b.color)}"></span><div class="bring" style="--p:${pct}"><b>${pct}%</b></div><div class="bname"><h2>${esc(b.name)}</h2><span class="m">${placed.length} carte${placed.length>1?"s":""} rangée${placed.length>1?"s":""} · ${own} obtenue${own>1?"s":""} · ${v.n} pages de ${b.cols}×${b.rows} · valeur <b class="cval">${eur(placed.reduce((a,k)=>{const c=CARDS[k];return a+(c&&c.r&&qty(k)?cote(c):0)},0))}</b></span></div></div>
       <div class="btools"><button class="btn ${finderOpen?"":"gold"}" data-c="togglefinder">${finderOpen?"◧ Masquer le panneau":"＋ Ajouter des cartes"}${(()=>{const n=toPlaceCount();return !finderOpen&&n?` <span class="nbadge">${n}</span>`:""})()}</button><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
         <div class="ddm" id="sortMenu" hidden><button data-sort="dex">Par Pokémon</button><button data-sort="rar">Par rareté</button><button data-sort="got">Obtenues d'abord</button><button data-sort="reg">International puis Japonais</button></div></div>
         <button class="btn" data-c="compact" title="Supprimer les cases vides entre les cartes">⇤ Boucher les trous</button>
@@ -1242,7 +1303,7 @@ function slotMenu(pos){const b=binder(),key=slotsOf(b)[pos],c=CARDS[key];if(!c)r
     <div class="slotview ${n?"":"miss"}">${(ensureFull(c),"")}<span class="lbc ${n&&isBig(c)?"holo full t-"+c.r:""}" style="width:220px"><img src="${c.img}" alt="${esc(c.name)}" style="width:220px"><span class="hl"></span><span class="hl2"></span></span>
       <div class="d"><h3>${esc(c.name)}${qty(c.key)?` <span class="qn">×${qty(c.key)}</span>`:""}</h3><span style="color:var(--muted)">${esc(c.label)}<br>${esc(langName(c.lang))}</span>${c.r?`<span class="rt rt-${c.r}" style="width:max-content">${tierName(c.r)}</span>`:""}
         <span class="state ${n?"got":"no"}" style="display:inline-block;padding:6px 12px;border-radius:999px;font-weight:600;font-size:14px;width:max-content">${n?"✔ Obtenue"+(n>1?" ×"+n:""):"Pas encore obtenue"}</span>
-        <span style="color:var(--muted);font-size:13px">Page ${Math.floor(pos/pp)+1} · case ${pos%pp+1}</span>
+        ${c.r?coteBox(c):""}<span style="color:var(--muted);font-size:13px">Page ${Math.floor(pos/pp)+1} · case ${pos%pp+1}</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn danger" data-m="remove">Retirer du classeur</button><button class="btn" data-m="close">Fermer</button></div></div></div></div></div>`;
   root.onclick=e=>{const a=e.target.closest("[data-m]");if(e.target.id==="modal"||(a&&a.dataset.m==="close")){root.innerHTML="";return}
     if(a&&a.dataset.m==="remove"){delete slotsOf(b)[pos];save();root.innerHTML="";drawBinder();drawChips();drawFinder();toast("Carte retirée")}}}
@@ -1378,6 +1439,9 @@ function profilePage(){const P=prof();
     <section class="pcard"><h2>Mes 3 cartes préférées</h2><div class="favs">${favs}</div></section>
     <section class="pcard"><h2>Mes 3 cartes gradées préférées</h2><div class="favs gfavs">${gfavs}</div></section>
     </div>
+    ${(()=>{const V=collValue(),top=[...UNIQ.filter(c=>qty(c.key)>0).map(c=>({v:cote(c),h:`<img src="${c.th||c.img}" alt="">`,n:c.name,l:tierName(c.r)})),...gState().filter(x=>CARDS[x.k]).map(x=>({v:coteSlab(x),h:`<img src="${CARDS[x.k].th||CARDS[x.k].img}" alt="" class="gsm">`,n:CARDS[x.k].name,l:"Gradée "+fmtG(x.g)+(x.lb==="black"?" Black":x.lb==="gold"?" Gold":"")}))].sort((a,b)=>b.v-a.v).slice(0,3);
+      const y=collValue.prev||0;return `<section class="pcard pvalc"><h2>Valeur de ma collection</h2><div class="pvbig">${eur(V.total)}</div><div class="pvsub"><span>🃏 Cartes <b>${eur(V.cards)}</b></span><span>🏆 Gradées <b>${eur(V.graded)}</b></span></div>
+      ${top.length?`<div class="pvtop">${top.map((t,i)=>`<div class="pvt"><span class="pvr">${i+1}</span>${t.h}<div><b>${esc(t.n)}</b><small>${esc(t.l)}</small></div><em>${eur(t.v)}</em></div>`).join("")}</div>`:""}<p class="pvnote">Les cotes bougent un peu chaque jour. Reste appuyé sur une carte de ton classeur pour voir sa cote.</p></section>`})()}
     <section class="pcard pprog"><h2>Progression</h2><div class="prings">${ring(all.p,"Total",`${all.o} / ${all.t}`)}${ring(intl.p,"🌍 International",`${intl.o} / ${intl.t}`,"#7ab8ff")}${ring(jp.p,`${flag("ja")} Japonais`,`${jp.o} / ${jp.t}`,"#ff7b7b")}${ring(trs.p,"🧑 Dresseurs",`${trs.o} / ${trs.t}`,"#5fd39a")}</div>
       <div class="kpis"><div><b>${gState().length}</b><small>Cartes gradées</small></div><div><b>${ST.graded.filter(s=>s.g===10).length}</b><small>Notes de 10</small></div><div><b>${started}</b><small>Pokémon commencés</small></div><div><b>${done}</b><small>Pokémon complétés</small></div><div><b>${(ST.trades.sent||[]).length}</b><small>Codes envoyés</small></div><div><b>${(ST.trades.got||[]).length}</b><small>Codes reçus</small></div>${best?`<div><b><span class="rt rt-${best.r}">${tierName(best.r)}</span></b><small>Plus rare : ${esc(best.name)}</small></div>`:""}</div></section></div>
     <div class="pcols"><section class="pcard"><h2>Par rareté</h2>${tiers}</section><section class="pcard"><h2>Par génération</h2>${gens}</section></div>
@@ -1476,7 +1540,7 @@ function mcList(){const nq=norm(MC.q.trim());
     dex:(a,b)=>dex(a)-dex(b)||TIERS[b.r].o-TIERS[a.r].o,
     nom:(a,b)=>a.name.localeCompare(b.name,"fr")||TIERS[b.r].o-TIERS[a.r].o,
     qte:(a,b)=>qty(b.key)-qty(a.key)||TIERS[b.r].o-TIERS[a.r].o,
-    annee:(a,b)=>(b.y||0)-(a.y||0)||dex(a)-dex(b)}[MC.sort];
+    annee:(a,b)=>(b.y||0)-(a.y||0)||dex(a)-dex(b),cote:(a,b)=>cote(b)-cote(a)}[MC.sort];
   return L.sort(by)}
 function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
   const own=UNIQ.filter(c=>qty(c.key)>=mcMin());
@@ -1486,13 +1550,13 @@ function minePage(){const L=mcList();MC.shown=Math.min(L.length,150);
     <input id="mcQ" placeholder="Rechercher (Pokémon, set…)" value="${esc(MC.q)}">
     <div class="pseg">${[["all","Toutes"],["intl","🌍 International"],["jp",flag("ja")+" Japonais"],["tr","🧑 Dresseurs"]].map(([k,l])=>`<button data-reg="${k}" class="${MC.reg===k?"on":""}">${l}</button>`).join("")}</div>
     <button class="btn mcdup ${MC.dup?"on":""}" id="mcDup">${MC.dup?"✓ ":""}Doublons seulement</button>
-    <label class="mcsort">Trier par <select id="mcS">${[["rare","Rareté (plus rare d'abord)"],["rareasc","Rareté (plus commune d'abord)"],["dex","N° de Pokédex"],["nom","Nom"],["qte","Quantité"],["annee","Plus récentes"]].map(([k,l])=>`<option value="${k}" ${MC.sort===k?"selected":""}>${l}</option>`).join("")}</select></label>
+    <label class="mcsort">Trier par <select id="mcS">${[["rare","Rareté (plus rare d'abord)"],["rareasc","Rareté (plus commune d'abord)"],["dex","N° de Pokédex"],["nom","Nom"],["qte","Quantité"],["annee","Plus récentes"],["cote","Cote (plus chère d'abord)"]].map(([k,l])=>`<option value="${k}" ${MC.sort===k?"selected":""}>${l}</option>`).join("")}</select></label>
   </div>
   <div class="mctiers">${Object.keys(TIERS).sort((a,b)=>TIERS[b].o-TIERS[a].o).map(t=>`<button class="mct ${MC.tiers.has(t)?"on":""}" data-t="${t}"><span class="rt rt-${t}">${tierName(t)}</span><b>${cnt(t)}</b></button>`).join("")}${MC.tiers.size?`<button class="mct clr" data-t="">✕ Toutes les raretés</button>`:""}</div>
   <div class="cards" id="mcGrid"></div><div class="mcmore" id="mcMore"></div>`;
   const grid=$("#mcGrid");
   const tile=(c,i)=>`<button class="card" data-i="${i}"><span class="im ${isBig(c)?"holo full soft t-"+c.r:""}"><img src="${c.th||c.img}" ${srcset(c)} alt="" loading="lazy">${isBig(c)?'<span class="hl"></span><span class="hl2"></span>':""}</span>
-    <span class="cap"><span><b class="qn">×${qty(c.key)}</b> ${esc(c.name)}</span><span class="rt rt-${c.r} mini">${tierName(c.r)}</span></span></button>`;
+    <span class="cap"><span><b class="qn">×${qty(c.key)}</b> ${esc(c.name)}</span><span class="rt rt-${c.r} mini">${tierName(c.r)}</span></span><span class="cpr">${eur(cote(c))}</span></button>`;
   const more=()=>{$("#mcMore").innerHTML=MC.shown<L.length?`<button class="btn" id="mcMoreB">Afficher plus (${L.length-MC.shown} restantes)</button>`:"";
     const b=$("#mcMoreB");if(b)b.onclick=()=>{const a=MC.shown;MC.shown=Math.min(L.length,a+150);grid.insertAdjacentHTML("beforeend",L.slice(a,MC.shown).map((c,j)=>tile(c,a+j)).join(""));bind();more()}};
   const bind=()=>grid.querySelectorAll(".card:not([data-b])").forEach(el=>{el.dataset.b=1;el.onclick=()=>openLb("card",L,+el.dataset.i);const pre=()=>ensureFull(L[+el.dataset.i]);el.onpointerenter=pre;el.onpointerdown=pre});
@@ -1558,7 +1622,7 @@ function doGrade(c){if(qty(c.key)<1)return;const r=rollGrade(c);const s={id:newC
   $("#gAgain").onclick=()=>{$("#modalRoot").innerHTML="";gradePage()};$("#gSee").onclick=()=>{$("#modalRoot").innerHTML="";location.hash="#gradees"};
 }
 function slabZoom(id){const s=gState().find(x=>x.id===id);if(!s)return;
-  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div><div class="tact" style="justify-content:center"><button class="btn" id="zClose">Fermer</button><button class="btn danger" id="zDel">Supprimer cette carte gradée</button></div></div></div>`;
+  $("#modalRoot").innerHTML=`<div class="modal" id="modal"><div class="grv">${slabHtml(s,true)}${slabCoteBox(s)}<div class="grv-txt" style="font-size:14px;opacity:.8">Gradée le ${new Date(s.d).toLocaleDateString("fr-FR")}${s.from?` · reçue de ${esc(s.from)}`:""}</div><div class="tact" style="justify-content:center"><button class="btn" id="zClose">Fermer</button><button class="btn danger" id="zDel">Supprimer cette carte gradée</button></div></div></div>`;
   $("#modal").onclick=e=>{if(e.target.id==="modal")$("#modalRoot").innerHTML=""};$("#zClose").onclick=()=>$("#modalRoot").innerHTML="";
   $("#zDel").onclick=()=>confirmBox("Supprimer cette carte gradée ?",`${esc(CARDS[s.k]?.name||"")} · note ${fmtG(s.g)} — elle sera définitivement supprimée.`,"Supprimer",()=>{ST.graded=gState().filter(x=>x.id!==id);if(typeof tSlabs!=="undefined")tSlabs.delete(id);save();toast("Carte gradée supprimée");route()})}
 /* --- onglet Cartes gradées --- */
@@ -1654,10 +1718,10 @@ function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,row
     all[b.id]=b;ST.gbcur=b.id;gbSpread=0;save();root.innerHTML="";gradedPage();toast(ex?"Classeur mis à jour":"Classeur créé")};
 }
 function gradedPage(){const L=[...gState()];
-  const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr")}[GV.sort];
+  const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr"),cote:(a,b)=>coteSlab(b)-coteSlab(a)}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
-  app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))}`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view!=="grid"?gbBarHtml():""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+  app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))} · valeur <b class="cval">${eur(L.reduce((a,x)=>a+coteSlab(x),0))}</b>`:""}</small></h1>
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view!=="grid"?gbBarHtml():""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["cote","Cote"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
    ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>slabHtml(s)).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
