@@ -433,6 +433,11 @@ body.nocote .scote,body.nocote .gplq{display:none}
 .gplq small{font-size:calc(var(--gw,200px)*.05);color:#b8bed0;letter-spacing:.06em}.gplq b{font-family:var(--disp);color:#f1d37a;font-size:calc(var(--gw,200px)*.085)}
 .gwi{display:flex;flex-direction:column;align-items:center;width:100%;--gw:250px}.gwi .gplq{position:static;width:86%;height:auto;padding:6px 8px;margin-top:10px}.gwi .slab{width:100%}
 .gbic.on{border-color:var(--gold)}
+.selmode .gwi{position:relative;cursor:pointer;transition:transform .12s,opacity .12s}.selmode .gwi:not(.picked){opacity:.6}.selmode .gwi:hover{transform:translateY(-2px)}
+.selmode .gwi .slab{pointer-events:none}.gwi.picked .slab{outline:3px solid var(--gold);outline-offset:4px;border-radius:16px}
+.gchk{position:absolute;top:-8px;right:4%;z-index:3;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;background:rgba(10,14,30,.9);border:2px solid rgba(255,255,255,.4);color:transparent}
+.gwi.picked .gchk{background:var(--gold);border-color:var(--gold);color:#1a1400}
+.gselbar{position:sticky;bottom:14px;z-index:20;margin:10px auto 20px;width:max-content;max-width:100%;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:rgba(13,20,48,.96);border:1px solid var(--gold);border-radius:16px;padding:10px 14px;box-shadow:0 14px 34px rgba(0,0,0,.55)}.gselbar b{color:var(--gold);font-size:18px}.gselbar #gsV{color:var(--gold);font-weight:700}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
@@ -1739,23 +1744,28 @@ function gbModal(ex){const all=gbAll(),b=ex?{...ex}:{id:uid(),name:"",cols:3,row
     if(ex&&(ex.cols!==b.cols||ex.rows!==b.rows)){const ids=Object.keys(b.slots).sort((x,y)=>x-y).map(k=>b.slots[k]);b.slots={};ids.forEach((id,i)=>b.slots[i]=id)}
     all[b.id]=b;ST.gbcur=b.id;gbSpread=0;save();root.innerHTML="";gradedPage();toast(ex?"Classeur mis à jour":"Classeur créé")};
 }
-function gradedPage(){const L=[...gState()];
+let GSEL=null;
+function gradedPage(){const L=[...gState()];if(GSEL)for(const id of [...GSEL])if(!L.some(x=>x.id===id))GSEL.delete(id);const grid=GV.view==="grid"||!!GSEL;
   const by={note:(a,b)=>gScore(b)-gScore(a)||TIERS[CARDS[b.k]?.r]?.o-TIERS[CARDS[a.k]?.r]?.o,rare:(a,b)=>(TIERS[CARDS[b.k]?.r]?.o||0)-(TIERS[CARDS[a.k]?.r]?.o||0)||gScore(b)-gScore(a),date:(a,b)=>b.d-a.d,nom:(a,b)=>(CARDS[a.k]?.name||"").localeCompare(CARDS[b.k]?.name||"","fr"),cote:(a,b)=>coteSlab(b)-coteSlab(a)}[GV.sort];
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))} · valeur <b class="cval">${eur(L.reduce((a,x)=>a+coteSlab(x),0))}</b>`:""}</small></h1>
-   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${GV.view!=="grid"?gbBarHtml():""}<label class="mcsort">Trier par <select id="gS">${[["note","Note"],["cote","Cote"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   ${GV.view!=="grid"?gbHtml(L):`<div class="gwall">${L.map(s=>`<div class="gwi">${slabHtml(s)}${plaque(s)}</div>`).join("")}</div>`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+   ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${!grid?gbBarHtml():""}<button class="btn ${GSEL?"gold":""}" id="gSel">${GSEL?"✕ Annuler la sélection":"☑ Sélectionner"}</button><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["cote","Cote"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
+   ${!grid?gbHtml(L):`<div class="gwall ${GSEL?"selmode":""}">${L.map(s=>`<div class="gwi ${GSEL&&GSEL.has(s.id)?"picked":""}" data-gsid="${s.id}">${GSEL?`<span class="gchk">✓</span>`:""}${slabHtml(s)}${plaque(s)}</div>`).join("")}</div>${GSEL?`<div class="gselbar"><b id="gsN">${GSEL.size}</b> sélectionnée${GSEL.size>1?"s":""} · <span id="gsV">${eur(L.filter(x=>GSEL.has(x.id)).reduce((a,x)=>a+coteSlab(x),0))}</span><button class="btn" id="gsAll">${GSEL.size===L.length?"Tout désélectionner":"Tout sélectionner"}</button><button class="btn danger" id="gsDel" ${GSEL.size?"":"disabled"}>🗑 Supprimer</button></div>`:""}`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
-  document.body.classList.toggle('wide',GV.view!=="grid"&&L.length>0);document.body.classList.toggle('gbfit',GV.view!=="grid"&&L.length>0);
-  if(GV.view!=="grid")bindGB(L);
-  app.querySelectorAll(".gwall [data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
+  document.body.classList.toggle('wide',!grid&&L.length>0);document.body.classList.toggle('gbfit',!grid&&L.length>0);
+  if(!grid)bindGB(L);
+  const gs=$("#gSel");if(gs)gs.onclick=()=>{GSEL=GSEL?null:new Set();gradedPage()};
+  if(GSEL){app.querySelectorAll(".gwall [data-gsid]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.gsid;GSEL.has(id)?GSEL.delete(id):GSEL.add(id);const y=scrollY;gradedPage();scrollTo(0,y)});
+    $("#gsAll").onclick=()=>{const y=scrollY;GSEL=GSEL.size===L.length?new Set():new Set(L.map(x=>x.id));gradedPage();scrollTo(0,y)};
+    $("#gsDel").onclick=()=>{const n=GSEL.size;if(!n)return;confirmBox(`Supprimer ${n} carte${n>1?"s":""} gradée${n>1?"s":""} ?`,`Valeur totale : ${eur(L.filter(x=>GSEL.has(x.id)).reduce((a,x)=>a+coteSlab(x),0))} — elles seront définitivement supprimées.`,"Supprimer",()=>{ST.graded=gState().filter(x=>!GSEL.has(x.id));if(typeof tSlabs!=="undefined")GSEL.forEach(id=>tSlabs.delete(id));GSEL=null;save();toast(`${n} carte${n>1?"s":""} gradée${n>1?"s":""} supprimée${n>1?"s":""}`);gradedPage()})}}
+  else app.querySelectorAll(".gwall [data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
 
 /* ============================================================
    ROUTAGE
    ============================================================ */
-function route(keep){document.body.classList.remove('wide');document.body.classList.remove('gbfit');document.body.classList.remove('bfull');
+function route(keep){GSEL=null;document.body.classList.remove('wide');document.body.classList.remove('gbfit');document.body.classList.remove('bfull');
   lb.classList.remove("open");
   if(!keep&&!$("#opener"))$("#modalRoot").innerHTML="";
   const id=location.hash.slice(1);
