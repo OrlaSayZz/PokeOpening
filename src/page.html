@@ -864,7 +864,11 @@ function fixState(){ST.owned=ST.owned||{};ST.slots=ST.slots||{};ST.opened=ST.ope
   if(!ST.binders[ST.current])ST.current=Object.keys(ST.binders)[0];
   for(const id in ST.slots){const m=ST.slots[id];for(const k in m)if(!CARDS[m[k]])delete m[k]}}
 let dbRef=null,saveT=null;
-function save(){PLC=null;try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}
+let UNDO=[],UNDOLAST=null,UNDOSKIP=false;
+const bSnap=()=>JSON.stringify({b:ST.binders,s:ST.slots,c:ST.current});
+function undoTrack(){if(location.hash!=="#collection"){UNDOLAST=null;return}const n=bSnap();if(UNDOLAST!==null&&n!==UNDOLAST&&!UNDOSKIP){UNDO.push(UNDOLAST);if(UNDO.length>50)UNDO.shift()}UNDOLAST=n;UNDOSKIP=false;const u=document.querySelector('[data-c=undo]');if(u)u.disabled=!UNDO.length}
+function undoLast(){if(!UNDO.length){toast("Rien à annuler");return}const o=JSON.parse(UNDO.pop());ST.binders=o.b;ST.slots=o.s;ST.current=o.c;UNDOSKIP=true;UNDOLAST=null;save();UNDOLAST=bSnap();pick=null;collectionPage();toast("Dernière action annulée")}
+function save(){PLC=null;undoTrack();try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}
   if(!dbRef)return;clearTimeout(saveT);saveT=setTimeout(()=>{dbRef.set(JSON.parse(JSON.stringify(ST))).catch(e=>console.error(e))},400)}
 (async function connect(){
   try{if(!window.claude||typeof window.claude.use!=="function")return;
@@ -1261,7 +1265,8 @@ function visible(b){const n=pageCount(b),per=twoUp()?2:1,maxS=Math.max(0,Math.ce
   let s=Math.min(Math.max(0,spread[b.id]||0),maxS);spread[b.id]=s;const arr=[];for(let i=0;i<per;i++){const p=s*per+i;arr.push(p<n?p:-1)}return{arr,n,s,maxS,per}}
 
 let fgoal=false;let finderOpen;try{finderOpen=localStorage.getItem('finderOpen')!=='0'}catch(e){finderOpen=true}
-function collectionPage(){
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&e.key.toLowerCase()==="z"&&location.hash==="#collection"&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();undoLast()}});
+function collectionPage(){if(UNDOLAST===null)UNDOLAST=bSnap();
   document.body.classList.add('wide');
   app.innerHTML=`<div class="ctop"><div class="bchips" id="bchips"></div><button class="btn primary" data-c="new">+ Nouveau classeur</button></div>
     <div class="cwrap ${finderOpen?"":"nofinder"}" id="cwrap">
@@ -1335,6 +1340,7 @@ function drawBinder(){const b=binder();const z=$("#bzone");if(!b){z.innerHTML=""
   z.innerHTML=`<div class="btitle"><div class="bhead"><span class="bcov" style="--c:${esc(b.color)}"></span><div class="bring" style="--p:${pct}"><b>${pct}%</b></div><div class="bname"><h2>${esc(b.name)}</h2><span class="m">${placed.length} carte${placed.length>1?"s":""} rangée${placed.length>1?"s":""} · ${own} obtenue${own>1?"s":""} · ${v.n} pages de ${b.cols}×${b.rows} · valeur <b class="cval">${eur(placed.reduce((a,k)=>{const c=CARDS[k];return a+(c&&c.r&&qty(k)?cote(c):0)},0))}</b></span></div></div>
       <div class="btools"><button class="btn ${finderOpen?"":"gold"}" data-c="togglefinder">${finderOpen?"◧ Masquer le panneau":"＋ Ajouter des cartes"}${(()=>{const n=toPlaceCount();return !finderOpen&&n?` <span class="nbadge">${n}</span>`:""})()}</button><div class="dd"><button class="btn" data-c="sortmenu">↕ Trier</button>
         <div class="ddm" id="sortMenu" hidden><button data-sort="dex">Par Pokémon</button><button data-sort="rar">Par rareté</button><button data-sort="got">Obtenues d'abord</button><button data-sort="reg">International puis Japonais</button></div></div>
+        <button class="btn" data-c="undo" title="Annuler la dernière action dans le classeur (Ctrl+Z)" ${UNDO.length?"":"disabled"}>↶ Annuler</button>
         <button class="btn" data-c="compact" title="Supprimer les cases vides entre les cartes">⇤ Boucher les trous</button>
         <button class="btn holotg ${noCote()?"":"on"}" data-c="cotes" title="Afficher ou masquer les cotes sous les cartes">💶 Cotes : ${noCote()?"Off":"On"}</button>
         <button class="btn holotg ${noHolo()?"":"on"}" data-c="holo" title="Activer ou désactiver les reflets holographiques dans le classeur">✨ Holo : ${noHolo()?"Off":"On"}</button>
@@ -1468,6 +1474,7 @@ document.addEventListener("click",e=>{if(location.hash!=="#collection")return;co
   if(a){const b=binder(),c=a.dataset.c;
     if(c==="new")binderModal(null);else if(c==="edit")binderModal(b);else if(c==="unpick"){pick=null;drawFinder()}
     else if(c==="prev"){spread[b.id]--;turnDir="prev";drawBinder()}else if(c==="next"){spread[b.id]++;turnDir="next";drawBinder()}
+    else if(c==="undo"){undoLast()}
     else if(c==="cotes"){const v=!noCote();try{localStorage.setItem('noCote',v?'1':'0')}catch(e){}document.body.classList.toggle('nocote',v);drawBinder()}
     else if(c==="holo"){const v=!noHolo();try{localStorage.setItem('noHolo',v?'1':'0')}catch(e){}document.body.classList.toggle('noholo',v);a.classList.toggle("on",!v);a.textContent="✨ Holo : "+(v?"Off":"On")}
     else if(c==="sortmenu"){const m=$("#sortMenu");m.hidden=!m.hidden}
