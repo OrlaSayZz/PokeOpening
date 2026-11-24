@@ -959,6 +959,10 @@ const fullWhole={},fullOne={};
 function setFull(c,u){const old=c.th;c.img=u;c.full=1;document.querySelectorAll("#modalRoot img,#lbImg").forEach(i=>{if(i.getAttribute("src")===old)i.src=u})}
 const partOf=c=>c.f[2]||1,qtyOK=c=>true;
 let rangeOK,probe=null;
+function upgradeSlots(el,sw){if(sw*(devicePixelRatio||1)<170)return;const b=binder();if(!b)return;const sl=slotsOf(b);
+  el.querySelectorAll(".slot.filled[data-pos] img").forEach(img=>{const c=CARDS[sl[img.parentNode.dataset.pos]];if(!c)return;
+    const set=()=>{if(c.full&&img.getAttribute("src")!==c.img){img.removeAttribute("srcset");img.removeAttribute("sizes");img.src=c.img}};
+    if(c.full)set();else ensureFull(c).then(set)})}
 function ensureFull(c){if(!c||!c.pk||c.full)return Promise.resolve();
   if(rangeOK===undefined&&probe&&!fullOne[c.key])return probe.then(()=>ensureFull(c));
   const p=ensureFull0(c);if(rangeOK===undefined&&!probe)probe=p.catch(()=>{});return p}
@@ -1407,7 +1411,7 @@ function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
   const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?112:105))-pagePad;
   const cap=noCote()?0:18;
   const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap-b.rows*cap)/b.rows)*63/88,full?420:340)));
-  el.style.setProperty("--sw",sw+"px");el.style.setProperty("--cap",cap+"px");el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
+  el.style.setProperty("--sw",sw+"px");el.style.setProperty("--cap",cap+"px");upgradeSlots(el,sw);el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
   el.classList.toggle("small",sw<80)}
 let PLC=null;
 function placedAll(k){if(!PLC){PLC={};for(const id in ST.slots){const m=ST.slots[id];for(const s in m){const c=canon(m[s]);PLC[c]=(PLC[c]||0)+1}}}return PLC[canon(k)]||0}
