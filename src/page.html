@@ -462,6 +462,22 @@ body.nocote .scote,body.nocote .gplq{display:none}
 .lotitem.open{animation:lotin .45s ease}@keyframes lotin{from{transform:rotateY(90deg)}}.lotitem.open.gold .slab{box-shadow:0 0 26px rgba(255,203,5,.6)}.lotitem.open.black .slab{box-shadow:0 0 30px rgba(232,198,106,.7)}
 .lotv{text-align:center;margin-top:6px;font-weight:700;font-size:13px}.lotv b{display:block;color:var(--gold);font-family:var(--disp);font-size:16px}
 .lotsum{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:18px 0 6px;background:var(--panel);border:1px solid var(--gold);border-radius:14px;padding:12px}.lotsum b{color:#fff}
+
+/* panneau Ajouter des cartes : grille de vignettes */
+.cwrap:not(.nofinder){grid-template-columns:clamp(340px,24vw,440px) minmax(0,1fr)!important}
+@media (max-width:900px){.cwrap:not(.nofinder){grid-template-columns:1fr!important}}
+.flist{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px!important;align-content:start}
+.flist>*:not(.fres),.toplace>*:not(.fres){grid-column:1/-1}
+.toplace{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px!important;grid-column:1/-1}
+.fres{flex-direction:column;align-items:stretch;gap:5px;padding:6px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);position:relative}
+.fres:hover{background:var(--panel);transform:translateY(-1px)}
+.fres img{width:100%!important;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.fres .t b{font-size:12px!important;gap:4px;flex-wrap:wrap;white-space:normal;line-height:1.2}
+.fres .t small{font-size:10.5px!important}
+.fres .qn{font-size:10.5px}.fres .inb{position:absolute;top:8px;right:8px;background:rgba(10,14,30,.85);border-radius:6px;padding:1px 4px;font-size:11px}
+.fhead b{font-size:15px!important}.fhead small{font-size:11.5px}.goaltg,.fillall{font-size:12.5px!important;padding:7px 10px!important}
+.finder h3{font-size:13.5px!important}.fseg button{font-size:12px}
+.tph b{font-size:14px!important}.tph small{font-size:11.5px!important}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
