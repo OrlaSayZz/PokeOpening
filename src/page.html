@@ -1401,17 +1401,19 @@ function addOwned(){const b=binder(),sl=slotsOf(b);const inB=new Set(Object.valu
   if(!list.length){toast("Toutes tes cartes disponibles sont déjà rangées");return}
   let pos=0;for(const c of list){while(sl[pos])pos++;sl[pos]=c.key}
   const need=Math.ceil((pos+1)/perPage(b));if(need>b.pages)b.pages=need;save();drawBinder();drawChips();drawFinder();toast(`${list.length} carte${list.length>1?"s":""} ajoutée${list.length>1?"s":""}`)}
-function layout(){const el=$("#binderEl"),b=binder();if(!el||!b)return;
+function layout(shrink=0,it=0){const el=$("#binderEl"),b=binder();if(!el||!b)return;
+  document.body.classList.add("gbfit");  const fd=document.querySelector(".cwrap .finder");if(fd&&innerWidth>900&&!it){fd.style.maxHeight=Math.max(300,innerHeight-(fd.getBoundingClientRect().top+scrollY)-14)+"px"}
   const gap=b.cols>=5||innerWidth<640?5:8,per=twoUp()?2:1,stage=el.parentElement;
   const padX=innerWidth<640?22:36,pagePad=innerWidth<640?16:24,ringW=innerWidth<640?24:40;
   const availW=(stage.clientWidth-padX-ringW)/per-pagePad;
   const top=el.getBoundingClientRect().top+scrollY;
   const full=document.body.classList.contains("bfull");
-  const availH=Math.max(340,innerHeight-(full?top:Math.min(top,240))-(full?112:105))-pagePad;
+  const availH=Math.max(110,innerHeight-(full?top:Math.min(top,240))-(full?112:105)-shrink)-pagePad;
   const cap=noCote()?0:18;
   const sw=Math.max(46,Math.floor(Math.min((availW-(b.cols-1)*gap)/b.cols,((availH-(b.rows-1)*gap-b.rows*cap)/b.rows)*63/88,full?420:340)));
   el.style.setProperty("--sw",sw+"px");el.style.setProperty("--cap",cap+"px");upgradeSlots(el,sw);el.style.setProperty("--gap",gap+"px");el.style.setProperty("--pw",(sw*b.cols+gap*(b.cols-1)+pagePad)+"px");
-  el.classList.toggle("small",sw<80)}
+  el.classList.toggle("small",sw<80);
+  if(it<6&&innerWidth>=640){const over=document.documentElement.scrollHeight-innerHeight;if(over>0&&sw>46)layout(shrink+over+6,it+1)}}
 let PLC=null;
 function placedAll(k){if(!PLC){PLC={};for(const id in ST.slots){const m=ST.slots[id];for(const s in m){const c=canon(m[s]);PLC[c]=(PLC[c]||0)+1}}}return PLC[canon(k)]||0}
 const freeQ=k=>qty(k)-placedAll(k);
