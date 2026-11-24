@@ -478,6 +478,7 @@ body.nocote .scote,body.nocote .gplq{display:none}
 .fhead b{font-size:15px!important}.fhead small{font-size:11.5px}.goaltg,.fillall{font-size:12.5px!important;padding:7px 10px!important}
 .finder h3{font-size:13.5px!important}.fseg button{font-size:12px}
 .tph b{font-size:14px!important}.tph small{font-size:11.5px!important}
+.flipping{outline:3px solid var(--gold)!important;outline-offset:3px;animation:flipP .45s ease-in-out infinite alternate}@keyframes flipP{to{transform:scale(1.15)}}
 .pktools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0 10px}.pktools label{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}.pktools select{font:inherit;font-size:13px;background:var(--tile);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:6px 8px}.pkn{margin-left:auto;color:var(--muted);font-size:12.5px}.pkc{display:block;color:var(--gold);font-size:12px;margin-top:2px}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
@@ -1510,6 +1511,15 @@ document.addEventListener("drop",e=>{if(!dragFrom)return;e.preventDefault();cons
   if(d.pos===pos)return;const a=m[d.pos],other=m[pos];m[pos]=a;if(other)m[d.pos]=other;else delete m[d.pos];save();drawBinder()});
 document.addEventListener("dragend",()=>{dragFrom=null;document.querySelectorAll(".dragover").forEach(x=>x.classList.remove("dragover"))});
 
+/* tourner les pages en survolant les flèches pendant un glisser */
+let flipT=null,flipEl=null;window.__dragTest=(x,y)=>{dragFrom=x;gbDrag=y};
+document.addEventListener("dragover",e=>{if(!dragFrom&&!gbDrag)return;const a=e.target.closest&&e.target.closest('[data-c=prev],[data-c=next],#gbPrev,#gbNext');
+  if(a&&!a.disabled){e.preventDefault();if(flipEl!==a){clearTimeout(flipT);flipEl&&flipEl.classList.remove("flipping");flipEl=a;a.classList.add("flipping");
+      const go=()=>{if(!flipEl||!document.contains(flipEl)){const id=flipEl&&(flipEl.id||"");const c=flipEl&&flipEl.dataset.c;flipEl=document.querySelector(id?"#"+id:`[data-c=${c}]`)}if(flipEl&&!flipEl.disabled){flipEl.click();flipEl=document.querySelector(a.id?"#"+a.id:`[data-c=${a.dataset.c}]`);flipEl&&flipEl.classList.add("flipping");flipT=setTimeout(go,800)}};
+      flipT=setTimeout(go,450)}}
+  else if(flipEl){clearTimeout(flipT);flipEl.classList.remove("flipping");flipEl=null}});
+["drop","dragend"].forEach(ev=>document.addEventListener(ev,()=>{clearTimeout(flipT);flipEl&&flipEl.classList.remove("flipping");flipEl=null}));
+
 /* grain du cuir */
 (function(){try{const n=220,c=document.createElement("canvas");c.width=c.height=n;const x=c.getContext("2d");const d=x.createImageData(n,n);
   for(let i=0;i<n*n;i++){const v=Math.random();const a=Math.floor(Math.pow(Math.abs(v-.5)*2,3)*38);d.data[i*4]=d.data[i*4+1]=d.data[i*4+2]=v<.5?0:255;d.data[i*4+3]=a}
@@ -1893,7 +1903,7 @@ function gradedPage(){const L=[...gState()];if(GSEL)for(const id of [...GSEL])if
   L.sort(by);const tens=L.filter(s=>s.g===10).length,avg=L.length?L.reduce((a,s)=>a+s.g,0)/L.length:0;
   app.innerHTML=`<h1 class="h1">Cartes gradées <small class="mcn">${L.length} carte${L.length>1?"s":""}${L.length?` · ${tens} × 10${L.some(x=>x.lb==="gold")?` · ${L.filter(x=>x.lb==="gold").length} Gold`:""}${L.some(x=>x.lb==="black")?` · ${L.filter(x=>x.lb==="black").length} Black`:""} · moyenne ${fmtG(+avg.toFixed(1))} · valeur <b class="cval">${eur(L.reduce((a,x)=>a+coteSlab(x),0))}</b>`:""}</small></h1>
    ${L.length?`<div class="mcbar"><div class="pseg">${[["binder","📒 Classeur"],["grid","▦ Grille"]].map(([k,l])=>`<button data-gv="${k}" class="${GV.view===k?"on":""}">${l}</button>`).join("")}</div>${!grid?gbBarHtml():""}<button class="btn ${GSEL?"gold":""}" id="gSel">${GSEL?"✕ Annuler la sélection":"☑ Sélectionner"}</button><label class="mcsort">Trier par <select id="gS">${[["note","Note"],["cote","Cote"],["rare","Rareté"],["date","Plus récentes"],["nom","Nom"]].map(([k,l])=>`<option value="${k}" ${GV.sort===k?"selected":""}>${l}</option>`).join("")}</select></label></div>
-   ${!grid?gbHtml(L):`<div class="gwall ${GSEL?"selmode":""}">${L.map(s=>`<div class="gwi ${GSEL&&GSEL.has(s.id)?"picked":""}" data-gsid="${s.id}">${GSEL?`<span class="gchk">✓</span>`:""}${slabHtml(s)}${plaque(s)}</div>`).join("")}</div>${GSEL?`<div class="gselbar"><b id="gsN">${GSEL.size}</b> sélectionnée${GSEL.size>1?"s":""} · <span id="gsV">${eur(L.filter(x=>GSEL.has(x.id)).reduce((a,x)=>a+coteSlab(x),0))}</span><button class="btn" id="gsAll">${GSEL.size===L.length?"Tout désélectionner":"Tout sélectionner"}</button><button class="btn danger" id="gsDel" ${GSEL.size?"":"disabled"}>🗑 Supprimer</button></div>`:""}`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
+   ${!grid?gbHtml(L):`<div class="gwall ${GSEL?"selmode":""}">${L.map(s=>`<div class="gwi ${GSEL&&GSEL.has(s.id)?"picked":""}" data-gsid="${s.id}">${GSEL?`<span class="gchk">✓</span>`:""}${slabHtml(s)}${plaque(s)}</div>`).join("")}</div>${GSEL?`<div class="gselbar"><b id="gsN">${GSEL.size}</b> sélectionnée${GSEL.size>1?"s":""} · <span id="gsV">${eur(L.filter(x=>GSEL.has(x.id)).reduce((a,x)=>a+coteSlab(x),0))}</span><button class="btn" id="gsAll">${GSEL.size===L.length?"Tout désélectionner":"Tout sélectionner"}</button><button class="btn" id="gsNo10">Tout sauf les 10</button><button class="btn danger" id="gsDel" ${GSEL.size?"":"disabled"}>🗑 Supprimer</button></div>`:""}`}`:`<p class="empty">Aucune carte gradée pour l'instant. Va dans <a href="#gradation">Gradation</a> pour en faire grader une !</p>`}`;
   const sel=$("#gS");if(sel)sel.onchange=e=>{GV.sort=e.target.value;gvSave();gradedPage()};
   const gg=$("#gG");if(gg)gg.onchange=e=>{GV.group=e.target.value;gvSave();gradedPage()};
   app.querySelectorAll("[data-gv]").forEach(b=>b.onclick=()=>{GV.view=b.dataset.gv;gvSave();gradedPage()});
@@ -1901,6 +1911,7 @@ function gradedPage(){const L=[...gState()];if(GSEL)for(const id of [...GSEL])if
   if(!grid)bindGB(L);
   const gs=$("#gSel");if(gs)gs.onclick=()=>{GSEL=GSEL?null:new Set();gradedPage()};
   if(GSEL){app.querySelectorAll(".gwall [data-gsid]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.gsid;GSEL.has(id)?GSEL.delete(id):GSEL.add(id);const y=scrollY;gradedPage();scrollTo(0,y)});
+    $("#gsNo10").onclick=()=>{const y=scrollY;GSEL=new Set(L.filter(x=>x.g<10).map(x=>x.id));gradedPage();scrollTo(0,y)};
     $("#gsAll").onclick=()=>{const y=scrollY;GSEL=GSEL.size===L.length?new Set():new Set(L.map(x=>x.id));gradedPage();scrollTo(0,y)};
     $("#gsDel").onclick=()=>{const n=GSEL.size;if(!n)return;confirmBox(`Supprimer ${n} carte${n>1?"s":""} gradée${n>1?"s":""} ?`,`Valeur totale : ${eur(L.filter(x=>GSEL.has(x.id)).reduce((a,x)=>a+coteSlab(x),0))} — elles seront définitivement supprimées.`,"Supprimer",()=>{ST.graded=gState().filter(x=>!GSEL.has(x.id));if(typeof tSlabs!=="undefined")GSEL.forEach(id=>tSlabs.delete(id));GSEL=null;save();toast(`${n} carte${n>1?"s":""} gradée${n>1?"s":""} supprimée${n>1?"s":""}`);gradedPage()})}}
   else app.querySelectorAll(".gwall [data-slab]").forEach(el=>el.onclick=()=>slabZoom(el.dataset.slab))}
