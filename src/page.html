@@ -1099,13 +1099,14 @@ function worldPop(c){c=CARDS[canon(c.key)]||c;if(POPC[c.key])return POPC[c.key];
   const base={C:12,U:18,R:45,H:160,DR:420,UR:600,IR:900,SIR:1400,HR:520}[c.r]||40;
   const pm=Math.pow(POP[c.pokemon.id]||1,1.5),era=y>=2019?25:y>=2016?3:y>=2010?1:y>=2003?.8:3;
   let N=base*pm*era*(c.region==="jp"?.6:1)*(.45+1.4*hsh(c.key+"N"));
-  const sh=y>=2019?[3,6,3,30,4,52,1.6,.05]:y>=2003?[8,15,6,35,6,28,1.2,.04]:[30,25,8,25,4,7.5,.4,.012];
-  const r=sh.map((p,i)=>{const e=N*p/100*(.7+.6*hsh(c.key+"s"+i));return Math.floor(e+hsh(c.key+"r"+i))});
+  const sh=y>=2019?[24,21,17,15,11,9,2.5,.06]:y>=2003?[32,24,16,13,8,5.5,1.2,.03]:[45,24,13,9,5,3,.4,.01];
+  const r=sh.map((p,i)=>{const e=N*p/100*(.8+.4*hsh(c.key+"s"+i));return Math.floor(e+hsh(c.key+"r"+i))});
+  for(let i=1;i<r.length;i++)if(r[i]>r[i-1])r[i]=r[i-1];
   return POPC[c.key]=r}
 let MINEC=null,MINESIG="";
 function mineCounts(ck){const G=gState(),sig=G.length+":"+(G.length?G[G.length-1].id+G[0].id:"");if(sig!==MINESIG){MINESIG=sig;MINEC={};G.forEach(x=>{const k=canon(x.k);(MINEC[k]=MINEC[k]||[0,0,0,0,0,0,0,0])[bkOf(x)]++})}return MINEC[ck]||[0,0,0,0,0,0,0,0]}
 function popOf(s){const c=CARDS[s.k];if(!c)return {pop:0,hi:0,w:[0,0,0,0,0,0,0,0],m:[0,0,0,0,0,0,0,0]};const w=worldPop(c),ck=canon(s.k),m=mineCounts(ck);const b=bkOf(s);let hi=0;for(let i=b+1;i<8;i++)hi+=w[i]+m[i];return {pop:w[b]+m[b],hi,w,m,b}}
-const popFactor=s=>{const {pop}=popOf(s),b=bkOf(s);return Math.min(5,Math.max(.3,Math.pow(80/Math.max(1,pop),b>=4?.38:.2)))};
+const popFactor=s=>{const {pop}=popOf(s),b=bkOf(s);return Math.min(5,Math.max(.3,Math.pow(80/Math.max(1,pop),.32)))};
 /* ---------- courbes ---------- */
 function sparkSvg(vals,{w=320,h=90,id="sp"}={}){const mn=Math.min(...vals),mx=Math.max(...vals),rg=mx-mn||1,up=vals[vals.length-1]>=vals[0],col=up?"#3ccf7f":"#ff6b6b";
   const X=i=>(i/(vals.length-1))*(w-8)+4,Y=v=>h-6-((v-mn)/rg)*(h-14);
