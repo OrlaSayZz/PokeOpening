@@ -478,6 +478,7 @@ body.nocote .scote,body.nocote .gplq{display:none}
 .fhead b{font-size:15px!important}.fhead small{font-size:11.5px}.goaltg,.fillall{font-size:12.5px!important;padding:7px 10px!important}
 .finder h3{font-size:13.5px!important}.fseg button{font-size:12px}
 .tph b{font-size:14px!important}.tph small{font-size:11.5px!important}
+.pktools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:4px 0 10px}.pktools label{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}.pktools select{font:inherit;font-size:13px;background:var(--tile);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:6px 8px}.pkn{margin-left:auto;color:var(--muted);font-size:12.5px}.pkc{display:block;color:var(--gold);font-size:12px;margin-top:2px}
 body.noholo .slot .hl,body.noholo .slot .hl2,body.noholo .slotview .hl,body.noholo .slotview .hl2{display:none}body.noholo .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45)!important}.btn.holotg.on{border-color:var(--gold);color:var(--gold)}
 .slot.filled.holo.full{box-shadow:0 3px 8px rgba(0,0,0,.45),0 0 14px 1px var(--glow,rgba(255,255,255,.35))}
 .slot .hl,.slot .hl2{z-index:1}
@@ -1588,13 +1589,18 @@ function profilePage(){const P=prof();
   app.querySelectorAll("[data-unfav]").forEach(x=>x.onclick=e=>{e.stopPropagation();P.fav[+x.dataset.unfav]=null;save();profilePage()});
   app.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>pickFav(+b.dataset.fav));bindCollChart();
 }
+const PKS={sort:(()=>{try{return localStorage.getItem("pksort")||"rare"}catch(e){return "rare"}})(),dup:false};
+const PKSORTS=[["rare","Rareté"],["cote","Cote (plus chère)"],["cotea","Cote (moins chère)"],["ten","Chance de 10"],["qty","Nb d'exemplaires"],["new","Plus récentes"],["old","Plus anciennes"],["nom","Nom"]];
+function pkSorter(){const t=(a,b)=>TIERS[b.r].o-TIERS[a.r].o||a.name.localeCompare(b.name);return ({rare:t,cote:(a,b)=>cote(b)-cote(a),cotea:(a,b)=>cote(a)-cote(b),ten:(a,b)=>chance10(b)-chance10(a)||t(a,b),qty:(a,b)=>qty(b.key)-qty(a.key)||t(a,b),new:(a,b)=>(b.y||0)-(a.y||0)||t(a,b),old:(a,b)=>(a.y||0)-(b.y||0)||t(a,b),nom:(a,b)=>a.name.localeCompare(b.name)||t(a,b)})[PKS.sort]||t}
+const pkToolsHtml=()=>`<div class="pktools"><label>Trier par <select id="pkSort">${PKSORTS.map(([k,l])=>`<option value="${k}" ${PKS.sort===k?"selected":""}>${l}</option>`).join("")}</select></label><button class="btn sm ${PKS.dup?"gold":""}" id="pkDup">${PKS.dup?"✓ ":""}Doublons seulement</button><span class="pkn" id="pkN"></span></div>`;
+function bindPkTools(draw){$("#pkSort").onchange=e=>{PKS.sort=e.target.value;try{localStorage.setItem("pksort",PKS.sort)}catch(_){}draw()};$("#pkDup").onclick=e=>{PKS.dup=!PKS.dup;e.target.classList.toggle("gold",PKS.dup);e.target.textContent=(PKS.dup?"✓ ":"")+"Doublons seulement";draw()}}
 function cardPicker({title,filter,onPick,note}){let q="",reg="all";const root=$("#modalRoot");
-  const draw=()=>{const nq=norm(q.trim());const L=UNIQ.filter(c=>qty(c.key)>0&&(reg==="all"||c.region===reg)&&(!filter||filter(c))&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq))).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o||a.name.localeCompare(b.name));
-    $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy"><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)}</small></button>`).join("")||`<p class="empty">Aucune carte obtenue${q?" pour cette recherche":""}.</p>`;
+  const draw=()=>{const nq=norm(q.trim());const L=UNIQ.filter(c=>qty(c.key)>(PKS.dup?1:0)&&(reg==="all"||c.region===reg)&&(!filter||filter(c))&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq))).sort(pkSorter());$("#pkN").textContent=L.length.toLocaleString("fr-FR")+" carte"+(L.length>1?"s":"")+(L.length>240?" (240 affichées)":"");
+    $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy"><span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)}</small><b class="pkc">${eur(cote(c))}</b></button>`).join("")||`<p class="empty">Aucune carte obtenue${q?" pour cette recherche":""}.</p>`;
     $("#pkList").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>onPick(CARDS[b.dataset.k],draw))};
   root.innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet"><h2>${title}</h2>${note?`<p class="pnote">${note}</p>`:""}
-    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp",flag("ja")]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div><button class="btn" id="pkClose">Fermer</button></div>
-    <div class="pklist" id="pkList"></div></div></div>`;
+    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp",flag("ja")]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div><button class="btn" id="pkClose">Fermer</button></div>${pkToolsHtml()}
+    <div class="pklist" id="pkList"></div></div></div>`;bindPkTools(draw);
   $("#pkQ").oninput=e=>{q=e.target.value;draw()};$("#pkClose").onclick=()=>root.innerHTML="";
   root.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{reg=b.dataset.reg;root.querySelectorAll("[data-reg]").forEach(x=>x.classList.toggle("on",x===b));draw()});
   $("#modal").onclick=e=>{if(e.target.id==="modal")root.innerHTML=""};draw();setTimeout(()=>$("#pkQ").focus(),30)}
@@ -1748,17 +1754,17 @@ function gradePage(){gState();const c=gPick&&CARDS[gPick]&&qty(gPick)>0?CARDS[gP
 }
 function lotPicker(){const sel={};let q="",reg="all";const MAX=30;const root=$("#modalRoot");const tot=()=>Object.values(sel).reduce((a,x)=>a+x,0);
   root.innerHTML=`<div class="modal" id="modal"><div class="sheet pksheet lotsheet"><h2>📦 Envoi par lot</h2><p class="pnote">Clique sur les cartes à envoyer (plusieurs clics = plusieurs exemplaires, ✕ pour retirer). Jusqu'à ${MAX} cartes par lot.</p>
-    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp",flag("ja")]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div></div>
+    <div class="pkbar"><input id="pkQ" placeholder="Rechercher un Pokémon ou un set…"><div class="pseg">${[["all","Toutes"],["intl","🌍"],["jp",flag("ja")]].map(([k,l])=>`<button data-reg="${k}" class="${k==="all"?"on":""}">${l}</button>`).join("")}</div></div>${pkToolsHtml()}
     <div class="pklist" id="pkList"></div><div class="lotbar" id="lotBar"></div></div></div>`;
   const drawBar=()=>{const n=tot(),ks=Object.keys(sel);$("#lotBar").innerHTML=`<div class="lotsel">${ks.map(k=>`<span class="lotc"><img src="${CARDS[k].th}" alt="">${sel[k]>1?`<b>×${sel[k]}</b>`:""}<i data-unlot="${k}">✕</i></span>`).join("")||'<span class="pnote">Aucune carte choisie.</span>'}</div>
       <div class="lotact"><span><b>${n}</b> / ${MAX} cartes · valeur brute ${eur(ks.reduce((a,k)=>a+cote(CARDS[k])*sel[k],0))}</span><button class="btn" id="lotNo">Annuler</button><button class="btn gold" id="lotGo" ${n?"":"disabled"}>Envoyer le lot${n?` (${n})`:""}</button></div>`;
     $("#lotBar").querySelectorAll("[data-unlot]").forEach(x=>x.onclick=()=>{const k=x.dataset.unlot;sel[k]--;if(sel[k]<=0)delete sel[k];draw()});
     $("#lotNo").onclick=()=>root.innerHTML="";
     $("#lotGo").onclick=()=>{const n=tot();confirmBox(`Envoyer ${n} carte${n>1?"s":""} en gradation ?`,"Elles quittent ta collection. Les résultats sont définitifs.","Envoyer",()=>gradeLot(Object.entries(sel)))}};
-  const draw=()=>{const nq=norm(q.trim());const L=UNIQ.filter(c=>qty(c.key)>0&&(reg==="all"||c.region===reg)&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq))).sort((a,b)=>TIERS[b.r].o-TIERS[a.r].o||a.name.localeCompare(b.name));
-    $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1 ${sel[c.key]?"lotin":""}" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy">${sel[c.key]?`<span class="lotn">${sel[c.key]}</span>`:""}<span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)} · ${fmtG(+chance10(c).toFixed(1))} % de 10</small></button>`).join("")||`<p class="empty">Aucune carte.</p>`;
+  const draw=()=>{const nq=norm(q.trim());const L=UNIQ.filter(c=>qty(c.key)>(PKS.dup?1:0)&&(reg==="all"||c.region===reg)&&(!nq||norm(c.name).includes(nq)||norm(c.label).includes(nq))).sort(pkSorter());$("#pkN").textContent=L.length.toLocaleString("fr-FR")+" carte"+(L.length>1?"s":"")+(L.length>240?" (240 affichées)":"");
+    $("#pkList").innerHTML=L.slice(0,240).map(c=>`<button class="pk1 ${sel[c.key]?"lotin":""}" data-k="${c.key}"><img src="${c.th}" alt="" loading="lazy">${sel[c.key]?`<span class="lotn">${sel[c.key]}</span>`:""}<span class="rt rt-${c.r}">${tierName(c.r)}</span><em>${esc(c.name)}</em><small>${esc(c.label)} · ×${qty(c.key)} · ${fmtG(+chance10(c).toFixed(1))} % de 10</small><b class="pkc">${eur(cote(c))}</b></button>`).join("")||`<p class="empty">Aucune carte.</p>`;
     $("#pkList").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(tot()>=MAX){toast(`${MAX} cartes maximum par lot`);return}if((sel[k]||0)>=qty(k)){toast("Tu n'as pas plus d'exemplaires");return}sel[k]=(sel[k]||0)+1;const y=$("#pkList").scrollTop;draw();$("#pkList").scrollTop=y});drawBar()};
-  $("#pkQ").oninput=e=>{q=e.target.value;draw()};
+  $("#pkQ").oninput=e=>{q=e.target.value;draw()};bindPkTools(draw);
   root.querySelectorAll("[data-reg]").forEach(b=>b.onclick=()=>{reg=b.dataset.reg;root.querySelectorAll("[data-reg]").forEach(x=>x.classList.toggle("on",x===b));draw()});
   draw();setTimeout(()=>$("#pkQ").focus(),30)}
 function gradeLot(entries){const out=[];for(const [k,n] of entries){const c=CARDS[k];for(let i=0;i<n;i++){if(qty(k)<1)break;const r=rollGrade(c);const s={id:newCert(),k:canon(k),g:r.g,sub:r.sub,d:Date.now()};if(r.lb)s.lb=r.lb;takeOut(k,1);gState().push(s);out.push(s)}}
